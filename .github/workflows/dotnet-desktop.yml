@@ -40,6 +40,6 @@ jobs:
       with:
         name: NT.IPTV
         path: | 
-         ${{ github.workspace }}\NT.IPTV\bin\Release\net8.0-windows\publish\
+         ${{ github.workspace }}/NT.IPTV/bin/Release/net8.0-windows/publish
 
    
