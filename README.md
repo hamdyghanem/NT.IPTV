@@ -14,7 +14,7 @@ If you have a valid account, you will be navigated to the main (categoeis) scree
 ![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/02a7b807-a88b-46bb-874d-7309c91b95b9)
 
 **To download from IPTV**
-
+Download Movie:
 Navigate to a movie
 ![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/38bf3afd-e785-4096-a7ff-041bcde2c2a6)
 
@@ -24,3 +24,7 @@ Start downloading
 
 The link of the downloaded file will be clickable once the fdownload process is completed.
 
+Downlaod Series:
+We still working to implement this feature, but we still can populate the links so the user can use another app like download manager to sdownload these links.
+
+![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/03de0166-8c50-42dd-b017-2ff1df217a43)
