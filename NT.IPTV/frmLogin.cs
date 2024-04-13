@@ -1,8 +1,10 @@
 using System.Configuration;
+using System.Diagnostics;
 using System.Reflection;
 using Microsoft.VisualBasic.ApplicationServices;
 using NT.IPTV.Models;
 using NT.IPTV.Utilities;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace NT.IPTV
 {
@@ -10,7 +12,6 @@ namespace NT.IPTV
     {
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private UserInfo _currentUser = new UserInfo();
-        private string assemblyFolder, saveDir, userFileFullPath;
         private bool logging = false;
         public frmLogin()
         {
@@ -18,7 +19,7 @@ namespace NT.IPTV
             //
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            lblVersion.Text =   fvi.FileVersion;
+            lblVersion.Text = fvi.FileVersion;
 
             clsCoreOperation.loadUsersFromDirectory(cboProfile);
             if (cboProfile.Items.Count > 0)
@@ -153,6 +154,15 @@ namespace NT.IPTV
             _currentUser.Port = txtPort.Text;
             clsCoreOperation.loadUsersFromDirectory(cboProfile);
             MessageBox.Show(_currentUser.Name + "'s data saved");
+        }
+
+        private void picLogo_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = "NileTechno.com",
+                UseShellExecute = true
+            });
         }
     }
 }

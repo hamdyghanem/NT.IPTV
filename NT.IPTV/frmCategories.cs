@@ -94,6 +94,7 @@ namespace NT.IPTV
         private void FillCategoryList(List<StreamCategory> groups)
         {
             lstCategories.Items.Clear();
+            txtSearchMovies.Clear();
             lblStatus.Text = "loading...";
             prgBar.Value = 0;
             prgBar.Maximum = groups.Count;

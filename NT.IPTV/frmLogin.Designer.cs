@@ -47,11 +47,11 @@
             statusStrip = new StatusStrip();
             lblVersion = new ToolStripStatusLabel();
             lblStatus = new ToolStripStatusLabel();
-            pictureBox1 = new PictureBox();
+            picLogo = new PictureBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
             SuspendLayout();
             // 
             // btnGo
@@ -209,22 +209,23 @@
             lblStatus.Size = new Size(21, 20);
             lblStatus.Text = "....";
             // 
-            // pictureBox1
+            // picLogo
             // 
-            pictureBox1.Image = Properties.Resources.small_logo;
-            pictureBox1.Location = new Point(2, 244);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(67, 74);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 9;
-            pictureBox1.TabStop = false;
+            picLogo.Image = Properties.Resources.small_logo;
+            picLogo.Location = new Point(2, 244);
+            picLogo.Name = "picLogo";
+            picLogo.Size = new Size(67, 74);
+            picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            picLogo.TabIndex = 9;
+            picLogo.TabStop = false;
+            picLogo.Click += picLogo_Click;
             // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(743, 347);
-            Controls.Add(pictureBox1);
+            Controls.Add(picLogo);
             Controls.Add(statusStrip);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(btnSave);
@@ -241,7 +242,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -265,6 +266,6 @@
         private StatusStrip statusStrip;
         private ToolStripStatusLabel lblVersion;
         private ToolStripStatusLabel lblStatus;
-        private PictureBox pictureBox1;
+        private PictureBox picLogo;
     }
 }
