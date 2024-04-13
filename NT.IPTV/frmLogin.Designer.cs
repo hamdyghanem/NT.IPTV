@@ -43,10 +43,13 @@
             lblPort = new Label();
             txtPort = new TextBox();
             errorProvider1 = new ErrorProvider(components);
-            lblStatus = new Label();
             btnSave = new Button();
+            statusStrip = new StatusStrip();
+            lblVersion = new ToolStripStatusLabel();
+            lblStatus = new ToolStripStatusLabel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            statusStrip.SuspendLayout();
             SuspendLayout();
             // 
             // btnGo
@@ -172,15 +175,6 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // lblStatus
-            // 
-            lblStatus.AutoSize = true;
-            lblStatus.Dock = DockStyle.Bottom;
-            lblStatus.Location = new Point(0, 293);
-            lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(0, 20);
-            lblStatus.TabIndex = 2;
-            // 
             // btnSave
             // 
             btnSave.Location = new Point(218, 254);
@@ -191,12 +185,34 @@
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Click += btnSave_Click;
             // 
+            // statusStrip
+            // 
+            statusStrip.ImageScalingSize = new Size(20, 20);
+            statusStrip.Items.AddRange(new ToolStripItem[] { lblVersion, lblStatus });
+            statusStrip.Location = new Point(0, 309);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(694, 26);
+            statusStrip.TabIndex = 8;
+            statusStrip.Text = "statusStrip1";
+            // 
+            // lblVersion
+            // 
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(50, 20);
+            lblVersion.Text = "0.0.0.1";
+            // 
+            // lblStatus
+            // 
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(21, 20);
+            lblStatus.Text = "....";
+            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(694, 313);
-            Controls.Add(lblStatus);
+            ClientSize = new Size(694, 335);
+            Controls.Add(statusStrip);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(btnSave);
             Controls.Add(btnGo);
@@ -210,6 +226,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -225,11 +243,13 @@
         private TextBox txtPassword;
         private TextBox txtServer;
         private ErrorProvider errorProvider1;
-        private Label lblStatus;
         private Label lblProfile;
         private ComboBox cboProfile;
         private Label lblPort;
         private TextBox txtPort;
         private Button btnSave;
+        private StatusStrip statusStrip;
+        private ToolStripStatusLabel lblVersion;
+        private ToolStripStatusLabel lblStatus;
     }
 }

@@ -156,7 +156,7 @@ namespace NT.IPTV.Utilities
             }
         }
 
-        public static async Task RetrievePlaylistData(Label lbl, CancellationToken token)//maybe pass in the action as a string and use this for all action calls
+        public static async Task RetrievePlaylistData(ToolStripStatusLabel lbl, CancellationToken token)//maybe pass in the action as a string and use this for all action calls
         {
             try
             {

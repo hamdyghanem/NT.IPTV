@@ -15,6 +15,11 @@ namespace NT.IPTV
         public frmLogin()
         {
             InitializeComponent();
+            //
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            lblVersion.Text =   fvi.FileVersion;
+
             clsCoreOperation.loadUsersFromDirectory(cboProfile);
             if (cboProfile.Items.Count > 0)
             {
