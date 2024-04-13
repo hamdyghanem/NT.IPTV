@@ -33,15 +33,13 @@ jobs:
 
     - name: Publish .NET
       run: |
-        dotnet publish /p:PublishProfile=Release-win-x86 -c Release
-        dotnet publish /p:PublishProfile=Release-win-x64 -c Release
+        dotnet publish -c Release
 
     - name: Upload Published Artifact
       uses: actions/upload-artifact@v2
       with:
         name: NT.IPTV
         path: | 
-         ${{ github.workspace }}\NT.IPTV\win-x86
-         ${{ github.workspace }}\NT.IPTV\win-x64
+         ${{ github.workspace }}\NT.IPTV\net8.0-windows
 
    
