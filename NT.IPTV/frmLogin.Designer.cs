@@ -47,14 +47,16 @@
             statusStrip = new StatusStrip();
             lblVersion = new ToolStripStatusLabel();
             lblStatus = new ToolStripStatusLabel();
+            pictureBox1 = new PictureBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // btnGo
             // 
-            btnGo.Location = new Point(341, 254);
+            btnGo.Location = new Point(380, 244);
             btnGo.Name = "btnGo";
             btnGo.Size = new Size(117, 36);
             btnGo.TabIndex = 0;
@@ -77,7 +79,7 @@
             tableLayoutPanel1.Controls.Add(cboProfile, 1, 0);
             tableLayoutPanel1.Controls.Add(lblPort, 0, 5);
             tableLayoutPanel1.Controls.Add(txtPort, 1, 5);
-            tableLayoutPanel1.Location = new Point(74, 33);
+            tableLayoutPanel1.Location = new Point(113, 23);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 6;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -177,7 +179,7 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(218, 254);
+            btnSave.Location = new Point(257, 244);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(117, 36);
             btnSave.TabIndex = 1;
@@ -189,9 +191,9 @@
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { lblVersion, lblStatus });
-            statusStrip.Location = new Point(0, 309);
+            statusStrip.Location = new Point(0, 321);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(694, 26);
+            statusStrip.Size = new Size(743, 26);
             statusStrip.TabIndex = 8;
             statusStrip.Text = "statusStrip1";
             // 
@@ -207,11 +209,22 @@
             lblStatus.Size = new Size(21, 20);
             lblStatus.Text = "....";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.small_logo;
+            pictureBox1.Location = new Point(2, 244);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(67, 74);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 9;
+            pictureBox1.TabStop = false;
+            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(694, 335);
+            ClientSize = new Size(743, 347);
+            Controls.Add(pictureBox1);
             Controls.Add(statusStrip);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(btnSave);
@@ -228,6 +241,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -251,5 +265,6 @@
         private StatusStrip statusStrip;
         private ToolStripStatusLabel lblVersion;
         private ToolStripStatusLabel lblStatus;
+        private PictureBox pictureBox1;
     }
 }

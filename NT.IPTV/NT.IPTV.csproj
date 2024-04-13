@@ -37,6 +37,7 @@
     <Compile Update="frmPlayMovie.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="frmStream.cs" />
     <Compile Update="frmCategories.cs">
       <SubType>Form</SubType>
     </Compile>
