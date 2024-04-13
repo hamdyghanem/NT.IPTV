@@ -5,3 +5,5 @@
 /.vs
 /NT.IPTV/bin/Debug/net8.0-windows
 /NT.IPTV/obj
+/NT.IPTV/bin/Release/net8.0-windows
+/NT.IPTV/Properties/PublishProfiles
