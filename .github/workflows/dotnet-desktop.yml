@@ -6,7 +6,7 @@ name: NT.IPTV.NET
 
 on:
   push:
-    branches: [ "Hamdy/Resolve" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
