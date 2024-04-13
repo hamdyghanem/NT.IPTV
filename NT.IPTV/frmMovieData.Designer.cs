@@ -210,9 +210,9 @@
             picMovie.BackdropPath = null;
             picMovie.Cursor = Cursors.Hand;
             picMovie.DelayedTextChangedTimeout = 2000;
-            picMovie.Location = new Point(610, 383);
+            picMovie.Location = new Point(504, 383);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(330, 121);
+            picMovie.Size = new Size(582, 121);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 9;
             picMovie.TabStop = false;

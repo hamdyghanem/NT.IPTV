@@ -301,7 +301,7 @@ namespace NT.IPTV.Utilities
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
-        public static async Task<Movie> GetMovieInfo(string vodID, CancellationToken token)
+        public static async Task<WatchMovie> GetMovieInfo(string vodID, CancellationToken token)
         {
             try
             {
@@ -309,7 +309,7 @@ namespace NT.IPTV.Utilities
                 var response = await _httpClient.GetAsync(url, token);
                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                 var responseFromServer = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Movie>(responseFromServer);
+                return JsonConvert.DeserializeObject<WatchMovie>(responseFromServer);
             }
             catch (Exception ex)
             {
@@ -317,7 +317,7 @@ namespace NT.IPTV.Utilities
                 return null;
             }
         }
-        public static async Task<Series> GetSeriesInfo(string seriesID, CancellationToken token)
+        public static async Task<WatchSeries> GetSeriesInfo(string seriesID, CancellationToken token)
         {
             try
             {
@@ -325,7 +325,7 @@ namespace NT.IPTV.Utilities
                 var response = await _httpClient.GetAsync(url, token);
                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                 var responseFromServer = await response.Content.ReadAsStringAsync();
-                var series = JsonConvert.DeserializeObject<Series>(responseFromServer);
+                var series = JsonConvert.DeserializeObject<WatchSeries>(responseFromServer);
                 //get season
                 for (int i = 1; i <= 12; i++)
                 {

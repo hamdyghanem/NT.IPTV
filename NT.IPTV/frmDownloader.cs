@@ -1,8 +1,12 @@
+using Microsoft.VisualBasic.Devices;
+using NT.IPTV.Models.StreamObject;
 using NT.IPTV.Utilities;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Security.Policy;
+using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -10,67 +14,125 @@ namespace NT.IPTV
 {
     public partial class frmDownloader : Form
     {
-        string url;
-        string filePath;
-        Thread threadStart;
-        WebClient client = new WebClient();
+        private Thread threadStart;
+        private WebClient client = new WebClient();
+        private string saveDir = Path.Combine(clsCoreOperation.assemblyFolder, clsCoreOperation.DownloadeFolder);
+        private IWatch downoadFile;
+        private string TitleName;
+        List<string> links = new List<string>();
         public frmDownloader()
         {
             InitializeComponent();
         }
-
-        public frmDownloader(string _url, string _name, string _extenstion, string _plot, string _pic)
+        public frmDownloader(IWatch _downoadFile)
         {
             InitializeComponent();
             //
             //
             client = new WebClient();
-            string saveDir = Path.Combine(clsCoreOperation.assemblyFolder, clsCoreOperation.DownloadeFolder);
             if (!Directory.Exists(saveDir))
                 Directory.CreateDirectory(saveDir);
 
-            //
-            this.url = _url;
-            this.Text = $"Download: {_name}";
-            _name = _name.Replace(":", " ").Replace("\\", " ").Replace("/", " ");
-            filePath = getFileName(_name, _extenstion, 0);
-            lblFileName.Text = filePath;
-            //
+            downoadFile = _downoadFile;
+            lblInfo.Text = downoadFile.Plot;
+            picMovie.ImageLocation = downoadFile.IconUrl;
+            var TitleName = cleanName(downoadFile.Name);
+            if (downoadFile.Category == enumCategories.Movies)
+            {
+                var movie = (WatchMovie)downoadFile;
+                lblFileName.Text = getFileName(movie.Name, movie.ContainerExtension, 0);
+                lblFileName.Tag = movie.StreamUrl;
+                this.Text = $"Download: {TitleName}";
+                links.Add(movie.StreamUrl);
+            }
+            else if (downoadFile.Category == enumCategories.Series)
+            {
+                var series = (WatchSeries)downoadFile;
+                var seriesSaveDir = Path.Combine(saveDir, TitleName);
+                if (!Directory.Exists(seriesSaveDir))
+                    Directory.CreateDirectory(seriesSaveDir);
 
-            lblInfo.Text = _plot;
-            picMovie.ImageLocation = _pic;
-
+                foreach (var seasson in series.seasonsData)
+                {
+                    foreach (var episode in seasson.Episodes)
+                    {
+                        links.Add(episode.StreamUrl);
+                    }
+                }
+            }
         }
-        private string getFileName(string _name, string _extenstion, int i)
+        private async void frmDownloader_Load(object sender, EventArgs e)
         {
-            var file = Path.Combine(clsCoreOperation.assemblyFolder, clsCoreOperation.DownloadeFolder, _name + "." + _extenstion);
-            if (i > 0)
+            if (downoadFile.Category == enumCategories.Movies)
             {
-                file = Path.Combine(clsCoreOperation.assemblyFolder, clsCoreOperation.DownloadeFolder, _name + "_" + i.ToString() + "." + _extenstion);
+                //var movie = (WatchMovie)downoadFile;
+                startDownload();
             }
-            if (File.Exists(file))
+            else if (downoadFile.Category == enumCategories.Series)
             {
-                return getFileName(_name, _extenstion, i + 1);
+                var series = (WatchSeries)downoadFile;
+                int i = 0;
+                foreach (var seasson in series.seasonsData)
+                {
+                    i++;
+                    var seasonPath = Path.Combine(saveDir, TitleName, $"seasons {i}");
+                    if (!Directory.Exists(seasonPath))
+                        Directory.CreateDirectory(seasonPath);
+                    //create folder
+                    foreach (var episode in seasson.Episodes)
+                    {
+                        //set name and file
+                        var filePath = Path.Combine(saveDir, TitleName, $"seasons {i}", episode.Name + "." + episode.ContainerExtension);
+                        lblFileName.Text = filePath;
+                        if (!File.Exists(filePath))
+                        {
+                            lblFileName.Tag = episode.StreamUrl;
+                            //
+                            await download();
+                        }
+                    }
+                }
             }
-            else
-            {
-                return file;
-            }
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-
         }
         private void startDownload()
         {
-            threadStart = new Thread(() =>
-          {
-              client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-              client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-              client.DownloadFileAsync(new Uri(url), filePath);
-          });
-            threadStart.Start();
+            var filePath = lblFileName.Text;
+            var url = lblFileName.Tag.ToString();
+            //threadStart = new Thread(() =>
+            //  {
+            //      client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+            //      client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+            //      client.DownloadFileAsync(new Uri(url), filePath);
+            //  });
+            //threadStart.Start();
+            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+            client.DownloadFileAsync(new Uri(url), filePath);
         }
+        private async Task download()
+        {
+            try
+            {
+                var destinationFilePath = lblFileName.Text;
+                var downloadFileUrl = lblFileName.Tag.ToString();
+
+                using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                {
+                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    {
+                        Console.WriteLine($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                    };
+
+                    await client.StartDownload();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+            }
+        }
+
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             try
@@ -82,7 +144,7 @@ namespace NT.IPTV
                 double percentage = bytesIn / totalBytes * 100;
                 lblSize.Text = "Downloaded " + e.BytesReceived + " of " + e.TotalBytesToReceive;
                 lblPercentage.Text = $"{string.Format("{0:0.00}", percentage)} %";
-                progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
+                prgBar.Value = int.Parse(Math.Truncate(percentage).ToString());
             });
             }
             catch { }
@@ -107,9 +169,25 @@ namespace NT.IPTV
         });
         }
 
-        private void frmDownloader_Load(object sender, EventArgs e)
+        public string cleanName(string name)
         {
-            startDownload();
+            return name.Replace(":", " ").Replace("\\", " ").Replace("/", " ");
+        }
+        private string getFileName(string _name, string _extenstion, int i)
+        {
+            var file = Path.Combine(saveDir, _name + "." + _extenstion);
+            if (i > 0)
+            {
+                file = Path.Combine(saveDir, _name + "_" + i.ToString() + "." + _extenstion);
+            }
+            if (File.Exists(file))
+            {
+                return getFileName(_name, _extenstion, i + 1);
+            }
+            else
+            {
+                return file;
+            }
         }
         public virtual void CleanUp()
         {
@@ -130,13 +208,21 @@ namespace NT.IPTV
 
         private void lblFileName_Click(object sender, EventArgs e)
         {
-            string directoryPath = Path.GetDirectoryName(filePath);
+            string directoryPath = Path.GetDirectoryName(lblFileName.Text);
             try
             {
                 Process.Start("explorer.exe", directoryPath);
 
             }
             catch { }
+        }
+
+        private void lblLinks_Click(object sender, EventArgs e)
+        {
+            using (frmGetDownloadLinks frm = new frmGetDownloadLinks(String.Join("\r\n", links.ToArray())))
+            {
+                frm.ShowDialog();
+            }
         }
     }
 }

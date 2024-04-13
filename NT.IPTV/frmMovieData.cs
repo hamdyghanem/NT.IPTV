@@ -11,7 +11,7 @@ namespace NT.IPTV
     {
         private CancellationTokenSource _cts = new CancellationTokenSource();
         ChannelControl cltrParent;
-        IMovie Selected;
+        IWatch Selected;
         public frmMovieData(ChannelControl cltr)
         {
             InitializeComponent();
@@ -44,17 +44,17 @@ namespace NT.IPTV
         private async Task getMovieInfo()
         {
             Selected = await clsCoreOperation.GetMovieInfo(cltrParent.Channel.StreamID, _cts.Token);
-            fillLabels();
+            await fillLabels();
             picCover.Click += picMovie_Click;
-            var movie = (Movie)Selected;
+            var movie = (WatchMovie)Selected;
         }
 
         private async Task getSeriesInfo()
         {
             Selected = await clsCoreOperation.GetSeriesInfo(cltrParent.Channel.StreamID, _cts.Token);
-            fillLabels();
+            await fillLabels();
 
-            var series = (Series)Selected;
+            var series = (WatchSeries)Selected;
             for (int i = 0; i < series.seasonsData.Count; i++)
             {
                 var tab = new TabPage($"Season {i + 1}");
@@ -67,7 +67,7 @@ namespace NT.IPTV
                 tabSeries.TabPages.Add(tab);
             }
         }
-        private void fillLabels()
+        private async Task fillLabels()
         {
             lblInfo.Text = Selected.Plot;
             lblCast.Text = Selected.Cast;
@@ -82,8 +82,18 @@ namespace NT.IPTV
             }
             else
             {
-                picMovie.BackdropPath = Selected.BackdropPath;
+                //ckeck first image
+                if (!await clsCore.Check404(Selected.BackdropPath[0]))
+                {
+                    picMovie.BackdropPath = new string[] { Selected.IconUrl };
+                }
+                else
+                {
+                    picMovie.BackdropPath = Selected.BackdropPath;
+                }
             }
+
+
             if (!string.IsNullOrEmpty(Selected.IconUrl))
             {
                 picCover.ImageLocation = Selected.IconUrl;
@@ -164,40 +174,22 @@ namespace NT.IPTV
 
         private void picMovie_Click(object sender, EventArgs e)
         {
-            this.Close();
-            frmPlayMovie frm = new frmPlayMovie(Selected.StreamUrl);
-            frm.ShowDialog();
-            frm.Dispose();
+            if (!string.IsNullOrEmpty(Selected.StreamUrl))
+            {
+                this.Close();
+                frmPlayMovie frm = new frmPlayMovie(Selected.StreamUrl);
+                frm.ShowDialog();
+                frm.Dispose();
+            }
         }
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            if (cltrParent.Channel.Category == enumCategories.Movies)
+            using (frmDownloader frm = new frmDownloader(Selected))
             {
-                using (frmDownloader frm = new frmDownloader(Selected.StreamUrl, Selected.Name, Selected.ContainerExtension, Selected.Plot, Selected.IconUrl))
-                {
-                    frm.ShowDialog();
-                }
-            }
-            else if (cltrParent.Channel.Category == enumCategories.Series)
-            {
-                MessageBox.Show("Sorry we still working on this feature, but you still can have this links and download them");
-                Series series = (Series)Selected;
-                StringBuilder links = new StringBuilder();     
-                foreach (var seasson in series.seasonsData)
-                {
-                    foreach (var episode in seasson.Episodes)
-                    {
-                        links.AppendLine(episode.StreamUrl);
-                    }
-                }
-                using (frmGetDownloadLinks frm = new frmGetDownloadLinks(links.ToString()))
-                {
-                    frm.ShowDialog();
-                }
+                frm.ShowDialog();
             }
         }
-
         private void btnDownloadViaWeb_Click(object sender, EventArgs e)
         {
             try

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace NT.IPTV.Models.StreamObject
 {
 
-    public interface IMovie
+    public interface IWatch
     {
         enumCategories Category { get; }
         string Name { get; }

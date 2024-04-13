@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace NT.IPTV.Models.StreamObject
 {
 
-    public class Series : IMovie
+    public class WatchSeries : IWatch
     {
 
         [JsonProperty("seasons")]
