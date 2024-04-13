@@ -208,8 +208,8 @@ namespace NT.IPTV
                 var ctrl = (ChannelControl)sender;
                 if (ctrl.Channel.Category == enumCategories.Live)
                 {
-                    frmStream frm = new frmStream(ctrl.Channel.StreamUrl);
-                    frm.ShowDialog();
+                    //frmStream frm = new frmStream(ctrl.Channel.StreamUrl);
+                    //frm.ShowDialog();
                 }
                 else
                 {

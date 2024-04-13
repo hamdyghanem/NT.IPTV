@@ -7,13 +7,11 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Channels;
 using System.Windows.Forms;
-using AxWMPLib;
 using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.VisualBasic.Devices;
 using NT.IPTV.Models;
 using NT.IPTV.Models.StreamObject;
 using NT.IPTV.Utilities;
-using WMPLib;
 
 namespace NT.IPTV
 {
