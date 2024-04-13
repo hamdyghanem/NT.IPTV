@@ -93,10 +93,9 @@ namespace NT.IPTV.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap default_image_icon_vector_missing_picture_page_website_design_mobile_app_no_photo_available_87543_11093_1_ {
+        internal static System.Drawing.Bitmap noimage {
             get {
-                object obj = ResourceManager.GetObject("default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo" +
-                        "-available_87543-11093[1]", resourceCulture);
+                object obj = ResourceManager.GetObject("noimage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

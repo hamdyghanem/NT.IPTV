@@ -10,6 +10,8 @@ using NT.IPTV.Models;
 using NT.IPTV.Utilities;
 using NT.IPTV.Models.Channel;
 using System.Collections.Generic;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using System.Diagnostics;
 
 namespace NT.IPTV
 {
@@ -208,8 +210,55 @@ namespace NT.IPTV
                 var ctrl = (ChannelControl)sender;
                 if (ctrl.Channel.Category == enumCategories.Live)
                 {
-                    frmStream frm = new frmStream(ctrl.Channel.StreamUrl);
-                    frm.ShowDialog();
+                    //frmStream frm = new frmStream(ctrl.Channel.StreamUrl);
+                    //frm.ShowDialog();
+                    try
+                    {
+                        string vlcLocatedPath = ConfigManager.GetVLCPath(); // Use the dedicated method to get or find the VLC path
+
+                        if (string.IsNullOrEmpty(vlcLocatedPath) || !File.Exists(vlcLocatedPath))
+                        {
+                            OpenFileDialog openFileDialog = new OpenFileDialog
+                            {
+                                InitialDirectory = "c:\\",
+                                Filter = "VLC Executable File (*.exe)|*.exe",
+                                RestoreDirectory = true
+                            };
+
+                            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                vlcLocatedPath = openFileDialog.FileName;
+                                // Optionally, update the configuration with the newly selected path
+                                ConfigManager.UpdateSetting("vlcLocationPath", vlcLocatedPath);
+                            }
+                            else
+                            {
+                                MessageBox.Show("VLC path selection was canceled.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(ctrl.Channel.StreamUrl))
+                        {
+                            ProcessStartInfo startInfo = new ProcessStartInfo
+                            {
+                                FileName = "cmd.exe",
+                                Arguments = $"/C \"{vlcLocatedPath}\" {ctrl.Channel.StreamUrl}",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            };
+
+                            Process.Start(startInfo);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Stream URL not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to open VLC: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
