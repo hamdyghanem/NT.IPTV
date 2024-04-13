@@ -36,16 +36,12 @@ jobs:
         dotnet publish /p:PublishProfile=Release-win-x86 -c Release
         dotnet publish /p:PublishProfile=Release-win-x64 -c Release
 
-    - name: Create Artifact Folder
-      run: New-Item -Path '${{ github.workspace }}' -Name "Artifacts" -ItemType "directory"
-      shell: powershell
-
     - name: Upload Published Artifact
       uses: actions/upload-artifact@v2
       with:
         name: NT.IPTV
         path: | 
          ${{ github.workspace }}\NT.IPTV\win-x86
-         ${{ github.workspace }}\NileTechno.ERP\win-x64
+         ${{ github.workspace }}\NT.IPTV\win-x64
 
    
