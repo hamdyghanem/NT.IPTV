@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMovieData));
-            pllHeader = new Panel();
-            btnWatchTrailer = new Button();
-            btnDownloadViaWeb = new Button();
-            btnDownload = new Button();
-            btnOpenVLC = new Button();
             lblInfo = new Label();
             tabSeries = new TabControl();
             tabPage1 = new TabPage();
@@ -43,64 +38,16 @@
             lblData = new Label();
             picCover = new PictureBox();
             picMovie = new PicBackdropPath();
-            pllHeader.SuspendLayout();
+            MyToolTip = new ToolStrip();
+            btnOpenInVLC = new ToolStripButton();
+            btnWatchTrailer = new ToolStripButton();
+            btnDownload = new ToolStripButton();
             tabSeries.SuspendLayout();
             pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picCover).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picMovie).BeginInit();
+            MyToolTip.SuspendLayout();
             SuspendLayout();
-            // 
-            // pllHeader
-            // 
-            pllHeader.Controls.Add(btnWatchTrailer);
-            pllHeader.Controls.Add(btnDownloadViaWeb);
-            pllHeader.Controls.Add(btnDownload);
-            pllHeader.Controls.Add(btnOpenVLC);
-            pllHeader.Dock = DockStyle.Top;
-            pllHeader.Location = new Point(0, 0);
-            pllHeader.Name = "pllHeader";
-            pllHeader.Size = new Size(1111, 56);
-            pllHeader.TabIndex = 1;
-            // 
-            // btnWatchTrailer
-            // 
-            btnWatchTrailer.Location = new Point(504, 12);
-            btnWatchTrailer.Name = "btnWatchTrailer";
-            btnWatchTrailer.Size = new Size(153, 29);
-            btnWatchTrailer.TabIndex = 0;
-            btnWatchTrailer.Text = "Watch Trailer";
-            btnWatchTrailer.UseVisualStyleBackColor = true;
-            btnWatchTrailer.Click += btnWatchTrailer_Click;
-            // 
-            // btnDownloadViaWeb
-            // 
-            btnDownloadViaWeb.Location = new Point(345, 12);
-            btnDownloadViaWeb.Name = "btnDownloadViaWeb";
-            btnDownloadViaWeb.Size = new Size(153, 29);
-            btnDownloadViaWeb.TabIndex = 0;
-            btnDownloadViaWeb.Text = "Download Via Web";
-            btnDownloadViaWeb.UseVisualStyleBackColor = true;
-            btnDownloadViaWeb.Click += btnDownloadViaWeb_Click;
-            // 
-            // btnDownload
-            // 
-            btnDownload.Location = new Point(186, 12);
-            btnDownload.Name = "btnDownload";
-            btnDownload.Size = new Size(153, 29);
-            btnDownload.TabIndex = 0;
-            btnDownload.Text = "Download";
-            btnDownload.UseVisualStyleBackColor = true;
-            btnDownload.Click += btnDownload_Click;
-            // 
-            // btnOpenVLC
-            // 
-            btnOpenVLC.Location = new Point(27, 12);
-            btnOpenVLC.Name = "btnOpenVLC";
-            btnOpenVLC.Size = new Size(153, 29);
-            btnOpenVLC.TabIndex = 0;
-            btnOpenVLC.Text = "Open in VLC";
-            btnOpenVLC.UseVisualStyleBackColor = true;
-            btnOpenVLC.Click += btnOpenVLC_Click;
             // 
             // lblInfo
             // 
@@ -156,7 +103,7 @@
             pnlHeader.Controls.Add(lblData);
             pnlHeader.Controls.Add(picCover);
             pnlHeader.Dock = DockStyle.Top;
-            pnlHeader.Location = new Point(0, 56);
+            pnlHeader.Location = new Point(0, 82);
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Padding = new Padding(0, 0, 0, 5);
             pnlHeader.Size = new Size(1111, 321);
@@ -218,6 +165,57 @@
             picMovie.TabStop = false;
             picMovie.Click += picMovie_Click;
             // 
+            // MyToolTip
+            // 
+            MyToolTip.ImageScalingSize = new Size(55, 55);
+            MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownload });
+            MyToolTip.Location = new Point(0, 0);
+            MyToolTip.Name = "MyToolTip";
+            MyToolTip.Size = new Size(1111, 82);
+            MyToolTip.TabIndex = 10;
+            MyToolTip.Text = "toolStrip1";
+            // 
+            // btnOpenInVLC
+            // 
+            btnOpenInVLC.Checked = true;
+            btnOpenInVLC.CheckOnClick = true;
+            btnOpenInVLC.CheckState = CheckState.Checked;
+            btnOpenInVLC.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnOpenInVLC.Image = (Image)resources.GetObject("btnOpenInVLC.Image");
+            btnOpenInVLC.ImageTransparentColor = Color.Magenta;
+            btnOpenInVLC.Name = "btnOpenInVLC";
+            btnOpenInVLC.Padding = new Padding(10);
+            btnOpenInVLC.Size = new Size(79, 79);
+            btnOpenInVLC.Text = "Open in VLC";
+            btnOpenInVLC.ToolTipText = "Open in VLC";
+            btnOpenInVLC.Click += btnOpenVLC_Click;
+            // 
+            // btnWatchTrailer
+            // 
+            btnWatchTrailer.CheckOnClick = true;
+            btnWatchTrailer.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnWatchTrailer.Image = (Image)resources.GetObject("btnWatchTrailer.Image");
+            btnWatchTrailer.ImageTransparentColor = Color.Magenta;
+            btnWatchTrailer.Name = "btnWatchTrailer";
+            btnWatchTrailer.Padding = new Padding(10);
+            btnWatchTrailer.Size = new Size(79, 79);
+            btnWatchTrailer.Text = "Watch Trailer";
+            btnWatchTrailer.ToolTipText = "Watch Trailer";
+            btnWatchTrailer.Click += btnWatchTrailer_Click;
+            // 
+            // btnDownload
+            // 
+            btnDownload.CheckOnClick = true;
+            btnDownload.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDownload.Image = (Image)resources.GetObject("btnDownload.Image");
+            btnDownload.ImageTransparentColor = Color.Magenta;
+            btnDownload.Name = "btnDownload";
+            btnDownload.Padding = new Padding(10);
+            btnDownload.Size = new Size(79, 79);
+            btnDownload.Text = "Download";
+            btnDownload.ToolTipText = "Download";
+            btnDownload.Click += btnDownload_Click;
+            // 
             // frmMovieData
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -226,26 +224,27 @@
             Controls.Add(picMovie);
             Controls.Add(tabSeries);
             Controls.Add(pnlHeader);
-            Controls.Add(pllHeader);
+            Controls.Add(MyToolTip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmMovieData";
             Text = "Data";
             WindowState = FormWindowState.Maximized;
             FormClosing += frmMovieData_FormClosing;
             Load += frmMovieData_Load;
-            pllHeader.ResumeLayout(false);
             tabSeries.ResumeLayout(false);
             pnlHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picCover).EndInit();
             ((System.ComponentModel.ISupportInitialize)picMovie).EndInit();
+            MyToolTip.ResumeLayout(false);
+            MyToolTip.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
         private Panel pllHeader;
         private Button btnOpenVLC;
         private Label lblInfo;
-        private Button btnDownload;
         private TabControl tabSeries;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -254,7 +253,9 @@
         private Label lblCast;
         private Label lblData;
         private PicBackdropPath picMovie;
-        private Button btnWatchTrailer;
-        private Button btnDownloadViaWeb;
+        private ToolStrip MyToolTip;
+        private ToolStripButton btnOpenInVLC;
+        private ToolStripButton btnDownload;
+        private ToolStripButton btnWatchTrailer;
     }
 }

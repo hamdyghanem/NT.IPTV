@@ -237,6 +237,7 @@ namespace NT.IPTV
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmCategories";
             Text = "Categories";
+            WindowState = FormWindowState.Maximized;
             FormClosing += frmCategories_FormClosing;
             Load += frmCategories_Load;
             pllHeader.ResumeLayout(false);

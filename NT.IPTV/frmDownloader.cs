@@ -20,6 +20,7 @@ namespace NT.IPTV
         private IWatch downoadFile;
         private string TitleName;
         List<string> links = new List<string>();
+        private bool bClosing;
         public frmDownloader()
         {
             InitializeComponent();
@@ -36,17 +37,19 @@ namespace NT.IPTV
             downoadFile = _downoadFile;
             lblInfo.Text = downoadFile.Plot;
             picMovie.ImageLocation = downoadFile.IconUrl;
-            var TitleName = cleanName(downoadFile.Name);
+            TitleName = cleanName(downoadFile.Name);
             if (downoadFile.Category == enumCategories.Movies)
             {
                 var movie = (WatchMovie)downoadFile;
                 lblFileName.Text = getFileName(movie.Name, movie.ContainerExtension, 0);
+                MyToolTip.Show(lblFileName.Text, lblFileName);
                 lblFileName.Tag = movie.StreamUrl;
                 this.Text = $"Download: {TitleName}";
                 links.Add(movie.StreamUrl);
             }
             else if (downoadFile.Category == enumCategories.Series)
             {
+
                 var series = (WatchSeries)downoadFile;
                 var seriesSaveDir = Path.Combine(saveDir, TitleName);
                 if (!Directory.Exists(seriesSaveDir))
@@ -59,6 +62,9 @@ namespace NT.IPTV
                         links.Add(episode.StreamUrl);
                     }
                 }
+                lblOverallProgress.Visible = true;
+                prgBarSeries.Visible = true;
+                prgBarSeries.Maximum = links.Count;
             }
         }
         private async void frmDownloader_Load(object sender, EventArgs e)
@@ -66,7 +72,8 @@ namespace NT.IPTV
             if (downoadFile.Category == enumCategories.Movies)
             {
                 //var movie = (WatchMovie)downoadFile;
-                startDownload();
+                //startDownload();
+                await download();
             }
             else if (downoadFile.Category == enumCategories.Series)
             {
@@ -81,9 +88,15 @@ namespace NT.IPTV
                     //create folder
                     foreach (var episode in seasson.Episodes)
                     {
+                        if (bClosing)
+                        {
+                            return;
+                        }
                         //set name and file
                         var filePath = Path.Combine(saveDir, TitleName, $"seasons {i}", episode.Name + "." + episode.ContainerExtension);
                         lblFileName.Text = filePath;
+                        MyToolTip.Show(lblFileName.Text, lblFileName);
+                        prgBarSeries.Value++;
                         if (!File.Exists(filePath))
                         {
                             lblFileName.Tag = episode.StreamUrl;
@@ -94,21 +107,21 @@ namespace NT.IPTV
                 }
             }
         }
-        private void startDownload()
-        {
-            var filePath = lblFileName.Text;
-            var url = lblFileName.Tag.ToString();
-            //threadStart = new Thread(() =>
-            //  {
-            //      client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-            //      client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-            //      client.DownloadFileAsync(new Uri(url), filePath);
-            //  });
-            //threadStart.Start();
-            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-            client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-            client.DownloadFileAsync(new Uri(url), filePath);
-        }
+        //private void startDownload()
+        //{
+        //    var filePath = lblFileName.Text;
+        //    var url = lblFileName.Tag.ToString();
+        //    //threadStart = new Thread(() =>
+        //    //  {
+        //    //      client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+        //    //      client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+        //    //      client.DownloadFileAsync(new Uri(url), filePath);
+        //    //  });
+        //    //threadStart.Start();
+        //    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+        //    client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+        //    client.DownloadFileAsync(new Uri(url), filePath);
+        //}
         private async Task download()
         {
             try
@@ -120,16 +133,23 @@ namespace NT.IPTV
                 {
                     client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                     {
-                        Console.WriteLine($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                        if (bClosing)
+                        {
+                            //cancel will delete the file
+                            client.Cancel();
+                            return;
+                        }
+                        lblPercentage.Text = $"{progressPercentage} % {ConvertBytesToString(totalBytesDownloaded)} of {ConvertBytesToString(totalFileSize ?? 0)}";
+                        prgBar.Value = int.Parse(Math.Truncate(progressPercentage ?? 0).ToString());
                     };
 
                     await client.StartDownload();
                 }
+                lblPercentage.Text = "Completed";
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
@@ -142,7 +162,6 @@ namespace NT.IPTV
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                lblSize.Text = "Downloaded " + e.BytesReceived + " of " + e.TotalBytesToReceive;
                 lblPercentage.Text = $"{string.Format("{0:0.00}", percentage)} %";
                 prgBar.Value = int.Parse(Math.Truncate(percentage).ToString());
             });
@@ -165,7 +184,6 @@ namespace NT.IPTV
             this.BeginInvoke((MethodInvoker)delegate
         {
             lblPercentage.Text = "100%";
-            lblSize.Text = "Completed";
         });
         }
 
@@ -191,6 +209,7 @@ namespace NT.IPTV
         }
         public virtual void CleanUp()
         {
+            bClosing = true;
             if (client != null)
             {
                 client.CancelAsync();
@@ -222,6 +241,21 @@ namespace NT.IPTV
             using (frmGetDownloadLinks frm = new frmGetDownloadLinks(String.Join("\r\n", links.ToArray())))
             {
                 frm.ShowDialog();
+            }
+        }
+        static double ConvertBytesToMegabytes(long bytes)
+        {
+            return (bytes / 1024f) / 1024f;
+        }
+        static string ConvertBytesToString(long bytes)
+        {
+            if ((bytes / 1024f) / 1024f > 1024)
+            {
+                return ((bytes / 1024f) / 1024f / 1024f).ToString("0.00") + "TB";
+            }
+            else
+            {
+                return ((bytes / 1024f) / 1024f).ToString("0.00") + "MB";
             }
         }
     }

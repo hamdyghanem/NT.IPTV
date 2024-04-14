@@ -7,6 +7,7 @@ namespace NT.IPTV.Utilities
     {
         private readonly string _downloadUrl;
         private readonly string _destinationFilePath;
+        private bool _Cancel;
 
         private HttpClient _httpClient;
 
@@ -27,7 +28,13 @@ namespace NT.IPTV.Utilities
             using (var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead))
                 await DownloadFileFromHttpResponseMessage(response);
         }
+        public void Cancel()
+        {
+            _Cancel = true;
+            _httpClient.Dispose();
+            //
 
+        }
         private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
@@ -49,6 +56,13 @@ namespace NT.IPTV.Utilities
             {
                 do
                 {
+                    if (_Cancel)
+                    {
+                        //release the file
+                        fileStream.Close();
+                        File.Delete(_destinationFilePath);
+                        return;
+                    }
                     var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
                     if (bytesRead == 0)
                     {

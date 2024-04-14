@@ -190,36 +190,7 @@ namespace NT.IPTV
                 frm.ShowDialog();
             }
         }
-        private void btnDownloadViaWeb_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (cltrParent.Channel.Category == enumCategories.Movies)
-                {
-                    System.Diagnostics.Process.Start(new ProcessStartInfo
-                    {
-                        FileName = Selected.StreamUrl,
-                        UseShellExecute = true
-                    });
-
-
-                }
-                else if (cltrParent.Channel.Category == enumCategories.Series)
-                {
-
-                }
-            }
-            catch (System.ComponentModel.Win32Exception noBrowser)
-            {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            }
-            catch (System.Exception other)
-            {
-                MessageBox.Show(other.Message);
-            }
-
-        }
+        
 
         private void btnWatchTrailer_Click(object sender, EventArgs e)
         {

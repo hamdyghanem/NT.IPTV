@@ -28,117 +28,109 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDownloader));
             lblInfo = new Label();
             picMovie = new PictureBox();
-            panel1 = new Panel();
-            statusStrip = new StatusStrip();
+            MyToolTip = new ToolTip(components);
+            lblFileName = new Label();
+            statusStrip1 = new StatusStrip();
             lblPercentage = new ToolStripStatusLabel();
-            lblSize = new ToolStripStatusLabel();
             prgBar = new ToolStripProgressBar();
-            lblFileName = new ToolStripStatusLabel();
-            toolStrip1 = new ToolStrip();
             lblLinks = new ToolStripStatusLabel();
+            lblOverallProgress = new ToolStripStatusLabel();
+            prgBarSeries = new ToolStripProgressBar();
             ((System.ComponentModel.ISupportInitialize)picMovie).BeginInit();
-            panel1.SuspendLayout();
-            statusStrip.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // lblInfo
             // 
-            lblInfo.BackColor = Color.Black;
+            lblInfo.BackColor = Color.FromArgb(64, 64, 64);
             lblInfo.Dock = DockStyle.Right;
-            lblInfo.Font = new Font("Segoe UI", 10F);
-            lblInfo.ForeColor = Color.White;
-            lblInfo.Location = new Point(523, 0);
+            lblInfo.Font = new Font("Segoe UI", 9F);
+            lblInfo.ForeColor = Color.Black;
+            lblInfo.Location = new Point(655, 0);
             lblInfo.Margin = new Padding(0);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(385, 324);
+            lblInfo.Size = new Size(422, 272);
             lblInfo.TabIndex = 5;
             lblInfo.Text = "label1";
             lblInfo.TextAlign = ContentAlignment.TopRight;
             // 
             // picMovie
             // 
-            picMovie.BackColor = Color.Black;
+            picMovie.BackColor = Color.FromArgb(64, 64, 64);
             picMovie.Cursor = Cursors.Hand;
             picMovie.Dock = DockStyle.Fill;
             picMovie.Location = new Point(0, 0);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(523, 324);
+            picMovie.Size = new Size(655, 272);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 7;
             picMovie.TabStop = false;
             // 
-            // panel1
+            // lblFileName
             // 
-            panel1.BackColor = Color.White;
-            panel1.Controls.Add(statusStrip);
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 324);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(908, 137);
-            panel1.TabIndex = 8;
+            lblFileName.AutoSize = true;
+            lblFileName.Dock = DockStyle.Bottom;
+            lblFileName.Location = new Point(0, 272);
+            lblFileName.Name = "lblFileName";
+            lblFileName.Size = new Size(72, 20);
+            lblFileName.TabIndex = 10;
+            lblFileName.Text = "FileName";
+            lblFileName.Click += lblFileName_Click;
             // 
-            // statusStrip
+            // statusStrip1
             // 
-            statusStrip.ImageScalingSize = new Size(20, 20);
-            statusStrip.Items.AddRange(new ToolStripItem[] { lblPercentage, lblSize, prgBar, lblFileName, lblLinks });
-            statusStrip.Location = new Point(0, 111);
-            statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(908, 26);
-            statusStrip.TabIndex = 8;
-            statusStrip.Text = "statusStrip1";
+            statusStrip1.ImageScalingSize = new Size(20, 20);
+            statusStrip1.Items.AddRange(new ToolStripItem[] { lblPercentage, prgBar, lblLinks, lblOverallProgress, prgBarSeries });
+            statusStrip1.Location = new Point(0, 292);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(1077, 26);
+            statusStrip1.TabIndex = 11;
+            statusStrip1.Text = "statusStrip1";
             // 
             // lblPercentage
             // 
+            lblPercentage.AutoSize = false;
             lblPercentage.Name = "lblPercentage";
-            lblPercentage.Size = new Size(82, 20);
+            lblPercentage.Size = new Size(200, 20);
             lblPercentage.Text = "Percentage";
-            // 
-            // lblSize
-            // 
-            lblSize.Name = "lblSize";
-            lblSize.Size = new Size(36, 20);
-            lblSize.Text = "Size";
             // 
             // prgBar
             // 
             prgBar.Name = "prgBar";
-            prgBar.Size = new Size(300, 18);
-            // 
-            // lblFileName
-            // 
-            lblFileName.Name = "lblFileName";
-            lblFileName.Size = new Size(72, 20);
-            lblFileName.Text = "FileName";
-            lblFileName.Click += lblFileName_Click;
-            // 
-            // toolStrip1
-            // 
-            toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Location = new Point(0, 0);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(523, 25);
-            toolStrip1.TabIndex = 9;
-            toolStrip1.Text = "toolStrip1";
+            prgBar.Size = new Size(200, 18);
             // 
             // lblLinks
             // 
             lblLinks.Name = "lblLinks";
-            lblLinks.Size = new Size(41, 20);
-            lblLinks.Text = "Links";
+            lblLinks.Size = new Size(79, 20);
+            lblLinks.Text = "Copy Links";
             lblLinks.Click += lblLinks_Click;
+            // 
+            // lblOverallProgress
+            // 
+            lblOverallProgress.Name = "lblOverallProgress";
+            lblOverallProgress.Size = new Size(116, 20);
+            lblOverallProgress.Text = "Overall Progress";
+            // 
+            // prgBarSeries
+            // 
+            prgBarSeries.Name = "prgBarSeries";
+            prgBarSeries.Size = new Size(200, 18);
             // 
             // frmDownloader
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(908, 461);
-            Controls.Add(toolStrip1);
+            BackColor = Color.Gray;
+            ClientSize = new Size(1077, 318);
             Controls.Add(picMovie);
             Controls.Add(lblInfo);
-            Controls.Add(panel1);
+            Controls.Add(lblFileName);
+            Controls.Add(statusStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
@@ -147,10 +139,8 @@
             FormClosing += frmDownloader_FormClosing;
             Load += frmDownloader_Load;
             ((System.ComponentModel.ISupportInitialize)picMovie).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            statusStrip.ResumeLayout(false);
-            statusStrip.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -158,13 +148,13 @@
         #endregion
         private Label lblInfo;
         private PictureBox picMovie;
-        private Panel panel1;
-        private StatusStrip statusStrip;
+        private ToolTip MyToolTip;
+        private Label lblFileName;
+        private StatusStrip statusStrip1;
         private ToolStripStatusLabel lblPercentage;
-        private ToolStripStatusLabel lblSize;
         private ToolStripProgressBar prgBar;
-        private ToolStripStatusLabel lblFileName;
-        private ToolStrip toolStrip1;
         private ToolStripStatusLabel lblLinks;
+        private ToolStripStatusLabel lblOverallProgress;
+        private ToolStripProgressBar prgBarSeries;
     }
 }
