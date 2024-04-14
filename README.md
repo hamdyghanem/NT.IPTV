@@ -25,6 +25,9 @@ Start downloading
 The link of the downloaded file will be clickable once the fdownload process is completed.
 
 Downlaod Series:
-We still working to implement this feature, but we still can populate the links so the user can use another app like download manager to sdownload these links.
+![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/a9ccf680-6f4e-4ec9-b961-98d1ed4cacfa)
 
-![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/03de0166-8c50-42dd-b017-2ff1df217a43)
+You also can have the links and download them by any way.
+
+![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/3fa399f9-90bf-4839-9c2d-1f526c6183ea)
+
