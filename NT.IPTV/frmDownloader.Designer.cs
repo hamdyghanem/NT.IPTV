@@ -94,7 +94,7 @@
             // 
             lblPercentage.AutoSize = false;
             lblPercentage.Name = "lblPercentage";
-            lblPercentage.Size = new Size(200, 20);
+            lblPercentage.Size = new Size(250, 20);
             lblPercentage.Text = "Percentage";
             // 
             // prgBar
