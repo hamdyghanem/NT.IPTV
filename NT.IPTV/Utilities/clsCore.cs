@@ -37,6 +37,46 @@ namespace NT.IPTV.Utilities
         {
             return currentTime.Minute % 15 == 0 && currentTime.Second == 0;
         }
+        public static async Task<bool> Check404(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(response.StatusCode.ToString());
+                }
+                else
+                {
+                    //response.StatusCode
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static async void dotest(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(response.StatusCode.ToString());
+                }
+                else
+                {
+                    // problems handling here
+                    Console.WriteLine(
+                        "Error occurred, the status code is: {0}",
+                        response.StatusCode
+                    );
+                }
+            }
+        }
+
         #endregion
     }
 

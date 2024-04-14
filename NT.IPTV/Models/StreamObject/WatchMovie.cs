@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace NT.IPTV.Models.StreamObject
 {
 
-    public class Movie : IMovie
+    public class WatchMovie : IWatch
     {
         [JsonProperty("info")]
         public MovieInfo MovieInfo { get; set; }
