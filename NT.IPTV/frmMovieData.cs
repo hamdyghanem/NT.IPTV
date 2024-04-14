@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.VisualBasic.Devices;
 using NT.IPTV.Models.StreamObject;
 using NT.IPTV.Utilities;
 
@@ -12,6 +13,8 @@ namespace NT.IPTV
         private CancellationTokenSource _cts = new CancellationTokenSource();
         ChannelControl cltrParent;
         IWatch Selected;
+        List<string> links = new List<string>();
+
         public frmMovieData(ChannelControl cltr)
         {
             InitializeComponent();
@@ -41,15 +44,16 @@ namespace NT.IPTV
             }
         }
 
-        private async Task getMovieInfo()
+        private async Task<WatchMovie> getMovieInfo()
         {
             Selected = await clsCoreOperation.GetMovieInfo(cltrParent.Channel.StreamID, _cts.Token);
             await fillLabels();
             picCover.Click += picMovie_Click;
-            var movie = (WatchMovie)Selected;
+            links.Add(Selected.StreamUrl);
+            return (WatchMovie)Selected;
         }
 
-        private async Task getSeriesInfo()
+        private async Task<WatchSeries> getSeriesInfo()
         {
             Selected = await clsCoreOperation.GetSeriesInfo(cltrParent.Channel.StreamID, _cts.Token);
             await fillLabels();
@@ -65,7 +69,14 @@ namespace NT.IPTV
                 tab.Controls.Add(flow);
                 //
                 tabSeries.TabPages.Add(tab);
+                //
+                foreach (var episode in series.seasonsData[i].Episodes)
+                {
+                    links.Add(episode.StreamUrl);
+                }
+
             }
+            return series;
         }
         private async Task fillLabels()
         {
@@ -190,7 +201,7 @@ namespace NT.IPTV
                 frm.ShowDialog();
             }
         }
-        
+
 
         private void btnWatchTrailer_Click(object sender, EventArgs e)
         {
@@ -205,6 +216,14 @@ namespace NT.IPTV
             catch (System.Exception other)
             {
                 MessageBox.Show(other.Message);
+            }
+        }
+
+        private void btnDownloadLinks_Click(object sender, EventArgs e)
+        {
+            using (frmGetDownloadLinks frm = new frmGetDownloadLinks(String.Join("\r\n", links.ToArray())))
+            {
+                frm.ShowDialog();
             }
         }
     }

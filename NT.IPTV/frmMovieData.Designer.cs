@@ -42,6 +42,7 @@
             btnOpenInVLC = new ToolStripButton();
             btnWatchTrailer = new ToolStripButton();
             btnDownload = new ToolStripButton();
+            btnDownloadLinks = new ToolStripButton();
             tabSeries.SuspendLayout();
             pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picCover).BeginInit();
@@ -168,7 +169,7 @@
             // MyToolTip
             // 
             MyToolTip.ImageScalingSize = new Size(55, 55);
-            MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownload });
+            MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownloadLinks, btnDownload });
             MyToolTip.Location = new Point(0, 0);
             MyToolTip.Name = "MyToolTip";
             MyToolTip.Size = new Size(1111, 82);
@@ -216,6 +217,16 @@
             btnDownload.ToolTipText = "Download";
             btnDownload.Click += btnDownload_Click;
             // 
+            // btnDownloadLinks
+            // 
+            btnDownloadLinks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDownloadLinks.Image = (Image)resources.GetObject("btnDownloadLinks.Image");
+            btnDownloadLinks.ImageTransparentColor = Color.Magenta;
+            btnDownloadLinks.Name = "btnDownloadLinks";
+            btnDownloadLinks.Size = new Size(59, 79);
+            btnDownloadLinks.Text = "Download Links";
+            btnDownloadLinks.Click += btnDownloadLinks_Click;
+            // 
             // frmMovieData
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -257,5 +268,6 @@
         private ToolStripButton btnOpenInVLC;
         private ToolStripButton btnDownload;
         private ToolStripButton btnWatchTrailer;
+        private ToolStripButton btnDownloadLinks;
     }
 }

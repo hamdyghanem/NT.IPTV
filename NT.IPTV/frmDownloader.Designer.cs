@@ -37,7 +37,6 @@
             statusStrip1 = new StatusStrip();
             lblPercentage = new ToolStripStatusLabel();
             prgBar = new ToolStripProgressBar();
-            lblLinks = new ToolStripStatusLabel();
             lblOverallProgress = new ToolStripStatusLabel();
             prgBarSeries = new ToolStripProgressBar();
             ((System.ComponentModel.ISupportInitialize)picMovie).BeginInit();
@@ -84,7 +83,7 @@
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
-            statusStrip1.Items.AddRange(new ToolStripItem[] { lblPercentage, prgBar, lblLinks, lblOverallProgress, prgBarSeries });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { lblPercentage, prgBar, lblOverallProgress, prgBarSeries });
             statusStrip1.Location = new Point(0, 292);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(1077, 26);
@@ -102,13 +101,6 @@
             // 
             prgBar.Name = "prgBar";
             prgBar.Size = new Size(200, 18);
-            // 
-            // lblLinks
-            // 
-            lblLinks.Name = "lblLinks";
-            lblLinks.Size = new Size(79, 20);
-            lblLinks.Text = "Copy Links";
-            lblLinks.Click += lblLinks_Click;
             // 
             // lblOverallProgress
             // 
@@ -153,7 +145,6 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel lblPercentage;
         private ToolStripProgressBar prgBar;
-        private ToolStripStatusLabel lblLinks;
         private ToolStripStatusLabel lblOverallProgress;
         private ToolStripProgressBar prgBarSeries;
     }

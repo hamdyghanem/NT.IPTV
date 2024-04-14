@@ -236,13 +236,6 @@ namespace NT.IPTV
             catch { }
         }
 
-        private void lblLinks_Click(object sender, EventArgs e)
-        {
-            using (frmGetDownloadLinks frm = new frmGetDownloadLinks(String.Join("\r\n", links.ToArray())))
-            {
-                frm.ShowDialog();
-            }
-        }
         static double ConvertBytesToMegabytes(long bytes)
         {
             return (bytes / 1024f) / 1024f;
