@@ -27,10 +27,15 @@ namespace NT.IPTV.Models.Channel
         [JsonProperty("stream_id")]
         public string StreamId { get; set; }
 
+        [JsonProperty("added")]
+        public string added { get; set; }
+
         [JsonProperty("category_id")]
         public string CategoryId { get; set; } // Single category ID
 
-        
+        [JsonProperty("releaseDate")]
+        public string releaseDate { get; set; }
+
         [JsonProperty("stream_type")]
         public string StreamType { get; set; }
 
@@ -43,9 +48,15 @@ namespace NT.IPTV.Models.Channel
                 return $"{(clsCore.currentUser.UseHttps ? "https" : "http")}://{clsCore.PlayerInfo.server_info.url}:{clsCore.PlayerInfo.server_info.port}/{clsCore.currentUser.UserName}/{clsCore.currentUser.Password}/{StreamId}.ts";
             }
         }
+        [JsonProperty("rating_5based")]
+        public string Rating5based { get; set; }
 
-        public string DisplayName => Name;
+        [JsonProperty("rating")]
+        public string rating { get; set; }
+
+        public string Rating => rating;
         public string IconUrl => LogoUrl;
+        public string ReleaseDate => string.IsNullOrEmpty( releaseDate)? releaseDate: added;
         public string Title => Name;
         public string Description => Name;
         public string StreamID => StreamId;

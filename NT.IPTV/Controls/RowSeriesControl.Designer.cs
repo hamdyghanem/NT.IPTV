@@ -38,7 +38,6 @@
             // 
             // lblName
             // 
-            lblName.AutoSize = true;
             lblName.BackColor = Color.Transparent;
             lblName.Dock = DockStyle.Top;
             lblName.Font = new Font("Segoe UI", 12F);
@@ -46,10 +45,12 @@
             lblName.Location = new Point(162, 0);
             lblName.Name = "lblName";
             lblName.Padding = new Padding(5);
-            lblName.Size = new Size(130, 38);
+            lblName.Size = new Size(486, 38);
             lblName.TabIndex = 0;
             lblName.Text = "Series Name";
-            lblName.TextAlign = ContentAlignment.TopCenter;
+            lblName.TextAlign = ContentAlignment.MiddleLeft;
+            lblName.MouseEnter += lblDuration_MouseEnter;
+            lblName.MouseLeave += lblDuration_MouseLeave;
             // 
             // picLogo
             // 
@@ -69,7 +70,6 @@
             // 
             // lblPlot
             // 
-            lblPlot.AutoSize = true;
             lblPlot.BackColor = Color.Transparent;
             lblPlot.Dock = DockStyle.Top;
             lblPlot.Font = new Font("Segoe UI", 10F);
@@ -77,14 +77,15 @@
             lblPlot.Location = new Point(162, 38);
             lblPlot.Name = "lblPlot";
             lblPlot.Padding = new Padding(5);
-            lblPlot.Size = new Size(115, 33);
+            lblPlot.Size = new Size(486, 33);
             lblPlot.TabIndex = 2;
             lblPlot.Text = "Series Name";
-            lblPlot.TextAlign = ContentAlignment.TopCenter;
+            lblPlot.TextAlign = ContentAlignment.MiddleLeft;
+            lblPlot.MouseEnter += lblDuration_MouseEnter;
+            lblPlot.MouseLeave += lblDuration_MouseLeave;
             // 
             // lblDuration
             // 
-            lblDuration.AutoSize = true;
             lblDuration.BackColor = Color.Transparent;
             lblDuration.Dock = DockStyle.Top;
             lblDuration.Font = new Font("Segoe UI", 10F);
@@ -92,10 +93,12 @@
             lblDuration.Location = new Point(162, 71);
             lblDuration.Name = "lblDuration";
             lblDuration.Padding = new Padding(5);
-            lblDuration.Size = new Size(55, 33);
+            lblDuration.Size = new Size(486, 33);
             lblDuration.TabIndex = 3;
             lblDuration.Text = "0:0:0";
-            lblDuration.TextAlign = ContentAlignment.TopCenter;
+            lblDuration.TextAlign = ContentAlignment.MiddleLeft;
+            lblDuration.Click += lblDuration_Click;
+            lblDuration.MouseEnter += lblDuration_MouseEnter;
             lblDuration.MouseLeave += lblDuration_MouseLeave;
             // 
             // RowSeriesControl
@@ -111,7 +114,6 @@
             Size = new Size(648, 139);
             ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

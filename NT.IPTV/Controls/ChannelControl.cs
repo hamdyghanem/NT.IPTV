@@ -30,7 +30,7 @@ namespace NT.IPTV
             InitializeComponent();
             //
             Channel = _channel;
-            lblChannelName.Text = Channel?.DisplayName;
+            lblChannelName.Text = Channel?.Title;
             //lblDesc.Text = channel.Title + channel.Description;
             //System.Net.WebRequest request = System.Net.WebRequest.Create(channel.LogoUrl);
             //System.Net.WebResponse response = request.GetResponse();

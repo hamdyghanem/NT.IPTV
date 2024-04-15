@@ -5,6 +5,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using NT.IPTV.Models;
 using NT.IPTV.Utilities;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NT.IPTV
 {
@@ -17,31 +18,17 @@ namespace NT.IPTV
         {
             InitializeComponent();
             //
+            clsCore.LoadConfiguration();
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             lblVersion.Text = fvi.FileVersion;
 
-            clsCoreOperation.loadUsersFromDirectory(cboProfile);
-            if (cboProfile.Items.Count > 0)
+            clsCore.loadUsersFromDirectory(cboProfile);
+            if (!string.IsNullOrEmpty(clsCore.Configurations.LastProfile))
             {
-                cboProfile.SelectedIndex = 0;
+                cboProfile.Text = clsCore.Configurations.LastProfile;
+                //cboProfile.SelectedIndex = 0;
             }
-        }
-
-
-        private void loadDataIntoTextFields()
-        {
-            if (_currentUser?.UserName == null || _currentUser?.Password == null || _currentUser?.Server == null || _currentUser?.Port == null)
-            {
-                MessageBox.Show("User data is missing, unable to load " + cboProfile.SelectedValue.ToString());
-                return;
-            }
-
-            txtUsername.Text = _currentUser.UserName;
-            txtPassword.Text = _currentUser.Password;
-            //protocolCheckBox.IsChecked = _currentUser.UseHttps;
-            txtServer.Text = _currentUser.Server;
-            txtPort.Text = _currentUser.Port;
         }
 
         private async void btnGo_Click(object sender, EventArgs e)
@@ -59,16 +46,13 @@ namespace NT.IPTV
             try
             {
                 lblStatus.Text = "Attempting to connect...";
-                if (await clsCoreOperation.CheckLoginConnection(_cts.Token)) // Connect to the server
+                if (await clsCore.CheckLoginConnection(_cts.Token)) // Connect to the server
                 {
                     lblStatus.Text = "Loading groups/categories data...";
-                    await clsCoreOperation.RetrieveCategories(_cts.Token); // Load epg into the channels array
+                    await clsCore.RetrieveCategories(_cts.Token); // Load epg into the channels array
 
                     lblStatus.Text = "Loading channel data...";
-                    await clsCoreOperation.RetrievePlaylistData(lblStatus, _cts.Token);
-
-                    // Update the lastEpgDataLoadTime setting with the current date and time in ISO 8601 format
-                    ConfigManager.UpdateSetting("lastEpgDataLoadTime", DateTime.UtcNow.ToString("o"));
+                    await clsCore.RetrievePlaylistData(lblStatus, _cts.Token);
 
                     if (!_cts.IsCancellationRequested)
                     {
@@ -113,25 +97,29 @@ namespace NT.IPTV
                 MessageBox.Show("You must select a user to load");
                 return;
             }
+            _currentUser = clsCore.GetUserData(cboProfile.SelectedItem.ToString());
+            if (_currentUser != null)
+            {
+                loadDataIntoTextFields();
+                // Optional: Clear the selection if needed or keep it based on your UI logic
+                // cboProfile.SelectedItem = null;
+            }
+            clsCore.Configurations.LastProfile = cboProfile.SelectedItem.ToString();
+            clsCore.SaveConfiguration();
+        }
+        private void loadDataIntoTextFields()
+        {
+            if (_currentUser?.UserName == null || _currentUser?.Password == null || _currentUser?.Server == null || _currentUser?.Port == null)
+            {
+                MessageBox.Show("User data is missing, unable to load " + cboProfile.SelectedValue.ToString());
+                return;
+            }
 
-            if (!string.IsNullOrWhiteSpace(cboProfile.SelectedItem.ToString()))
-            {
-                _currentUser = clsCoreOperation.GetUserData(cboProfile.SelectedItem.ToString());
-                if (_currentUser != null)
-                {
-                    loadDataIntoTextFields();
-                    // Optional: Clear the selection if needed or keep it based on your UI logic
-                    // cboProfile.SelectedItem = null;
-                }
-                else
-                {
-                    MessageBox.Show("Failed to load user data. User file might be missing or corrupted.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Invalid user selection.");
-            }
+            txtUsername.Text = _currentUser.UserName;
+            txtPassword.Text = _currentUser.Password;
+            //protocolCheckBox.IsChecked = _currentUser.UseHttps;
+            txtServer.Text = _currentUser.Server;
+            txtPort.Text = _currentUser.Port;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -152,7 +140,7 @@ namespace NT.IPTV
             //_currentUser.UseHttps = (bool)protocolCheckBox.IsChecked;
             _currentUser.Server = txtServer.Text;
             _currentUser.Port = txtPort.Text;
-            clsCoreOperation.loadUsersFromDirectory(cboProfile);
+            clsCore.loadUsersFromDirectory(cboProfile);
             MessageBox.Show(_currentUser.Name + "'s data saved");
         }
 

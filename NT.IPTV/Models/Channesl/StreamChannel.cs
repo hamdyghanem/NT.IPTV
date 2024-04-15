@@ -62,6 +62,7 @@ namespace NT.IPTV.Models.Channel
         public string StreamID => StreamId;
         public string CategoryName { get; set; }
 
+        public string Rating => string.Empty;
         public string Streamurl
         {
             get
@@ -74,6 +75,7 @@ namespace NT.IPTV.Models.Channel
         public string IconUrl => LogoUrl;
         public string StreamUrl => Streamurl;
         public string Title => Name;
+        public string ReleaseDate => string.Empty;
         public string Description => Name;
         public enumCategories Category => enumCategories.Live;
 

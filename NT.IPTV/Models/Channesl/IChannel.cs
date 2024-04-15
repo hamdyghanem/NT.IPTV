@@ -10,10 +10,12 @@ namespace NT.IPTV.Models.Channel
     public interface IChannel
     {
         enumCategories Category { get; }
-        string DisplayName { get; }
         string IconUrl { get; }
         string Title { get; }
         string Description { get; }
+        string ReleaseDate { get; }
+        string Rating { get; }
+
         string StreamID { get; }
         string StreamUrl { get; }
     }

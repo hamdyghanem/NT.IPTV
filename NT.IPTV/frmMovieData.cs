@@ -46,7 +46,7 @@ namespace NT.IPTV
 
         private async Task<WatchMovie> getMovieInfo()
         {
-            Selected = await clsCoreOperation.GetMovieInfo(cltrParent.Channel.StreamID, _cts.Token);
+            Selected = await clsCore.GetMovieInfo(cltrParent.Channel.StreamID, _cts.Token);
             await fillLabels();
             picCover.Click += picMovie_Click;
             links.Add(Selected.StreamUrl);
@@ -55,7 +55,7 @@ namespace NT.IPTV
 
         private async Task<WatchSeries> getSeriesInfo()
         {
-            Selected = await clsCoreOperation.GetSeriesInfo(cltrParent.Channel.StreamID, _cts.Token);
+            Selected = await clsCore.GetSeriesInfo(cltrParent.Channel.StreamID, _cts.Token);
             await fillLabels();
 
             var series = (WatchSeries)Selected;
@@ -128,7 +128,7 @@ namespace NT.IPTV
         {
             try
             {
-                string vlcLocatedPath = ConfigManager.GetVLCPath(); // Use the dedicated method to get or find the VLC path
+                string vlcLocatedPath = clsCore.GetVLCPath(); // Use the dedicated method to get or find the VLC path
 
                 if (string.IsNullOrEmpty(vlcLocatedPath) || !File.Exists(vlcLocatedPath))
                 {
@@ -143,7 +143,8 @@ namespace NT.IPTV
                     {
                         vlcLocatedPath = openFileDialog.FileName;
                         // Optionally, update the configuration with the newly selected path
-                        ConfigManager.UpdateSetting("vlcLocationPath", vlcLocatedPath);
+                        clsCore.Configurations.VlcLocationPath = vlcLocatedPath;
+                        clsCore.SaveConfiguration();
                     }
                     else
                     {
@@ -225,6 +226,12 @@ namespace NT.IPTV
             {
                 frm.ShowDialog();
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+
         }
     }
 }

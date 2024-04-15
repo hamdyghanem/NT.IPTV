@@ -12,6 +12,7 @@ using NT.IPTV.Models.Channel;
 using System.Collections.Generic;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using System.Diagnostics;
+using NT.IPTV.Properties;
 
 namespace NT.IPTV
 {
@@ -20,7 +21,7 @@ namespace NT.IPTV
         private System.Timers.Timer _updateCheckTimer;
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private List<StreamCategory> categoryies = new List<StreamCategory>();
-        private bool bStopProcess =false;
+        private bool bStopProcess = false;
         public frmCategories()
         {
             InitializeComponent();
@@ -78,14 +79,14 @@ namespace NT.IPTV
         #endregion
         private void loadCategories()
         {
-            categoryies = clsCore.ChannelCategories.OrderBy(x => x.Name).ToList();
+            categoryies = clsCore.ChannelCategories.OrderBy(x => x.ID).ToList();
             switch (clsCore.CurrentCategory)
             {
                 case enumCategories.Movies:
-                    categoryies = clsCore.MoviesCategories.OrderBy(x => x.Name).ToList();
+                    categoryies = clsCore.MoviesCategories.OrderBy(x => x.ID).ToList();
                     break;
                 case enumCategories.Series:
-                    categoryies = clsCore.SeriesCategories.OrderBy(x => x.Name).ToList();
+                    categoryies = clsCore.SeriesCategories.OrderBy(x => x.ID).ToList();
                     break;
             }
             FillCategoryList(categoryies);
@@ -93,35 +94,30 @@ namespace NT.IPTV
 
         private void FillCategoryList(List<StreamCategory> groups)
         {
-            lstCategories.Items.Clear();
-            txtSearchMovies.Clear();
-            lblStatus.Text = "loading...";
-            prgBar.Value = 0;
-            prgBar.Maximum = groups.Count;
-            foreach (var item in groups)
-            {
-                lstCategories.Items.Add(item);
-                prgBar.Value++;
-            }
+            //lstCategories.Items.Clear();
+            //txtSearchMovies.Clear();
+            //lblStatus.Text = "loading...";
+            //prgBar.Value = 0;
+            //prgBar.Maximum = groups.Count;
+            //foreach (var item in groups)
+            //{
+            //    lstCategories.Items.Add(item);
+            //    prgBar.Value++;
+            //}
             lblStatus.Text = string.Empty;
+            flwCat.LoadCategories(groups,prgBar);
+
         }
-        
+
         private void backToLoginBtn_Click(object sender, EventArgs e)
         {
             /*UserLogin.ReturnToLogin = true;
             this.Close();*/
         }
-        private void lstCategories_SelectedValueChanged(object sender, EventArgs e)
-        {
-
-        }
         private async void lstCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.lstCategories.SelectedItems.Count == 0)
-                return;
-
-            var selectedItem = (StreamCategory)this.lstCategories.SelectedItems[0];
-            await clsCoreOperation.RetrieveStreams(selectedItem, _cts.Token);
+            var selectedItem = this.flwCat.SelectedItem;
+            await clsCore.RetrieveStreams(selectedItem, _cts.Token);
             switch (clsCore.CurrentCategory)
             {
                 case enumCategories.Live:
@@ -215,7 +211,7 @@ namespace NT.IPTV
                     //frm.ShowDialog();
                     try
                     {
-                        string vlcLocatedPath = ConfigManager.GetVLCPath(); // Use the dedicated method to get or find the VLC path
+                        string vlcLocatedPath = clsCore.GetVLCPath(); // Use the dedicated method to get or find the VLC path
 
                         if (string.IsNullOrEmpty(vlcLocatedPath) || !File.Exists(vlcLocatedPath))
                         {
@@ -230,7 +226,8 @@ namespace NT.IPTV
                             {
                                 vlcLocatedPath = openFileDialog.FileName;
                                 // Optionally, update the configuration with the newly selected path
-                                ConfigManager.UpdateSetting("vlcLocationPath", vlcLocatedPath);
+                                clsCore.Configurations.VlcLocationPath = vlcLocatedPath;
+                                clsCore.SaveConfiguration();
                             }
                             else
                             {
@@ -275,6 +272,7 @@ namespace NT.IPTV
 
         private void frmCategories_FormClosing(object sender, FormClosingEventArgs e)
         {
+            clsCore.SaveConfiguration();
             Application.ExitThread();
         }
 
@@ -283,7 +281,7 @@ namespace NT.IPTV
             var btn = (ToolStripButton)sender;
             ToggleButtons(btn);
             clsCore.CurrentCategory = (enumCategories)btn.Tag;
-            await clsCoreOperation.RetrieveCategories(_cts.Token);
+            await clsCore.RetrieveCategories(_cts.Token);
             loadCategories();
         }
         private void ToggleButtons(ToolStripButton btn)
@@ -310,12 +308,94 @@ namespace NT.IPTV
                 {
                     if (bStopProcess)
                     {
-                        bStopProcess=false;
+                        bStopProcess = false;
                         break;
                     }
                     Application.DoEvents();
                     ctrl.Size = newSize;
                 }
+            }
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            System.Drawing.Bitmap img;
+            //
+            IEnumerable<ChannelControl> lst = flwChannel.Controls.OfType<ChannelControl>();
+            List<ChannelControl> ordered = new List<ChannelControl>();
+            if (button.Tag == "down")
+            {
+                ordered = lst.OrderBy(x => x.Channel.Title).ToList();
+                img = Properties.Resources.NameUp;
+            }
+            else
+            {
+                ordered = lst.OrderByDescending(x => x.Channel.Title).ToList();
+                img = Properties.Resources.NameDown;
+            }
+
+            fillOrderedControl(ordered, button, img);
+        }
+
+        private void btnDateUp_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            System.Drawing.Bitmap img;
+            //
+            IEnumerable<ChannelControl> lst = flwChannel.Controls.OfType<ChannelControl>();
+            List<ChannelControl> ordered = new List<ChannelControl>();
+            if (button.Tag == "down")
+            {
+                ordered = lst.OrderBy(x => x.Channel.ReleaseDate).ToList();
+                img = Properties.Resources.YearUp;
+            }
+            else
+            {
+                ordered = lst.OrderByDescending(x => x.Channel.ReleaseDate).ToList();
+                img = Properties.Resources.YearDown;
+            }
+
+            fillOrderedControl(ordered, button, img);
+        }
+
+        private void btnRatingUp_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            System.Drawing.Bitmap img;
+            //
+            IEnumerable<ChannelControl> lst = flwChannel.Controls.OfType<ChannelControl>();
+            List<ChannelControl> ordered = new List<ChannelControl>();
+            if (button.Tag == "down")
+            {
+                ordered = lst.OrderBy(x => x.Channel.Rating).ToList();
+                img = Properties.Resources.RatingUp;
+            }
+            else
+            {
+                ordered = lst.OrderByDescending(x => x.Channel.Rating).ToList();
+                img = Properties.Resources.RatingDown;
+            }
+
+            fillOrderedControl(ordered, button, img);
+        }
+        private void fillOrderedControl(List<ChannelControl> ordered, Button btn, System.Drawing.Bitmap img)
+        {
+            if (btn.Tag == "down")
+            {
+                btn.Tag = "up";
+            }
+            else
+            {
+                btn.Tag = "down";
+            }
+
+            btn.BackgroundImage = img;
+            //
+            flwChannel.Controls.Clear();
+            foreach (Control ctrl in ordered)
+            {
+                flwChannel.Controls.Add(ctrl);
             }
         }
     }

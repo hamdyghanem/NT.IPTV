@@ -33,8 +33,10 @@ namespace NT.IPTV
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategories));
-            lstCategories = new ListBox();
             pllHeader = new Panel();
+            btnNameUp = new Button();
+            btnRatingUp = new Button();
+            btnDateUp = new Button();
             btnBigger = new Button();
             btnSmaller = new Button();
             txtSearchMovies = new SearchTextBox();
@@ -50,24 +52,17 @@ namespace NT.IPTV
             btnLive = new ToolStripButton();
             btnMovies = new ToolStripButton();
             btnSeries = new ToolStripButton();
+            flwCat = new FlowCatControl();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
-            // lstCategories
-            // 
-            lstCategories.Dock = DockStyle.Left;
-            lstCategories.FormattingEnabled = true;
-            lstCategories.Location = new Point(0, 140);
-            lstCategories.Name = "lstCategories";
-            lstCategories.Size = new Size(457, 499);
-            lstCategories.TabIndex = 2;
-            lstCategories.SelectedIndexChanged += lstCategories_SelectedIndexChanged;
-            lstCategories.SelectedValueChanged += lstCategories_SelectedValueChanged;
-            // 
             // pllHeader
             // 
+            pllHeader.Controls.Add(btnNameUp);
+            pllHeader.Controls.Add(btnRatingUp);
+            pllHeader.Controls.Add(btnDateUp);
             pllHeader.Controls.Add(btnBigger);
             pllHeader.Controls.Add(btnSmaller);
             pllHeader.Controls.Add(txtSearchMovies);
@@ -80,14 +75,54 @@ namespace NT.IPTV
             pllHeader.Size = new Size(1381, 58);
             pllHeader.TabIndex = 3;
             // 
+            // btnNameUp
+            // 
+            btnNameUp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnNameUp.BackgroundImage = Properties.Resources.NameUp;
+            btnNameUp.BackgroundImageLayout = ImageLayout.Zoom;
+            btnNameUp.Location = new Point(1202, 11);
+            btnNameUp.Name = "btnNameUp";
+            btnNameUp.Size = new Size(54, 43);
+            btnNameUp.TabIndex = 6;
+            btnNameUp.Tag = "up";
+            btnNameUp.UseVisualStyleBackColor = true;
+            btnNameUp.Click += btnDown_Click;
+            // 
+            // btnRatingUp
+            // 
+            btnRatingUp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnRatingUp.BackgroundImage = (Image)resources.GetObject("btnRatingUp.BackgroundImage");
+            btnRatingUp.BackgroundImageLayout = ImageLayout.Zoom;
+            btnRatingUp.Location = new Point(1092, 11);
+            btnRatingUp.Name = "btnRatingUp";
+            btnRatingUp.Size = new Size(54, 43);
+            btnRatingUp.TabIndex = 7;
+            btnRatingUp.Tag = "down";
+            btnRatingUp.UseVisualStyleBackColor = true;
+            btnRatingUp.Click += btnRatingUp_Click;
+            // 
+            // btnDateUp
+            // 
+            btnDateUp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnDateUp.BackgroundImage = (Image)resources.GetObject("btnDateUp.BackgroundImage");
+            btnDateUp.BackgroundImageLayout = ImageLayout.Zoom;
+            btnDateUp.Location = new Point(1148, 11);
+            btnDateUp.Name = "btnDateUp";
+            btnDateUp.Size = new Size(54, 43);
+            btnDateUp.TabIndex = 7;
+            btnDateUp.Tag = "down";
+            toolTip1.SetToolTip(btnDateUp, "Release date ascending");
+            btnDateUp.UseVisualStyleBackColor = true;
+            btnDateUp.Click += btnDateUp_Click;
+            // 
             // btnBigger
             // 
             btnBigger.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnBigger.BackgroundImage = (Image)resources.GetObject("btnBigger.BackgroundImage");
             btnBigger.BackgroundImageLayout = ImageLayout.Center;
-            btnBigger.Location = new Point(1310, 9);
+            btnBigger.Location = new Point(1310, 11);
             btnBigger.Name = "btnBigger";
-            btnBigger.Size = new Size(66, 43);
+            btnBigger.Size = new Size(54, 43);
             btnBigger.TabIndex = 5;
             btnBigger.Tag = "*";
             btnBigger.UseVisualStyleBackColor = true;
@@ -98,9 +133,9 @@ namespace NT.IPTV
             btnSmaller.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSmaller.BackgroundImage = (Image)resources.GetObject("btnSmaller.BackgroundImage");
             btnSmaller.BackgroundImageLayout = ImageLayout.Center;
-            btnSmaller.Location = new Point(1238, 12);
+            btnSmaller.Location = new Point(1256, 11);
             btnSmaller.Name = "btnSmaller";
-            btnSmaller.Size = new Size(66, 43);
+            btnSmaller.Size = new Size(54, 43);
             btnSmaller.TabIndex = 5;
             btnSmaller.Tag = "/";
             btnSmaller.UseVisualStyleBackColor = true;
@@ -109,7 +144,7 @@ namespace NT.IPTV
             // txtSearchMovies
             // 
             txtSearchMovies.DelayedTextChangedTimeout = 2000;
-            txtSearchMovies.Location = new Point(547, 11);
+            txtSearchMovies.Location = new Point(652, 19);
             txtSearchMovies.Name = "txtSearchMovies";
             txtSearchMovies.Size = new Size(418, 27);
             txtSearchMovies.TabIndex = 4;
@@ -118,7 +153,7 @@ namespace NT.IPTV
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(466, 11);
+            label1.Location = new Point(593, 26);
             label1.Name = "label1";
             label1.Size = new Size(53, 20);
             label1.TabIndex = 3;
@@ -129,7 +164,7 @@ namespace NT.IPTV
             txtSearch.DelayedTextChangedTimeout = 2000;
             txtSearch.Location = new Point(70, 11);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(262, 27);
+            txtSearch.Size = new Size(351, 27);
             txtSearch.TabIndex = 1;
             txtSearch.DelayedTextChanged += txtSearch_DelayedTextChanged;
             // 
@@ -147,9 +182,9 @@ namespace NT.IPTV
             flwChannel.AutoScroll = true;
             flwChannel.BackColor = Color.FromArgb(64, 64, 64);
             flwChannel.Dock = DockStyle.Fill;
-            flwChannel.Location = new Point(457, 140);
+            flwChannel.Location = new Point(434, 140);
             flwChannel.Name = "flwChannel";
-            flwChannel.Size = new Size(924, 499);
+            flwChannel.Size = new Size(947, 499);
             flwChannel.TabIndex = 5;
             // 
             // statusStrip
@@ -171,7 +206,7 @@ namespace NT.IPTV
             // prgBar
             // 
             prgBar.Name = "prgBar";
-            prgBar.Size = new Size(100, 18);
+            prgBar.Size = new Size(200, 18);
             // 
             // toolStrip
             // 
@@ -224,13 +259,26 @@ namespace NT.IPTV
             btnSeries.ToolTipText = "Series";
             btnSeries.Click += btnLive_Click;
             // 
+            // flwCat
+            // 
+            flwCat.AutoScroll = true;
+            flwCat.BackColor = Color.FromArgb(64, 64, 64);
+            flwCat.Categories = null;
+            flwCat.Dock = DockStyle.Left;
+            flwCat.Location = new Point(0, 140);
+            flwCat.Name = "flwCat";
+            flwCat.SelectedItem = null;
+            flwCat.Size = new Size(434, 499);
+            flwCat.TabIndex = 10;
+            flwCat.SelectedIndexChaged += lstCategories_SelectedIndexChanged;
+            // 
             // frmCategories
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1381, 665);
             Controls.Add(flwChannel);
-            Controls.Add(lstCategories);
+            Controls.Add(flwCat);
             Controls.Add(pllHeader);
             Controls.Add(statusStrip);
             Controls.Add(toolStrip);
@@ -251,8 +299,6 @@ namespace NT.IPTV
         }
 
         #endregion
-
-        private ListBox lstCategories;
         private Panel pllHeader;
         private SearchTextBox txtSearch;
         private Label lblSeach;
@@ -269,5 +315,9 @@ namespace NT.IPTV
         private ToolStripButton btnSeries;
         private Button btnBigger;
         private Button btnSmaller;
+        private Button btnNameUp;
+        private Button btnDateUp;
+        private Button btnRatingUp;
+        private FlowCatControl flwCat;
     }
 }

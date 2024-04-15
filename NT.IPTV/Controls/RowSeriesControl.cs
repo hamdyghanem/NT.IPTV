@@ -58,6 +58,18 @@ namespace NT.IPTV
 
         private void lblDuration_MouseLeave(object sender, EventArgs e)
         {
+            OnMouseLeave(e);
+
+        }
+
+        private void lblDuration_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblDuration_MouseEnter(object sender, EventArgs e)
+        {
+            OnMouseEnter(e);
 
         }
     }

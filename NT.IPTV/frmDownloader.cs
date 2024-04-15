@@ -16,7 +16,7 @@ namespace NT.IPTV
     {
         private Thread threadStart;
         private WebClient client = new WebClient();
-        private string saveDir = Path.Combine(clsCoreOperation.assemblyFolder, clsCoreOperation.DownloadeFolder);
+        private string saveDir = Path.Combine(clsCore.assemblyFolder, clsCore.DownloadeFolder);
         private IWatch downoadFile;
         private string TitleName;
         List<string> links = new List<string>();

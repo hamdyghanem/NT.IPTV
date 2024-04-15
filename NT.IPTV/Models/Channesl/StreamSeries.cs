@@ -42,13 +42,17 @@ namespace NT.IPTV.Models.Channel
         public string Rating5based { get; set; }
 
         [JsonProperty("rating")]
-        public string Rating { get; set; }
+        public string rating { get; set; }
 
         [JsonProperty("last_modified")]
         public string LastModified { get; set; }
 
         [JsonProperty("releaseDate")]
-        public string ReleaseDate { get; set; }
+        public string releaseDate { get; set; }
+        
+
+        [JsonProperty("added")]
+        public string added { get; set; }
 
         [JsonProperty("director")]
         public string Director { get; set; }
@@ -63,8 +67,9 @@ namespace NT.IPTV.Models.Channel
             }
         }
 
-        public string DisplayName => "(" + Number + ")" + Name;
+        public string Rating => rating;
         public string Title => Name;
+        public string ReleaseDate => string.IsNullOrEmpty( releaseDate)? releaseDate: added;
         public string Description => Plot;
         public string IconUrl => CoverUrl;
         public string StreamID => SeriesId;
