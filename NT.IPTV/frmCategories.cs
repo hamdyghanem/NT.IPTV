@@ -1,4 +1,4 @@
-using System.Configuration;
+﻿using System.Configuration;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Channels;
@@ -79,14 +79,17 @@ namespace NT.IPTV
         #endregion
         private void loadCategories()
         {
-            categoryies = clsCore.ChannelCategories.OrderBy(x => x.ID).ToList();
             switch (clsCore.CurrentCategory)
             {
+                case enumCategories.Live:
+                    //categoryies = clsCore.ChannelCategories.OrderBy(x => x.ID ).ThenBy(n => n.Favorite).ToList();
+                    categoryies = clsCore.ChannelCategories.OrderByDescending(n => n.Favorite).ToList();
+                    break;
                 case enumCategories.Movies:
-                    categoryies = clsCore.MoviesCategories.OrderBy(x => x.ID).ToList();
+                    categoryies = clsCore.MoviesCategories.OrderByDescending(n => n.Favorite).ToList();
                     break;
                 case enumCategories.Series:
-                    categoryies = clsCore.SeriesCategories.OrderBy(x => x.ID).ToList();
+                    categoryies = clsCore.SeriesCategories.OrderByDescending(n => n.Favorite).ToList();
                     break;
             }
             FillCategoryList(categoryies);
@@ -105,7 +108,7 @@ namespace NT.IPTV
             //    prgBar.Value++;
             //}
             lblStatus.Text = string.Empty;
-            flwCat.LoadCategories(groups,prgBar);
+            flwCat.LoadCategories(groups, prgBar);
 
         }
 
@@ -226,7 +229,7 @@ namespace NT.IPTV
                             {
                                 vlcLocatedPath = openFileDialog.FileName;
                                 // Optionally, update the configuration with the newly selected path
-                                clsCore.Configurations.VlcLocationPath = vlcLocatedPath;
+                                clsCore.Config.VlcLocationPath = vlcLocatedPath;
                                 clsCore.SaveConfiguration();
                             }
                             else

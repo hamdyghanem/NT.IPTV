@@ -47,24 +47,41 @@ namespace NT.IPTV
             //    picLogo.ImageLocation = defaultImage;
             //}
 
-            btnFavorite.Tag = "0";
+            btnFavorite.Tag = Category.Favorite ? "1" : "0";
+            if (btnFavorite.Tag == "1")
+            {
+                btnFavorite.BackgroundImage = Properties.Resources.RatingUp;
+            }
+            else
+            {
+                btnFavorite.BackgroundImage = Properties.Resources.RatingDown;
+            }
         }
 
 
         private void btnFavorite_Click(object sender, EventArgs e)
         {
             List<string> lst = new List<string>();
-            if (clsCore.CurrentCategory == enumCategories.Live)
+            switch (clsCore.CurrentCategory)
             {
-                lst = clsCore.Configurations.FavoritChannelsCategory;
-            }
-            else if (clsCore.CurrentCategory == enumCategories.Movies)
-            {
-                lst = clsCore.Configurations.FavoritMoviesCategory;
-            }
-            else
-            {
-                lst = clsCore.Configurations.FavoritSeriesCategory;
+                case enumCategories.Live:
+                    {
+                        lst = clsCore.Config.FavoritChannelsCategory;
+                        clsCore.ChannelCategories.Single(x => x.ID == Category.ID).Favorite = btnFavorite.Tag == "0";
+                        break;
+                    }
+                case enumCategories.Movies:
+                    {
+                        lst = clsCore.Config.FavoritMoviesCategory;
+                        clsCore.MoviesCategories.Single(x => x.ID == Category.ID).Favorite = btnFavorite.Tag == "0";
+                        break;
+                    }
+                case enumCategories.Series:
+                    {
+                        lst = clsCore.Config.FavoritSeriesCategory;
+                        clsCore.SeriesCategories.Single(x => x.ID == Category.ID).Favorite = btnFavorite.Tag == "0";
+                        break;
+                    }
             }
             //
             if (btnFavorite.Tag == "0")

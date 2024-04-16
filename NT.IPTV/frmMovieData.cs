@@ -143,7 +143,7 @@ namespace NT.IPTV
                     {
                         vlcLocatedPath = openFileDialog.FileName;
                         // Optionally, update the configuration with the newly selected path
-                        clsCore.Configurations.VlcLocationPath = vlcLocatedPath;
+                        clsCore.Config.VlcLocationPath = vlcLocatedPath;
                         clsCore.SaveConfiguration();
                     }
                     else

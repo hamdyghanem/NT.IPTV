@@ -17,6 +17,7 @@ namespace NT.IPTV.Models
 
         [JsonProperty("parent_id")]
         public int ParentId { get; set; }
+        public bool Favorite{ get; set; }
 
         public override string? ToString()
         {

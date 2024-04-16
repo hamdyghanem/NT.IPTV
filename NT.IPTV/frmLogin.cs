@@ -24,9 +24,9 @@ namespace NT.IPTV
             lblVersion.Text = fvi.FileVersion;
 
             clsCore.loadUsersFromDirectory(cboProfile);
-            if (!string.IsNullOrEmpty(clsCore.Configurations.LastProfile))
+            if (!string.IsNullOrEmpty(clsCore.Config.LastProfile))
             {
-                cboProfile.Text = clsCore.Configurations.LastProfile;
+                cboProfile.Text = clsCore.Config.LastProfile;
                 //cboProfile.SelectedIndex = 0;
             }
         }
@@ -104,7 +104,7 @@ namespace NT.IPTV
                 // Optional: Clear the selection if needed or keep it based on your UI logic
                 // cboProfile.SelectedItem = null;
             }
-            clsCore.Configurations.LastProfile = cboProfile.SelectedItem.ToString();
+            clsCore.Config.LastProfile = cboProfile.SelectedItem.ToString();
             clsCore.SaveConfiguration();
         }
         private void loadDataIntoTextFields()

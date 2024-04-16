@@ -22,7 +22,7 @@ namespace NT.IPTV.Utilities
         #region clsCore Data Storage
         public static enumCategories CurrentCategory { get; set; } = enumCategories.Live;
         public static string ServerConnectionString { get; set; } = string.Empty;
-        public static AppSettings Configurations { get; set; } = new AppSettings();
+        public static AppSettings Config { get; set; } = new AppSettings();
         public static string PlaylistDataConnectionString { get; set; } = string.Empty;
         //User's login info to use throughout the program
         public static UserInfo currentUser = new UserInfo();
@@ -47,7 +47,7 @@ namespace NT.IPTV.Utilities
         public static string GetVLCPath()
         {
             // Attempt to get the path from the configuration file
-            string vlcPath = Configurations.VlcLocationPath;
+            string vlcPath = Config.VlcLocationPath;
 
             // Check if the path is not null/empty and if the file exists
             if (!string.IsNullOrEmpty(vlcPath) && File.Exists(vlcPath))
@@ -61,7 +61,7 @@ namespace NT.IPTV.Utilities
                 if (vlcPath != null)
                 {
                     // Update the configuration with the found path
-                    Configurations.VlcLocationPath = vlcPath;
+                    Config.VlcLocationPath = vlcPath;
                     SaveConfiguration();
                 }
                 return vlcPath;
@@ -232,37 +232,41 @@ namespace NT.IPTV.Utilities
                 {
                     case enumCategories.Live:
                         {
-                            if (clsCore.ChannelCategories.Count == 0)
+                            if (ChannelCategories.Count == 0)
                             {
                                 var url = $"{clsCore.ServerConnectionString}&action=get_live_categories";
                                 HttpResponseMessage response = await _httpClient.GetAsync(url, token);
                                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                                 var responseFromServer = await response.Content.ReadAsStringAsync();
-                                clsCore.ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                ChannelCategories.All(x => x.Favorite = Config.FavoritChannelsCategory.Contains(x.ID));
+                                Config.FavoritChannelsCategory.All(x => ChannelCategories.Single(c => x == c.ID).Favorite = true);
                             }
                         }
                         break;
                     case enumCategories.Movies:
                         {
-                            if (clsCore.MoviesCategories.Count == 0)
+                            if (MoviesCategories.Count == 0)
                             {
                                 var url = $"{clsCore.ServerConnectionString}&action=get_vod_categories";
                                 var response = await _httpClient.GetAsync(url, token);
                                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                                 var responseFromServer = await response.Content.ReadAsStringAsync();
-                                clsCore.MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                Config.FavoritMoviesCategory.All(x => MoviesCategories.Single(c => x == c.ID).Favorite = true);
                             }
                         }
                         break;
                     case enumCategories.Series:
                         {
-                            if (clsCore.SeriesCategories.Count == 0)
+                            if (SeriesCategories.Count == 0)
                             {
                                 var url = $"{clsCore.ServerConnectionString}&action=get_series_categories";
                                 var response = await _httpClient.GetAsync(url, token);
                                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                                 var responseFromServer = await response.Content.ReadAsStringAsync();
-                                clsCore.SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                                Config.FavoritSeriesCategory.All(x => SeriesCategories.Single(c => x == c.ID).Favorite = true);
                             }
                         }
                         break;
@@ -458,7 +462,7 @@ namespace NT.IPTV.Utilities
         public static void SaveConfiguration()
         {
             string filePath = Path.Combine(assemblyFolder, settingsFileName);
-            string json = JsonConvert.SerializeObject(clsCore.Configurations, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(clsCore.Config, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
@@ -466,7 +470,7 @@ namespace NT.IPTV.Utilities
         {
             string filePath = Path.Combine(assemblyFolder, settingsFileName);
             string json = File.ReadAllText(filePath);
-            Configurations= JsonConvert.DeserializeObject<AppSettings>(json);
+            Config = JsonConvert.DeserializeObject<AppSettings>(json);
         }
         #endregion
     }
