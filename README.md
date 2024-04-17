@@ -11,7 +11,8 @@ You should have a subscription from Lionz IPTV to use this app (we will not prov
 
 If you have a valid account, you will be navigated to the main (categoeis) screen:
 
-![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/02a7b807-a88b-46bb-874d-7309c91b95b9)
+![image](https://github.com/hamdyghanem/NT.IPTV/assets/1084332/5c7f4684-61f2-4f01-9783-785a33b3a6c7)
+
 
 **To download from IPTV**
 Download Movie:
