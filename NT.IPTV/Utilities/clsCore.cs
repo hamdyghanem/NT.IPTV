@@ -469,8 +469,15 @@ namespace NT.IPTV.Utilities
         public static void LoadConfiguration()
         {
             string filePath = Path.Combine(assemblyFolder, settingsFileName);
-            string json = File.ReadAllText(filePath);
-            Config = JsonConvert.DeserializeObject<AppSettings>(json);
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                Config = JsonConvert.DeserializeObject<AppSettings>(json);
+            }
+            else
+            {
+                Config = new AppSettings();
+            }
         }
         #endregion
     }
