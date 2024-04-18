@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
+using NT.IPTV.Models.Items.Channesl;
+using NT.IPTV.Models.Items.StreamObject;
 using NT.IPTV.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,12 +15,12 @@ namespace NT.IPTV.Models.Channel
     public class StreamSeries : IChannel
     {
         [JsonProperty("num")]
-        public string Number { get; set; }
+        public string num { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("series_id")]
-        public string SeriesId { get; set; }
+        public string series_id { get; set; }
 
         [JsonProperty("cover")]
         public string CoverUrl { get; set; }
@@ -27,7 +29,7 @@ namespace NT.IPTV.Models.Channel
         public string Plot { get; set; }
 
         [JsonProperty("category_id")]
-        public string CategoryId { get; set; } // Single category ID
+        public string category_id { get; set; } // Single category ID
 
         [JsonProperty("episode_run_time")]
         public string EpisodeRuntime { get; set; }
@@ -67,14 +69,22 @@ namespace NT.IPTV.Models.Channel
             }
         }
 
+        public string ID=> series_id;
+        public string CategoryID => category_id;
         public string Rating => rating;
         public string Title => Name;
         public string ReleaseDate => string.IsNullOrEmpty( releaseDate)? releaseDate: added;
         public string Description => Plot;
         public string IconUrl => CoverUrl;
-        public string StreamID => SeriesId;
+        public string StreamID => series_id;
         public string StreamUrl => Streamurl;
         public enumCategories Category => enumCategories.Series;
-
+        public enumItemType ItemType => enumItemType.Channel;
+        private bool favorite = false;
+        public bool Favorite { get => favorite; set => favorite = value; }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

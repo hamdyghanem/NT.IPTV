@@ -48,11 +48,12 @@ namespace NT.IPTV
                 lblStatus.Text = "Attempting to connect...";
                 if (await clsCore.CheckLoginConnection(_cts.Token)) // Connect to the server
                 {
-                    lblStatus.Text = "Loading groups/categories data...";
-                    await clsCore.RetrieveCategories(_cts.Token); // Load epg into the channels array
-
-                    lblStatus.Text = "Loading channel data...";
-                    await clsCore.RetrievePlaylistData(lblStatus, _cts.Token);
+                    await clsCore.RetrieveCategories(lblStatus, _cts.Token);
+                    //await clsCore.RetrieveStreams(lblStatus, _cts.Token);
+                    _ = Task.Run(async () =>
+                  {
+                      await clsCore.RetrieveStreams(_cts.Token);
+                  });
 
                     if (!_cts.IsCancellationRequested)
                     {

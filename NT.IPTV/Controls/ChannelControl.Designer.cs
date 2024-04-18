@@ -28,26 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChannelControl));
             lblChannelName = new Label();
             picLogo = new PictureBox();
+            toolTip1 = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
             SuspendLayout();
             // 
             // lblChannelName
             // 
-            lblChannelName.AutoSize = true;
             lblChannelName.BackColor = Color.Transparent;
+            lblChannelName.Cursor = Cursors.Hand;
             lblChannelName.Dock = DockStyle.Top;
             lblChannelName.Font = new Font("Segoe UI", 8.5F);
             lblChannelName.ForeColor = Color.White;
             lblChannelName.Location = new Point(0, 0);
             lblChannelName.Name = "lblChannelName";
             lblChannelName.Padding = new Padding(0, 0, 0, 10);
-            lblChannelName.Size = new Size(106, 30);
+            lblChannelName.Size = new Size(197, 50);
             lblChannelName.TabIndex = 0;
             lblChannelName.Text = "Channel Name";
-            lblChannelName.TextAlign = ContentAlignment.TopCenter;
+            lblChannelName.TextAlign = ContentAlignment.MiddleCenter;
+            toolTip1.SetToolTip(lblChannelName, "Click to add to favorites");
+            lblChannelName.Click += lblChannelName_Click;
             // 
             // picLogo
             // 
@@ -55,10 +59,10 @@
             picLogo.Cursor = Cursors.Hand;
             picLogo.Dock = DockStyle.Fill;
             picLogo.InitialImage = (Image)resources.GetObject("picLogo.InitialImage");
-            picLogo.Location = new Point(0, 30);
+            picLogo.Location = new Point(0, 50);
             picLogo.Name = "picLogo";
             picLogo.Padding = new Padding(2);
-            picLogo.Size = new Size(197, 166);
+            picLogo.Size = new Size(197, 146);
             picLogo.SizeMode = PictureBoxSizeMode.Zoom;
             picLogo.TabIndex = 1;
             picLogo.TabStop = false;
@@ -76,12 +80,12 @@
             Size = new Size(197, 196);
             ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private Label lblChannelName;
         private PictureBox picLogo;
+        private ToolTip toolTip1;
     }
 }

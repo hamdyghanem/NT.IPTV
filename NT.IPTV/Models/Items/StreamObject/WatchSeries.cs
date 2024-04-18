@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NT.IPTV.Models.StreamObject
+namespace NT.IPTV.Models.Items.StreamObject
 {
 
     public class WatchSeries : IWatch
@@ -22,20 +22,22 @@ namespace NT.IPTV.Models.StreamObject
         public Episodes Episodes { get; set; }
         public List<Season> seasonsData { get; set; } = new List<Season>();
 
-        public enumCategories Category =>  enumCategories.Series;
+        public enumCategories Category => enumCategories.Series;
+        public enumItemType ItemType => enumItemType.Watch;
 
+        public string ID => SeriesInfo.tmdb_id;
         public string Name => SeriesInfo.Name;
         public string Duration => string.Empty;
-        
+
         public string IconUrl => SeriesInfo.Cover;
         public string Cast => SeriesInfo.Cast;
-        
+
         public string[] BackdropPath => SeriesInfo.BackdropPath;
 
         public string Plot => SeriesInfo.Plot;
         public string Genre => SeriesInfo.Genre;
         public string Director => SeriesInfo.Director;
-        
+
         public string StreamID => string.Empty;
 
         public string StreamUrl => string.Empty;

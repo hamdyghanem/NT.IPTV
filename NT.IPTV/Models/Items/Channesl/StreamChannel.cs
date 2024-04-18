@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
+using NT.IPTV.Models.Items.StreamObject;
 using NT.IPTV.Utilities;
 using System;
 using System.Collections.Generic;
@@ -8,19 +9,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace NT.IPTV.Models.Channel
+namespace NT.IPTV.Models.Items.Channesl
 {
 
     public class StreamChannel : IChannel
     {
         [JsonProperty("num")]
-        public string ChannelNumber { get; set; }
+        public string num { get; set; }
 
         [JsonProperty("epg_channel_id")]
         public string ChannelId { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string name { get; set; }
 
         [JsonProperty("stream_icon")]
         public string LogoUrl { get; set; }
@@ -29,32 +30,10 @@ namespace NT.IPTV.Models.Channel
         public string StreamId { get; set; }
 
         [JsonProperty("category_id")]
-        public string CategoryId { get; set; } // Single category ID
+        public string category_id { get; set; } // Single category ID
 
-        private List<int> category_ids;
         [JsonProperty("category_ids")]
-        public List<int> CategoryIds
-        {
-            get
-            {
-                if (category_ids == null)
-                {
-                    if (!string.IsNullOrEmpty(CategoryId))
-                    {
-                        category_ids = new List<int>() { int.Parse(CategoryId) };
-                    }
-                    else
-                    {
-                        category_ids = new List<int>();
-                    }
-                }
-                return category_ids;
-            }
-            set
-            {
-                category_ids = value;
-            }
-        } // List of category IDs (some channels belong to more than one category)
+        private List<int> category_ids;
 
         [JsonProperty("stream_type")]
         public string StreamType { get; set; }
@@ -71,14 +50,22 @@ namespace NT.IPTV.Models.Channel
             }
         }
 
-        public string DisplayName => Name;
+        public string ID => num;
+        public string Name => name;
         public string IconUrl => LogoUrl;
         public string StreamUrl => Streamurl;
-        public string Title => Name;
+        public string CategoryID => category_id;
         public string ReleaseDate => string.Empty;
-        public string Description => Name;
+        public string Description => name;
         public enumCategories Category => enumCategories.Live;
+        public enumItemType ItemType => enumItemType.Channel;
+        private bool favorite = false;
+        public bool Favorite { get => favorite; set => favorite = value; }
 
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
 

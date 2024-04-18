@@ -2,12 +2,16 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using NT.IPTV.Models;
 using NT.IPTV.Models.Channel;
-using NT.IPTV.Models.StreamObject;
+using NT.IPTV.Models.Items;
+using NT.IPTV.Models.Items.Channesl;
+using NT.IPTV.Models.Items.StreamObject;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Net;
 using System.Reflection;
+using System.Security.Policy;
 
 namespace NT.IPTV.Utilities
 {
@@ -37,6 +41,10 @@ namespace NT.IPTV.Utilities
         public static List<StreamCategory> MoviesCategories { get; set; } = new List<StreamCategory>();
         public static List<StreamCategory> SeriesCategories { get; set; } = new List<StreamCategory>();
         //
+        public static List<StreamChannel> AllStreamChannels { get; set; } = new List<StreamChannel>();
+        public static List<StreamSeries> AllStreamSerieses { get; set; } = new List<StreamSeries>();
+        public static List<StreamVideo> AllStreamVideos { get; set; } = new List<StreamVideo>();
+
         public static List<StreamChannel> StreamChannels { get; set; } = new List<StreamChannel>();
         public static List<StreamSeries> StreamSerieses { get; set; } = new List<StreamSeries>();
         public static List<StreamVideo> StreamVideos { get; set; } = new List<StreamVideo>();
@@ -185,92 +193,43 @@ namespace NT.IPTV.Utilities
             }
         }
 
-        public static async Task RetrievePlaylistData(ToolStripStatusLabel lbl, CancellationToken token)//maybe pass in the action as a string and use this for all action calls
+        public static async Task RetrieveCategories(ToolStripStatusLabel lblStatus, CancellationToken token)
         {
             try
             {
                 token.ThrowIfCancellationRequested();
-
-                //string url = $"{(clsCore.currentUser.UseHttps ? "https" : "http")}://{clsCore.currentUser.Server}:{clsCore.currentUser.Port}/player_api.php?username={clsCore.currentUser.UserName}&password={clsCore.currentUser.Password}&action=get_live_streams";
-                string url = $"{clsCore.ServerConnectionString}&action=get_live_streams";
-                clsCore.StreamChannels.Clear();
-                using (var httpClient = new HttpClient())
-                {
-                    var response = await httpClient.GetAsync(url, token);
-                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-
-                    // Deserialize the JSON response into an array of StreamChannel objects.
-                    var channels = JsonConvert.DeserializeObject<StreamChannel[]>(responseContent);
-
-                    clsCore.StreamChannels.AddRange(channels);
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                MessageBox.Show("HTTP Error: " + ex.Message);
-            }
-            catch (OperationCanceledException)
-            {
-                MessageBox.Show("Login Canceled.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred: " + ex.Message);
-            }
-        }
-
-        //done, rewritten
-        public static async Task RetrieveCategories(CancellationToken token)
-        {
-            try
-            {
-                token.ThrowIfCancellationRequested();
-
-                switch (clsCore.CurrentCategory)
-                {
-                    case enumCategories.Live:
-                        {
-                            if (ChannelCategories.Count == 0)
-                            {
-                                var url = $"{clsCore.ServerConnectionString}&action=get_live_categories";
-                                HttpResponseMessage response = await _httpClient.GetAsync(url, token);
-                                response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                var responseFromServer = await response.Content.ReadAsStringAsync();
-                                ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
-                                ChannelCategories.All(x => x.Favorite = Config.FavoritChannelsCategory.Contains(x.ID));
-                                Config.FavoritChannelsCategory.All(x => ChannelCategories.Single(c => x == c.ID).Favorite = true);
-                            }
-                        }
-                        break;
-                    case enumCategories.Movies:
-                        {
-                            if (MoviesCategories.Count == 0)
-                            {
-                                var url = $"{clsCore.ServerConnectionString}&action=get_vod_categories";
-                                var response = await _httpClient.GetAsync(url, token);
-                                response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                var responseFromServer = await response.Content.ReadAsStringAsync();
-                                MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
-                                Config.FavoritMoviesCategory.All(x => MoviesCategories.Single(c => x == c.ID).Favorite = true);
-                            }
-                        }
-                        break;
-                    case enumCategories.Series:
-                        {
-                            if (SeriesCategories.Count == 0)
-                            {
-                                var url = $"{clsCore.ServerConnectionString}&action=get_series_categories";
-                                var response = await _httpClient.GetAsync(url, token);
-                                response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                var responseFromServer = await response.Content.ReadAsStringAsync();
-                                SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
-                                Config.FavoritSeriesCategory.All(x => SeriesCategories.Single(c => x == c.ID).Favorite = true);
-                            }
-                        }
-                        break;
-                }
+                //
+                lblStatus.Text = "Loading live channels categories";
+                var url = $"{clsCore.ServerConnectionString}&action=get_live_categories";
+                HttpResponseMessage response = await _httpClient.GetAsync(url, token);
+                response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                var responseFromServer = await response.Content.ReadAsStringAsync();
+                ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                ChannelCategories.Where(c => Config.FavoritChannelsCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                //Add Favorites
+                ChannelCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
+                //
+                lblStatus.Text = "Loading videos categories";
+                url = $"{clsCore.ServerConnectionString}&action=get_vod_categories";
+                response = await _httpClient.GetAsync(url, token);
+                response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                responseFromServer = await response.Content.ReadAsStringAsync();
+                MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                //MoviesCategories.All(x => x.Favorite = Config.FavoritMoviesCategory.Contains(x.ID));
+                //Config.FavoritMoviesCategory.All(x => MoviesCategories.Single(c => x == c.ID).Favorite = true);
+                MoviesCategories.Where(c => Config.FavoritMoviesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                MoviesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
+                //
+                lblStatus.Text = "Loading series categories";
+                url = $"{clsCore.ServerConnectionString}&action=get_series_categories";
+                response = await _httpClient.GetAsync(url, token);
+                response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                responseFromServer = await response.Content.ReadAsStringAsync();
+                SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
+                //SeriesCategories.All(x => x.Favorite = Config.FavoritSeriesCategory.Contains(x.ID));
+                //Config.FavoritSeriesCategory.All(x => SeriesCategories.Single(c => x == c.ID).Favorite = true);
+                SeriesCategories.Where(c => Config.FavoritSeriesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                SeriesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
             }
             catch (HttpRequestException ex)
             {
@@ -290,33 +249,88 @@ namespace NT.IPTV.Utilities
             try
             {
                 token.ThrowIfCancellationRequested();
+                if (AllStreamVideos.Count == 0 || AllStreamSerieses.Count == 0)
+                {
+                    //to set all
+                    await RetrieveStreams(token);
+                }
+                //
                 switch (clsCore.CurrentCategory)
                 {
                     case enumCategories.Live:
                         {
-                            var url = $"{clsCore.ServerConnectionString}&action=get_live_streams&category_id={selectedItem.ID}";
-                            var response = await _httpClient.GetAsync(url, token);
-                            response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                            var responseFromServer = await response.Content.ReadAsStringAsync();
-                            clsCore.StreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
+                            if (selectedItem.ID == "-1")
+                            {
+                                StreamChannels = AllStreamChannels.Where(c => Config.FavoritChannels.Contains(c.ID)).ToList();
+                                StreamChannels.All(c => c.Favorite = true);
+                            }
+                            else
+                            {
+                                if (AllStreamChannels.Count > 0)
+                                {
+                                    StreamChannels = AllStreamChannels.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                }
+                                else
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_live_streams&category_id={selectedItem.ID}";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    clsCore.StreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
+                                }
+                                StreamChannels.Where(c => Config.FavoritChannels.Contains(c.ID)).All(x => x.Favorite = true);
+                            }
                         }
                         break;
                     case enumCategories.Movies:
                         {
-                            var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams&category_id={selectedItem.ID}";
-                            var response = await _httpClient.GetAsync(url, token);
-                            response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                            var responseFromServer = await response.Content.ReadAsStringAsync();
-                            clsCore.StreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
+                            if (selectedItem.ID == "-1")
+                            {
+                                StreamVideos = AllStreamVideos.Where(c => Config.FavoritMovies.Contains(c.ID)).ToList();
+                                StreamVideos.All(c => c.Favorite = true);
+                            }
+                            else
+                            {
+                                if (AllStreamVideos.Count > 0)
+                                {
+                                    StreamVideos = AllStreamVideos.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                }
+                                else
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams&category_id={selectedItem.ID}";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    clsCore.StreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
+                                }
+                                StreamVideos.Where(c => Config.FavoritMovies.Contains(c.ID)).All(x => x.Favorite = true);
+                            }
                         }
                         break;
                     case enumCategories.Series:
                         {
-                            var url = $"{clsCore.ServerConnectionString}&action=get_series&category_id={selectedItem.ID}";
-                            var response = await _httpClient.GetAsync(url, token);
-                            response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                            var responseFromServer = await response.Content.ReadAsStringAsync();
-                            clsCore.StreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                            if (selectedItem.ID == "-1")
+                            {
+                                StreamSerieses = AllStreamSerieses.Where(c => Config.FavoritSeries.Contains(c.ID)).ToList();
+                                StreamSerieses.All(c => c.Favorite = true);
+                            }
+                            else
+                            {
+                                if (AllStreamSerieses.Count > 0)
+                                {
+                                    StreamSerieses = AllStreamSerieses.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                }
+                                else
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_series&category_id={selectedItem.ID}";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    StreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                                }
+                                //load favorites
+                                StreamSerieses.Where(c => Config.FavoritSeries.Contains(c.ID)).All(x => x.Favorite = true);
+                            }
                         }
                         break;
                 }
@@ -332,6 +346,47 @@ namespace NT.IPTV.Utilities
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
+            }
+        }
+        public static async Task RetrieveStreams(CancellationToken token)
+        {
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                {
+                    //lblStatus?.Text = "Loading live streams";
+                    if (AllStreamChannels.Count == 0)
+                    {
+                        var url = $"{clsCore.ServerConnectionString}&action=get_live_streams";
+                        var response = await _httpClient.GetAsync(url, token);
+                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                        var responseFromServer = await response.Content.ReadAsStringAsync();
+                        AllStreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
+                    }
+                    //lblStatus.Text = "Loading movies streams";
+                    if (AllStreamVideos.Count == 0)
+                    {
+                        var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams";
+                        var response = await _httpClient.GetAsync(url, token);
+                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                        var responseFromServer = await response.Content.ReadAsStringAsync();
+                        AllStreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
+                    }
+                    //
+                    //lblStatus.Text = "Loading series streams";
+                    if (clsCore.AllStreamSerieses.Count == 0)
+                    {
+                        var url = $"{clsCore.ServerConnectionString}&action=get_series";
+                        var response = await _httpClient.GetAsync(url, token);
+                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                        var responseFromServer = await response.Content.ReadAsStringAsync();
+                        clsCore.AllStreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
         public static async Task<WatchMovie> GetMovieInfo(string vodID, CancellationToken token)

@@ -1,5 +1,5 @@
 using Microsoft.VisualBasic.Devices;
-using NT.IPTV.Models.StreamObject;
+using NT.IPTV.Models.Items.StreamObject;
 using NT.IPTV.Utilities;
 using System;
 using System.ComponentModel;

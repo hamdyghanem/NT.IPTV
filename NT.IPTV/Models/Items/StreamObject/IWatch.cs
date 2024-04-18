@@ -7,27 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NT.IPTV.Models.StreamObject
+namespace NT.IPTV.Models.Items.StreamObject
 {
 
-    public interface IWatch
+    public interface IWatch: IItemType
     {
         enumCategories Category { get; }
-        string Name { get; }
-        string IconUrl { get; }
-        string[] BackdropPath { get;  }
+        string[] BackdropPath { get; }
         string Duration { get; }
-        
+
         string Cast { get; }
         string Genre { get; }
         string Director { get; }
-        
+
         string Plot { get; }
-        string StreamID { get; }
-        string StreamUrl { get; }
         string ContainerExtension { get; }
         string YoutubeTrailer { get; }
-        
+        string StreamID { get; }
+        string StreamUrl { get; }
+
     }
 
 }

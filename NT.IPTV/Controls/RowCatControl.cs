@@ -1,6 +1,5 @@
-﻿using NT.IPTV.Models;
-using NT.IPTV.Models.Channel;
-using NT.IPTV.Models.StreamObject;
+﻿using NT.IPTV.Models.Channel;
+using NT.IPTV.Models.Items;
 using NT.IPTV.Properties;
 using NT.IPTV.Utilities;
 using System;

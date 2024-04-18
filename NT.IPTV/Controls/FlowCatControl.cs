@@ -1,19 +1,6 @@
-﻿using NT.IPTV.Models;
-using NT.IPTV.Models.Channel;
-using NT.IPTV.Models.StreamObject;
-using System;
-using System.Collections.Generic;
+﻿using NT.IPTV.Models.Items;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace NT.IPTV
 {
@@ -116,6 +103,26 @@ namespace NT.IPTV
             {
                 ctrl.BackColor = Color.Black;
                 ctrl.ForeColor = Color.White;
+            }
+        }
+        public void SelectByIndex(int i)
+        {
+            if (i == -1)
+            {
+                SelectedItem = null;
+                if (lastestRowCatControl != null)
+                {
+                    lastestRowCatControl.BackColor = Color.Black;
+                    lastestRowCatControl.ForeColor = Color.White;
+                    lastestRowCatControl.Selected = false;
+                }
+            }
+            else
+            {
+                RowCatControl ctrl = (RowCatControl)flowLayoutPanel.Controls[i];
+                SelectedItem = ctrl.Category;
+                ChannelControl_ButtonClick(ctrl, null);
+
             }
         }
     }

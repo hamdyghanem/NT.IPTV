@@ -96,6 +96,7 @@
             lblPercentage.Name = "lblPercentage";
             lblPercentage.Size = new Size(250, 20);
             lblPercentage.Text = "Percentage";
+            lblPercentage.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // prgBar
             // 

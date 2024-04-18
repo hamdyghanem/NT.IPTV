@@ -1,5 +1,5 @@
 ﻿using NT.IPTV.Models.Channel;
-using NT.IPTV.Models.StreamObject;
+using NT.IPTV.Models.Items.StreamObject;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

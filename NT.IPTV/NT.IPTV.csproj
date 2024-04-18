@@ -33,6 +33,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\FlowSeriesControl.cs" />
+    <Compile Update="frmGlobalSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="frmDownloader.cs">
       <SubType>Form</SubType>
     </Compile>

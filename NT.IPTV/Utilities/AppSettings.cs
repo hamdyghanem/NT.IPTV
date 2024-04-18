@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using NT.IPTV.Models;
 using NT.IPTV.Models.Channel;
-using NT.IPTV.Models.StreamObject;
 using System.Runtime.CompilerServices;
 
 namespace NT.IPTV.Utilities
@@ -12,6 +11,7 @@ namespace NT.IPTV.Utilities
         
         public string VlcLocationPath { set; get; }
         public string LastProfile { set; get; }
+        public int ThumbnailSize { set; get; } = 100;
         #region "Favorites ...
         public List<string> FavoritChannelsCategory { set; get; }=new List<string>();
         public List<string> FavoritMoviesCategory { set; get; } = new List<string>();

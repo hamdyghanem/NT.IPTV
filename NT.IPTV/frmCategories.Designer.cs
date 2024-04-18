@@ -52,6 +52,7 @@ namespace NT.IPTV
             btnLive = new ToolStripButton();
             btnMovies = new ToolStripButton();
             btnSeries = new ToolStripButton();
+            btnGlobalSearch = new ToolStripButton();
             flwCat = new FlowCatControl();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
@@ -144,16 +145,17 @@ namespace NT.IPTV
             // txtSearchMovies
             // 
             txtSearchMovies.DelayedTextChangedTimeout = 2000;
-            txtSearchMovies.Location = new Point(652, 19);
+            txtSearchMovies.Location = new Point(652, 11);
             txtSearchMovies.Name = "txtSearchMovies";
             txtSearchMovies.Size = new Size(418, 27);
             txtSearchMovies.TabIndex = 4;
             txtSearchMovies.DelayedTextChanged += txtSearchMovies_DelayedTextChanged;
+            txtSearchMovies.TextChanged += txtSearchMovies_TextChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(593, 26);
+            label1.Location = new Point(593, 11);
             label1.Name = "label1";
             label1.Size = new Size(53, 20);
             label1.TabIndex = 3;
@@ -167,6 +169,7 @@ namespace NT.IPTV
             txtSearch.Size = new Size(351, 27);
             txtSearch.TabIndex = 1;
             txtSearch.DelayedTextChanged += txtSearch_DelayedTextChanged;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // lblSeach
             // 
@@ -211,7 +214,7 @@ namespace NT.IPTV
             // toolStrip
             // 
             toolStrip.ImageScalingSize = new Size(55, 55);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnGlobalSearch });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 82);
@@ -259,6 +262,17 @@ namespace NT.IPTV
             btnSeries.ToolTipText = "Series";
             btnSeries.Click += btnLive_Click;
             // 
+            // btnGlobalSearch
+            // 
+            btnGlobalSearch.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnGlobalSearch.Image = (Image)resources.GetObject("btnGlobalSearch.Image");
+            btnGlobalSearch.ImageTransparentColor = Color.Magenta;
+            btnGlobalSearch.Name = "btnGlobalSearch";
+            btnGlobalSearch.Padding = new Padding(10);
+            btnGlobalSearch.Size = new Size(79, 79);
+            btnGlobalSearch.Text = "Global Search";
+            btnGlobalSearch.Click += btnGlobalSearch_Click;
+            // 
             // flwCat
             // 
             flwCat.AutoScroll = true;
@@ -271,6 +285,7 @@ namespace NT.IPTV
             flwCat.Size = new Size(434, 499);
             flwCat.TabIndex = 10;
             flwCat.SelectedIndexChaged += lstCategories_SelectedIndexChanged;
+            flwCat.Load += flwCat_Load;
             // 
             // frmCategories
             // 
@@ -284,7 +299,7 @@ namespace NT.IPTV
             Controls.Add(toolStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmCategories";
-            Text = "Categories";
+            Text = "NT.IPTV";
             WindowState = FormWindowState.Maximized;
             FormClosing += frmCategories_FormClosing;
             Load += frmCategories_Load;
@@ -319,5 +334,6 @@ namespace NT.IPTV
         private Button btnDateUp;
         private Button btnRatingUp;
         private FlowCatControl flwCat;
+        private ToolStripButton btnGlobalSearch;
     }
 }

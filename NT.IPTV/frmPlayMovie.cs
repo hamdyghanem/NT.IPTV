@@ -1,17 +1,3 @@
-using System;
-using System.Configuration;
-using System.Diagnostics;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Channels;
-using System.Windows.Forms;
-using Microsoft.VisualBasic.ApplicationServices;
-using NT.IPTV.Models;
-using NT.IPTV.Models.StreamObject;
-using NT.IPTV.Utilities;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace NT.IPTV
 {
     public partial class frmPlayMovie : Form

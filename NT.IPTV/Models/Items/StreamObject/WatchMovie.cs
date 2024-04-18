@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NT.IPTV.Models.StreamObject
+namespace NT.IPTV.Models.Items.StreamObject
 {
 
     public class WatchMovie : IWatch
@@ -19,9 +19,11 @@ namespace NT.IPTV.Models.StreamObject
         public MovieData MovieData { get; set; }
 
         public enumCategories Category => enumCategories.Movies;
+        public enumItemType ItemType => enumItemType.Watch;
 
+        public string ID => MovieData.StreamID;
+     
         public string Name => MovieData.Name;
-
 
         public string IconUrl => MovieInfo.MovieImage;
         public string[] BackdropPath => MovieInfo.BackdropPath;

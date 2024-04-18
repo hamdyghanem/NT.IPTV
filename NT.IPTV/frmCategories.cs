@@ -6,13 +6,13 @@ using System.Timers;
 using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using NT.IPTV.Models;
 using NT.IPTV.Utilities;
-using NT.IPTV.Models.Channel;
 using System.Collections.Generic;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using System.Diagnostics;
 using NT.IPTV.Properties;
+using NT.IPTV.Models.Items.Channesl;
+using NT.IPTV.Models.Items;
 
 namespace NT.IPTV
 {
@@ -21,6 +21,7 @@ namespace NT.IPTV
         private System.Timers.Timer _updateCheckTimer;
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private List<StreamCategory> categoryies = new List<StreamCategory>();
+        private frmGlobalSearch frmGSearch = new frmGlobalSearch();
         private bool bStopProcess = false;
         public frmCategories()
         {
@@ -82,7 +83,6 @@ namespace NT.IPTV
             switch (clsCore.CurrentCategory)
             {
                 case enumCategories.Live:
-                    //categoryies = clsCore.ChannelCategories.OrderBy(x => x.ID ).ThenBy(n => n.Favorite).ToList();
                     categoryies = clsCore.ChannelCategories.OrderByDescending(n => n.Favorite).ToList();
                     break;
                 case enumCategories.Movies:
@@ -97,19 +97,10 @@ namespace NT.IPTV
 
         private void FillCategoryList(List<StreamCategory> groups)
         {
-            //lstCategories.Items.Clear();
-            //txtSearchMovies.Clear();
-            //lblStatus.Text = "loading...";
-            //prgBar.Value = 0;
-            //prgBar.Maximum = groups.Count;
-            //foreach (var item in groups)
-            //{
-            //    lstCategories.Items.Add(item);
-            //    prgBar.Value++;
-            //}
             lblStatus.Text = string.Empty;
             flwCat.LoadCategories(groups, prgBar);
-
+            //select first one
+            flwCat.SelectByIndex(0); ;
         }
 
         private void backToLoginBtn_Click(object sender, EventArgs e)
@@ -119,6 +110,7 @@ namespace NT.IPTV
         }
         private async void lstCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
+            flwChannel.Enabled = false;
             var selectedItem = this.flwCat.SelectedItem;
             await clsCore.RetrieveStreams(selectedItem, _cts.Token);
             switch (clsCore.CurrentCategory)
@@ -139,6 +131,7 @@ namespace NT.IPTV
                     }
                     break;
             }
+            flwChannel.Enabled = true;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -284,8 +277,22 @@ namespace NT.IPTV
             var btn = (ToolStripButton)sender;
             ToggleButtons(btn);
             clsCore.CurrentCategory = (enumCategories)btn.Tag;
-            await clsCore.RetrieveCategories(_cts.Token);
             loadCategories();
+        }
+        private async void btnGlobalSearch_Click(object sender, EventArgs e)
+        {
+            if (clsCore.CurrentCategory == enumCategories.Live && clsCore.AllStreamChannels.Count == 0 ||
+                clsCore.CurrentCategory == enumCategories.Movies && clsCore.AllStreamVideos.Count == 0 ||
+                clsCore.CurrentCategory == enumCategories.Series && clsCore.AllStreamSerieses.Count == 0)
+            {
+                MessageBox.Show("Still loading data, please wait and try again.");
+                await clsCore.RetrieveStreams(_cts.Token);
+                return;
+            }
+            if (frmGSearch.ShowDialog() == DialogResult.OK)
+            {
+                FillSubCategories(frmGSearch.FoundStreamChannel);
+            }
         }
         private void ToggleButtons(ToolStripButton btn)
         {
@@ -307,6 +314,7 @@ namespace NT.IPTV
                 {
                     newSize = new Size(Convert.ToInt32(flwChannel.Controls[0].Size.Width / iinterval), Convert.ToInt32(flwChannel.Controls[0].Size.Width / iinterval));
                 }
+                clsCore.Config.ThumbnailSize = flwChannel.Controls[0].Size.Width;
                 foreach (Control ctrl in flwChannel.Controls)
                 {
                     if (bStopProcess)
@@ -329,12 +337,12 @@ namespace NT.IPTV
             List<ChannelControl> ordered = new List<ChannelControl>();
             if (button.Tag == "down")
             {
-                ordered = lst.OrderBy(x => x.Channel.Title).ToList();
+                ordered = lst.OrderBy(x => x.Channel.Name).ToList();
                 img = Properties.Resources.NameUp;
             }
             else
             {
-                ordered = lst.OrderByDescending(x => x.Channel.Title).ToList();
+                ordered = lst.OrderByDescending(x => x.Channel.Name).ToList();
                 img = Properties.Resources.NameDown;
             }
 
@@ -392,14 +400,29 @@ namespace NT.IPTV
             {
                 btn.Tag = "down";
             }
-
             btn.BackgroundImage = img;
             //
             flwChannel.Controls.Clear();
             foreach (Control ctrl in ordered)
             {
+                ctrl.Size = new Size(clsCore.Config.ThumbnailSize, clsCore.Config.ThumbnailSize);
                 flwChannel.Controls.Add(ctrl);
             }
+        }
+
+        private void txtSearchMovies_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flwCat_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

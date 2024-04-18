@@ -1,4 +1,6 @@
-﻿using NT.IPTV.Models.Channel;
+﻿using NT.IPTV.Models.Items;
+using NT.IPTV.Models.Items.Channesl;
+using NT.IPTV.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,7 +32,7 @@ namespace NT.IPTV
             InitializeComponent();
             //
             Channel = _channel;
-            lblChannelName.Text = Channel?.Title;
+            lblChannelName.Text = Channel?.Name;
             //lblDesc.Text = channel.Title + channel.Description;
             //System.Net.WebRequest request = System.Net.WebRequest.Create(channel.LogoUrl);
             //System.Net.WebResponse response = request.GetResponse();
@@ -40,6 +42,12 @@ namespace NT.IPTV
             if (!string.IsNullOrEmpty(Channel?.IconUrl))
             {
                 picLogo.ImageLocation = Channel.IconUrl;
+            }
+            lblChannelName.Tag = Channel.Favorite ? "1" : "0";
+            if (lblChannelName.Tag == "1")
+            {
+                lblChannelName.BackColor = Color.Gold;
+                lblChannelName.ForeColor = Color.Black;
             }
         }
 
@@ -52,6 +60,55 @@ namespace NT.IPTV
         {
             if (this.ButtonClick != null)
                 this.ButtonClick(this, e);
+        }
+
+        private void lblChannelName_Click(object sender, EventArgs e)
+        {
+            //add to favorites
+            List<string> lst = new List<string>();
+            switch (clsCore.CurrentCategory)
+            {
+                case enumCategories.Live:
+                    {
+                        lst = clsCore.Config.FavoritChannels;
+                        clsCore.StreamChannels.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
+                        break;
+                    }
+                case enumCategories.Movies:
+                    {
+                        lst = clsCore.Config.FavoritMovies;
+                        clsCore.StreamVideos.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
+                        break;
+                    }
+                case enumCategories.Series:
+                    {
+                        lst = clsCore.Config.FavoritSeries;
+                        clsCore.StreamSerieses.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
+                        break;
+                    }
+            }
+            //
+            if (lblChannelName.Tag == "0")
+            {
+                lblChannelName.Tag = "1";
+                lblChannelName.BackColor=  Color.Gold;
+                lblChannelName.ForeColor=  Color.Black;
+                if (!lst.Contains(Channel.ID))
+                {
+                    lst.Add(Channel.ID);
+                }
+            }
+            else
+            {
+                lblChannelName.Tag = "0";
+                lblChannelName.BackColor=  Color.Black;
+                lblChannelName.ForeColor=  Color.White;
+                if (lst.Contains(Channel.ID))
+                {
+                    lst.Remove(Channel.ID);
+                }
+            }
+            clsCore.SaveConfiguration();
         }
     }
 }
