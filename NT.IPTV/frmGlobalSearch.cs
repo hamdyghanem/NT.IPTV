@@ -62,7 +62,12 @@ namespace NT.IPTV
             lstGlobalSearch.Items.Clear();
             prgBar.Minimum = 0;
             prgBar.Value = 0;
+            lblFound.Text = "";
             //
+            if (string.IsNullOrEmpty( filterText))
+            {
+                return;
+            }
             List<IChannel> tosearchIn = new List<IChannel>();
             switch (clsCore.CurrentCategory)
             {
