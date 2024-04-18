@@ -110,7 +110,6 @@ namespace NT.IPTV
         }
         private async void lstCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            flwChannel.Enabled = false;
             var selectedItem = this.flwCat.SelectedItem;
             await clsCore.RetrieveStreams(selectedItem, _cts.Token);
             switch (clsCore.CurrentCategory)
@@ -131,7 +130,6 @@ namespace NT.IPTV
                     }
                     break;
             }
-            flwChannel.Enabled = true;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)

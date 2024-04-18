@@ -119,11 +119,14 @@ namespace NT.IPTV
             }
             else
             {
-                RowCatControl ctrl = (RowCatControl)flowLayoutPanel.Controls[i];
-                SelectedItem = ctrl.Category;
-                ChannelControl_ButtonClick(ctrl, null);
-
+                if (flowLayoutPanel.Controls.Count > i)
+                {
+                    RowCatControl ctrl = (RowCatControl)flowLayoutPanel.Controls[i];
+                    SelectedItem = ctrl.Category;
+                    ChannelControl_ButtonClick(ctrl, null);
+                }
             }
+
         }
     }
 }
