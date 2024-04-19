@@ -49,6 +49,7 @@ namespace NT.IPTV
                 lblChannelName.BackColor = Color.Gold;
                 lblChannelName.ForeColor = Color.Black;
             }
+            this.Size = new Size(clsCore.Config.ThumbnailSize, clsCore.Config.ThumbnailSize);
         }
 
         private void picLogo_DoubleClick(object sender, EventArgs e)
@@ -91,8 +92,8 @@ namespace NT.IPTV
             if (lblChannelName.Tag == "0")
             {
                 lblChannelName.Tag = "1";
-                lblChannelName.BackColor=  Color.Gold;
-                lblChannelName.ForeColor=  Color.Black;
+                lblChannelName.BackColor = Color.Gold;
+                lblChannelName.ForeColor = Color.Black;
                 if (!lst.Contains(Channel.ID))
                 {
                     lst.Add(Channel.ID);
@@ -101,8 +102,8 @@ namespace NT.IPTV
             else
             {
                 lblChannelName.Tag = "0";
-                lblChannelName.BackColor=  Color.Black;
-                lblChannelName.ForeColor=  Color.White;
+                lblChannelName.BackColor = Color.Black;
+                lblChannelName.ForeColor = Color.White;
                 if (lst.Contains(Channel.ID))
                 {
                     lst.Remove(Channel.ID);

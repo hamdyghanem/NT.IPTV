@@ -484,6 +484,8 @@ namespace NT.IPTV.Utilities
         }
         public static async Task<bool> Check404(string url)
         {
+            try
+            {
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(url);
@@ -499,6 +501,11 @@ namespace NT.IPTV.Utilities
                 }
             }
             return true;
+            }
+            catch(Exception ex)
+            {
+                    return false;
+            }
         }
 
         public static async void dotest(string url)
