@@ -208,8 +208,10 @@ namespace NT.IPTV
             // 
             // prgBar
             // 
+            prgBar.MarqueeAnimationSpeed = 30;
             prgBar.Name = "prgBar";
-            prgBar.Size = new Size(200, 18);
+            prgBar.Size = new Size(300, 18);
+            prgBar.Style = ProgressBarStyle.Marquee;
             // 
             // toolStrip
             // 

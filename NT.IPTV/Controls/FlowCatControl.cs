@@ -60,6 +60,11 @@ namespace NT.IPTV
         {
             if (lastestRowCatControl != null)
             {
+                if (lastestRowCatControl == (RowCatControl)sender)
+                {
+                    //same one
+                    return;
+                }
                 lastestRowCatControl.BackColor = Color.Black;
                 lastestRowCatControl.ForeColor = Color.White;
                 lastestRowCatControl.Selected = false;

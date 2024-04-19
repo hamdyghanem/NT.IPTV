@@ -13,6 +13,8 @@ using System.Diagnostics;
 using NT.IPTV.Properties;
 using NT.IPTV.Models.Items.Channesl;
 using NT.IPTV.Models.Items;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Button = System.Windows.Forms.Button;
 
 namespace NT.IPTV
 {
@@ -110,8 +112,12 @@ namespace NT.IPTV
         }
         private async void lstCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
+            prgBar.Visible = true;
+             
+
             var selectedItem = this.flwCat.SelectedItem;
             await clsCore.RetrieveStreams(selectedItem, _cts.Token);
+
             switch (clsCore.CurrentCategory)
             {
                 case enumCategories.Live:
@@ -130,6 +136,9 @@ namespace NT.IPTV
                     }
                     break;
             }
+
+            prgBar.Visible = false;
+
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -272,10 +281,19 @@ namespace NT.IPTV
 
         private async void btnLive_Click(object sender, EventArgs e)
         {
+            flwCat.Enabled = false;
+            prgBar.Visible = true;
+
             var btn = (ToolStripButton)sender;
             ToggleButtons(btn);
             clsCore.CurrentCategory = (enumCategories)btn.Tag;
+            await clsCore.RetrieveStreams(  _cts.Token);
+
             loadCategories();
+
+            prgBar.Visible = false;
+            flwCat.Enabled = true;
+
         }
         private async void btnGlobalSearch_Click(object sender, EventArgs e)
         {
@@ -388,7 +406,7 @@ namespace NT.IPTV
 
             fillOrderedControl(ordered, button, img);
         }
-        private void fillOrderedControl(List<ChannelControl> ordered, Button btn, System.Drawing.Bitmap img)
+        private void fillOrderedControl(List<ChannelControl> ordered, System.Windows.Forms.Button btn, System.Drawing.Bitmap img)
         {
             if (btn.Tag == "down")
             {

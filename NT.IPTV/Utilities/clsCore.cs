@@ -249,12 +249,6 @@ namespace NT.IPTV.Utilities
             try
             {
                 token.ThrowIfCancellationRequested();
-                if (AllStreamVideos.Count == 0 || AllStreamSerieses.Count == 0)
-                {
-                    //to set all
-                    await RetrieveStreams(token);
-                }
-                //
                 switch (clsCore.CurrentCategory)
                 {
                     case enumCategories.Live:
@@ -266,18 +260,18 @@ namespace NT.IPTV.Utilities
                             }
                             else
                             {
-                                if (AllStreamChannels.Count > 0)
-                                {
-                                    StreamChannels = AllStreamChannels.Where(x => x.CategoryID == selectedItem.ID).ToList();
-                                }
-                                else
-                                {
-                                    var url = $"{clsCore.ServerConnectionString}&action=get_live_streams&category_id={selectedItem.ID}";
-                                    var response = await _httpClient.GetAsync(url, token);
-                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                    var responseFromServer = await response.Content.ReadAsStringAsync();
-                                    clsCore.StreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
-                                }
+                                //if (AllStreamChannels.Count > 0)
+                                //{
+                                StreamChannels = AllStreamChannels.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                //}
+                                //else
+                                //{
+                                //    var url = $"{clsCore.ServerConnectionString}&action=get_live_streams&category_id={selectedItem.ID}";
+                                //    var response = await _httpClient.GetAsync(url, token);
+                                //    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                //    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                //    clsCore.StreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
+                                //}
                                 StreamChannels.Where(c => Config.FavoritChannels.Contains(c.ID)).All(x => x.Favorite = true);
                             }
                         }
@@ -291,18 +285,18 @@ namespace NT.IPTV.Utilities
                             }
                             else
                             {
-                                if (AllStreamVideos.Count > 0)
-                                {
-                                    StreamVideos = AllStreamVideos.Where(x => x.CategoryID == selectedItem.ID).ToList();
-                                }
-                                else
-                                {
-                                    var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams&category_id={selectedItem.ID}";
-                                    var response = await _httpClient.GetAsync(url, token);
-                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                    var responseFromServer = await response.Content.ReadAsStringAsync();
-                                    clsCore.StreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
-                                }
+                                //if (AllStreamVideos.Count > 0)
+                                //{
+                                StreamVideos = AllStreamVideos.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                //}
+                                //else
+                                //{
+                                //    var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams&category_id={selectedItem.ID}";
+                                //    var response = await _httpClient.GetAsync(url, token);
+                                //    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                //    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                //    clsCore.StreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
+                                //}
                                 StreamVideos.Where(c => Config.FavoritMovies.Contains(c.ID)).All(x => x.Favorite = true);
                             }
                         }
@@ -316,18 +310,18 @@ namespace NT.IPTV.Utilities
                             }
                             else
                             {
-                                if (AllStreamSerieses.Count > 0)
-                                {
-                                    StreamSerieses = AllStreamSerieses.Where(x => x.CategoryID == selectedItem.ID).ToList();
-                                }
-                                else
-                                {
-                                    var url = $"{clsCore.ServerConnectionString}&action=get_series&category_id={selectedItem.ID}";
-                                    var response = await _httpClient.GetAsync(url, token);
-                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                                    var responseFromServer = await response.Content.ReadAsStringAsync();
-                                    StreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
-                                }
+                                //if (AllStreamSerieses.Count > 0)
+                                //{
+                                StreamSerieses = AllStreamSerieses.Where(x => x.CategoryID == selectedItem.ID).ToList();
+                                //}
+                                //else
+                                //{
+                                //    var url = $"{clsCore.ServerConnectionString}&action=get_series&category_id={selectedItem.ID}";
+                                //    var response = await _httpClient.GetAsync(url, token);
+                                //    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                //    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                //    StreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                                //}
                                 //load favorites
                                 StreamSerieses.Where(c => Config.FavoritSeries.Contains(c.ID)).All(x => x.Favorite = true);
                             }
@@ -354,33 +348,50 @@ namespace NT.IPTV.Utilities
             {
                 token.ThrowIfCancellationRequested();
                 {
-                    //lblStatus?.Text = "Loading live streams";
-                    if (AllStreamChannels.Count == 0)
+                    switch (clsCore.CurrentCategory)
                     {
-                        var url = $"{clsCore.ServerConnectionString}&action=get_live_streams";
-                        var response = await _httpClient.GetAsync(url, token);
-                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                        var responseFromServer = await response.Content.ReadAsStringAsync();
-                        AllStreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
-                    }
-                    //lblStatus.Text = "Loading movies streams";
-                    if (AllStreamVideos.Count == 0)
-                    {
-                        var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams";
-                        var response = await _httpClient.GetAsync(url, token);
-                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                        var responseFromServer = await response.Content.ReadAsStringAsync();
-                        AllStreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
-                    }
-                    //
-                    //lblStatus.Text = "Loading series streams";
-                    if (clsCore.AllStreamSerieses.Count == 0)
-                    {
-                        var url = $"{clsCore.ServerConnectionString}&action=get_series";
-                        var response = await _httpClient.GetAsync(url, token);
-                        response.EnsureSuccessStatusCode(); // Throw if not a success code.
-                        var responseFromServer = await response.Content.ReadAsStringAsync();
-                        clsCore.AllStreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                        case enumCategories.Live:
+                            {
+                                //lblStatus?.Text = "Loading live streams";
+                                if (AllStreamChannels.Count == 0)
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_live_streams";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    AllStreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
+                                }
+                                break;
+                            }
+
+                        case enumCategories.Movies:
+                            {
+                                //lblStatus.Text = "Loading movies streams";
+                                if (AllStreamVideos.Count == 0)
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_vod_streams";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    AllStreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
+                                }
+                                break;
+                            }
+
+                        //
+                        case enumCategories.Series:
+                            {
+                                //lblStatus.Text = "Loading series streams";
+                                if (clsCore.AllStreamSerieses.Count == 0)
+                                {
+                                    var url = $"{clsCore.ServerConnectionString}&action=get_series";
+                                    var response = await _httpClient.GetAsync(url, token);
+                                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
+                                    var responseFromServer = await response.Content.ReadAsStringAsync();
+                                    clsCore.AllStreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
+                                }
+                                break;
+                            }
                     }
                 }
             }

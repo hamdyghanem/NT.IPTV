@@ -49,11 +49,13 @@ namespace NT.IPTV
                 if (await clsCore.CheckLoginConnection(_cts.Token)) // Connect to the server
                 {
                     await clsCore.RetrieveCategories(lblStatus, _cts.Token);
-                    //await clsCore.RetrieveStreams(lblStatus, _cts.Token);
-                    _ = Task.Run(async () =>
-                  {
-                      await clsCore.RetrieveStreams(_cts.Token);
-                  });
+                    await clsCore.RetrieveStreams(_cts.Token);
+
+                    //  //await clsCore.RetrieveStreams(lblStatus, _cts.Token);
+                    //  _ = Task.Run(async () =>
+                    //{
+                    //    await clsCore.RetrieveStreams(_cts.Token);
+                    //});
 
                     if (!_cts.IsCancellationRequested)
                     {
