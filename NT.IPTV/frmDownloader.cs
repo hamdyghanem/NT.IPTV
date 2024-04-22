@@ -55,7 +55,7 @@ namespace NT.IPTV
                 if (!Directory.Exists(seriesSaveDir))
                     Directory.CreateDirectory(seriesSaveDir);
 
-                foreach (var seasson in series.seasonsData)
+                foreach (var seasson in series.Seasons)
                 {
                     foreach (var episode in seasson.Episodes)
                     {
@@ -79,7 +79,7 @@ namespace NT.IPTV
             {
                 var series = (WatchSeries)downoadFile;
                 int i = 0;
-                foreach (var seasson in series.seasonsData)
+                foreach (var seasson in series.Seasons)
                 {
                     i++;
                     var seasonPath = Path.Combine(saveDir, TitleName, $"seasons {i}");

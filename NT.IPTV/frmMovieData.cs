@@ -56,30 +56,37 @@ namespace NT.IPTV
         private async Task<WatchSeries> getSeriesInfo()
         {
             Selected = await clsCore.GetSeriesInfo(cltrParent.Channel.StreamID, _cts.Token);
-            await fillLabels();
-
-            var series = (WatchSeries)Selected;
-            for (int i = 0; i < series.seasonsData.Count; i++)
+            if (Selected != null)
             {
-                var tab = new TabPage($"Season {i + 1}");
-                flowSeriesControl flow = new flowSeriesControl(series.seasonsData[i], i, series.SeriesInfo.Cover);
-                flow.ButtonClick += new EventHandler(SeriesControl_ButtonClick);
-                flow.Dock = DockStyle.Fill;
-                tab.BackColor = Color.Black;
-                tab.Controls.Add(flow);
-                //
-                tabSeries.TabPages.Add(tab);
-                //
-                foreach (var episode in series.seasonsData[i].Episodes)
-                {
-                    links.Add(episode.StreamUrl);
-                }
+                await fillLabels();
 
+                var series = (WatchSeries)Selected;
+                for (int i = 0; i < series.Seasons.Count; i++)
+                {
+                    var tab = new TabPage($"Season {i + 1}");
+                    flowSeriesControl flow = new flowSeriesControl(series.Seasons[i], i, series.SeriesInfo.Cover);
+                    flow.ButtonClick += new EventHandler(SeriesControl_ButtonClick);
+                    flow.Dock = DockStyle.Fill;
+                    tab.BackColor = Color.Black;
+                    tab.Controls.Add(flow);
+                    //
+                    tabSeries.TabPages.Add(tab);
+                    //
+                    foreach (var episode in series.Seasons[i].Episodes)
+                    {
+                        links.Add(episode.StreamUrl);
+                    }
+                }
+                return series;
             }
-            return series;
+            return null;
         }
         private async Task fillLabels()
         {
+            if (Selected == null)
+            {
+                return;
+            }
             lblInfo.Text = Selected.Plot;
             lblCast.Text = Selected.Cast;
             if (!string.IsNullOrEmpty(Selected.Duration))

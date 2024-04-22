@@ -15,12 +15,12 @@ namespace NT.IPTV.Models.Items.StreamObject
     {
 
         [JsonProperty("seasons")]
-        public string[] seasons { get; set; }
+        public SeasonData[] SeasonsData { get; set; }
         [JsonProperty("info")]
         public SeriesInfo SeriesInfo { get; set; }
         [JsonProperty("episodes")]
         public Episodes Episodes { get; set; }
-        public List<Season> seasonsData { get; set; } = new List<Season>();
+        public List<Season> Seasons { get; set; } = new List<Season>();
 
         public enumCategories Category => enumCategories.Series;
         public enumItemType ItemType => enumItemType.Watch;
@@ -127,6 +127,35 @@ namespace NT.IPTV.Models.Items.StreamObject
         [JsonProperty("releasedate")]
         public string releasedate { get; set; }
 
+    }
+    public class SeasonData
+    {
+        [JsonProperty("id")]
+        public int id { get; set; }
+
+        [JsonProperty("episode_count")]
+        public int episode_count { get; set; }
+
+        [JsonProperty("air_date")]
+        public string air_date { get; set; }
+
+        [JsonProperty("name")]
+        public string name { get; set; }
+
+        [JsonProperty("season_number")]
+        public int season_number { get; set; }
+
+        [JsonProperty("overview")]
+        public string overview { get; set; }
+
+        [JsonProperty("vote_average")]
+        public string vote_average { get; set; }
+
+        [JsonProperty("cover")]
+        public string cover { get; set; }
+
+        [JsonProperty("cover_big")]
+        public string cover_big { get; set; }
     }
     public class EpisodeData
     {

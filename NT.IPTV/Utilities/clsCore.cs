@@ -430,7 +430,7 @@ namespace NT.IPTV.Utilities
                 {
                     var d = GetPropValue(series.Episodes, $"EpisodeData_{i}");
                     if (d == null) break;
-                    series.seasonsData.Add(new Season { Episodes = (List<EpisodeData>)d });
+                    series.Seasons.Add(new Season { Episodes = (List<EpisodeData>)d });
                 }
                 return series;
             }
@@ -486,25 +486,25 @@ namespace NT.IPTV.Utilities
         {
             try
             {
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync(url);
+                using (HttpClient client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.GetAsync(url);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine(response.StatusCode.ToString());
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine(response.StatusCode.ToString());
+                    }
+                    else
+                    {
+                        //response.StatusCode
+                        return false;
+                    }
                 }
-                else
-                {
-                    //response.StatusCode
-                    return false;
-                }
+                return true;
             }
-            return true;
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                    return false;
+                return false;
             }
         }
 
