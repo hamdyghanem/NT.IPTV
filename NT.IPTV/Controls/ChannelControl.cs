@@ -71,19 +71,19 @@ namespace NT.IPTV
             {
                 case enumCategories.Live:
                     {
-                        lst = clsCore.Config.FavoritChannels;
+                        lst = clsCore.currentUser.FavoritChannels;
                         clsCore.AllStreamChannels.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
                         break;
                     }
                 case enumCategories.Movies:
                     {
-                        lst = clsCore.Config.FavoritMovies;
+                        lst = clsCore.currentUser.FavoritMovies;
                         clsCore.AllStreamVideos.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
                         break;
                     }
                 case enumCategories.Series:
                     {
-                        lst = clsCore.Config.FavoritSeries;
+                        lst = clsCore.currentUser.FavoritSeries;
                         clsCore.AllStreamSerieses.Single(x => x.ID == Channel.ID).Favorite = lblChannelName.Tag == "0";
                         break;
                     }

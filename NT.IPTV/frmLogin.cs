@@ -12,7 +12,6 @@ namespace NT.IPTV
     public partial class frmLogin : Form
     {
         private CancellationTokenSource _cts = new CancellationTokenSource();
-        private UserInfo _currentUser = new UserInfo();
         private bool logging = false;
         public frmLogin()
         {
@@ -100,8 +99,8 @@ namespace NT.IPTV
                 MessageBox.Show("You must select a user to load");
                 return;
             }
-            _currentUser = clsCore.GetUserData(cboProfile.SelectedItem.ToString());
-            if (_currentUser != null)
+            clsCore.currentUser = clsCore.GetUserData(cboProfile.SelectedItem.ToString());
+            if (clsCore.currentUser != null)
             {
                 loadDataIntoTextFields();
                 // Optional: Clear the selection if needed or keep it based on your UI logic
@@ -112,17 +111,17 @@ namespace NT.IPTV
         }
         private void loadDataIntoTextFields()
         {
-            if (_currentUser?.UserName == null || _currentUser?.Password == null || _currentUser?.Server == null || _currentUser?.Port == null)
+            if (clsCore.currentUser?.UserName == null || clsCore.currentUser?.Password == null || clsCore.currentUser?.Server == null || clsCore.currentUser?.Port == null)
             {
                 MessageBox.Show("User data is missing, unable to load " + cboProfile.SelectedValue.ToString());
                 return;
             }
 
-            txtUsername.Text = _currentUser.UserName;
-            txtPassword.Text = _currentUser.Password;
-            //protocolCheckBox.IsChecked = _currentUser.UseHttps;
-            txtServer.Text = _currentUser.Server;
-            txtPort.Text = _currentUser.Port;
+            txtUsername.Text = clsCore.currentUser.UserName;
+            txtPassword.Text = clsCore.currentUser.Password;
+            //protocolCheckBox.IsChecked = clsCore.currentUser.UseHttps;
+            txtServer.Text = clsCore.currentUser.Server;
+            txtPort.Text = clsCore.currentUser.Port;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -137,14 +136,15 @@ namespace NT.IPTV
                 MessageBox.Show("Give it a name");
                 return;
             }
-            _currentUser.Name = cboProfile.Text;
-            _currentUser.UserName = txtUsername.Text;
-            _currentUser.Password = txtPassword.Text;
-            //_currentUser.UseHttps = (bool)protocolCheckBox.IsChecked;
-            _currentUser.Server = txtServer.Text;
-            _currentUser.Port = txtPort.Text;
+            clsCore.currentUser.Name = cboProfile.Text;
+            clsCore.currentUser.UserName = txtUsername.Text;
+            clsCore.currentUser.Password = txtPassword.Text;
+            //clsCore.currentUser.UseHttps = (bool)protocolCheckBox.IsChecked;
+            clsCore.currentUser.Server = txtServer.Text;
+            clsCore.currentUser.Port = txtPort.Text;
+            clsCore.SaveConfiguration();
             clsCore.loadUsersFromDirectory(cboProfile);
-            MessageBox.Show(_currentUser.Name + "'s data saved");
+            MessageBox.Show(clsCore.currentUser.Name + "'s data saved");
         }
 
         private void picLogo_Click(object sender, EventArgs e)

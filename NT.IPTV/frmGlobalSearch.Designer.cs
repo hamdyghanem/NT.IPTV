@@ -114,6 +114,8 @@
             lstGlobalSearch.Name = "lstGlobalSearch";
             lstGlobalSearch.Size = new Size(809, 205);
             lstGlobalSearch.TabIndex = 17;
+            lstGlobalSearch.SelectedIndexChanged += lstGlobalSearch_SelectedIndexChanged;
+            lstGlobalSearch.DoubleClick += lstGlobalSearch_DoubleClick;
             // 
             // pnlHeader
             // 

@@ -26,10 +26,11 @@ namespace NT.IPTV
         {
             InitializeComponent();
         }
-        private async void frmGlobalSearch_Load(object sender, EventArgs e)
+        private void frmGlobalSearch_Load(object sender, EventArgs e)
         {
             txtSearchMovies.Clear();
             lstGlobalSearch.Items.Clear();
+            this.Text += $" {clsCore.CurrentCategory}";
         }
 
         private void frmGlobalSearch_FormClosing(object sender, FormClosingEventArgs e)
@@ -64,7 +65,7 @@ namespace NT.IPTV
             prgBar.Value = 0;
             lblFound.Text = "";
             //
-            if (string.IsNullOrEmpty( filterText))
+            if (string.IsNullOrEmpty(filterText))
             {
                 return;
             }
@@ -98,6 +99,16 @@ namespace NT.IPTV
                 lstGlobalSearch.Items.Add(item.ToString());
             }
             Cursor = Cursors.Default;
+        }
+
+        private void lstGlobalSearch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lstGlobalSearch_DoubleClick(object sender, EventArgs e)
+        {
+            btnOk_Click(sender, e);
         }
     }
 }

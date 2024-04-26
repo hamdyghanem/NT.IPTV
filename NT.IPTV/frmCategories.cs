@@ -331,6 +331,7 @@ namespace NT.IPTV
                     newSize = new Size(Convert.ToInt32(flwChannel.Controls[0].Size.Width / iinterval), Convert.ToInt32(flwChannel.Controls[0].Size.Width / iinterval));
                 }
                 clsCore.Config.ThumbnailSize = flwChannel.Controls[0].Size.Width;
+                clsCore.SaveConfiguration();
                 foreach (Control ctrl in flwChannel.Controls)
                 {
                     if (bStopProcess)

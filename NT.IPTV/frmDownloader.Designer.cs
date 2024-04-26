@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDownloader));
-            lblInfo = new Label();
+            lstLog = new ListBox();
             picMovie = new PictureBox();
             MyToolTip = new ToolTip(components);
             lblFileName = new Label();
@@ -43,19 +43,17 @@
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // lblInfo
+            // lstLog
             // 
-            lblInfo.BackColor = Color.FromArgb(64, 64, 64);
-            lblInfo.Dock = DockStyle.Right;
-            lblInfo.Font = new Font("Segoe UI", 9F);
-            lblInfo.ForeColor = Color.Black;
-            lblInfo.Location = new Point(655, 0);
-            lblInfo.Margin = new Padding(0);
-            lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(422, 272);
-            lblInfo.TabIndex = 5;
-            lblInfo.Text = "label1";
-            lblInfo.TextAlign = ContentAlignment.TopRight;
+            lstLog.BackColor = Color.FromArgb(64, 64, 64);
+            lstLog.Dock = DockStyle.Right;
+            lstLog.Font = new Font("Segoe UI", 9F);
+            lstLog.ForeColor = Color.Black;
+            lstLog.Location = new Point(625, 0);
+            lstLog.Margin = new Padding(0);
+            lstLog.Name = "lstLog";
+            lstLog.Size = new Size(721, 341);
+            lstLog.TabIndex = 5;
             // 
             // picMovie
             // 
@@ -63,8 +61,9 @@
             picMovie.Cursor = Cursors.Hand;
             picMovie.Dock = DockStyle.Fill;
             picMovie.Location = new Point(0, 0);
+            picMovie.Margin = new Padding(4);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(655, 272);
+            picMovie.Size = new Size(625, 341);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 7;
             picMovie.TabStop = false;
@@ -73,9 +72,10 @@
             // 
             lblFileName.AutoSize = true;
             lblFileName.Dock = DockStyle.Bottom;
-            lblFileName.Location = new Point(0, 272);
+            lblFileName.Location = new Point(0, 341);
+            lblFileName.Margin = new Padding(4, 0, 4, 0);
             lblFileName.Name = "lblFileName";
-            lblFileName.Size = new Size(72, 20);
+            lblFileName.Size = new Size(91, 25);
             lblFileName.TabIndex = 10;
             lblFileName.Text = "FileName";
             lblFileName.Click += lblFileName_Click;
@@ -84,9 +84,10 @@
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblPercentage, prgBar, lblOverallProgress, prgBarSeries });
-            statusStrip1.Location = new Point(0, 292);
+            statusStrip1.Location = new Point(0, 366);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(1077, 26);
+            statusStrip1.Padding = new Padding(1, 0, 18, 0);
+            statusStrip1.Size = new Size(1346, 32);
             statusStrip1.TabIndex = 11;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -94,37 +95,40 @@
             // 
             lblPercentage.AutoSize = false;
             lblPercentage.Name = "lblPercentage";
-            lblPercentage.Size = new Size(250, 20);
+            lblPercentage.Size = new Size(250, 26);
             lblPercentage.Text = "Percentage";
             lblPercentage.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // prgBar
             // 
             prgBar.Name = "prgBar";
-            prgBar.Size = new Size(200, 18);
+            prgBar.Size = new Size(250, 24);
             // 
             // lblOverallProgress
             // 
             lblOverallProgress.Name = "lblOverallProgress";
-            lblOverallProgress.Size = new Size(116, 20);
+            lblOverallProgress.Size = new Size(116, 26);
             lblOverallProgress.Text = "Overall Progress";
             // 
             // prgBarSeries
             // 
             prgBarSeries.Name = "prgBarSeries";
-            prgBarSeries.Size = new Size(200, 18);
+            prgBarSeries.Size = new Size(250, 24);
             // 
             // frmDownloader
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gray;
-            ClientSize = new Size(1077, 318);
+            ClientSize = new Size(1346, 398);
             Controls.Add(picMovie);
-            Controls.Add(lblInfo);
+            Controls.Add(lstLog);
             Controls.Add(lblFileName);
             Controls.Add(statusStrip1);
+            Cursor = Cursors.Hand;
+            Font = new Font("Segoe UI", 11F);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmDownloader";
@@ -139,7 +143,7 @@
         }
 
         #endregion
-        private Label lblInfo;
+        private ListBox lstLog;
         private PictureBox picMovie;
         private ToolTip MyToolTip;
         private Label lblFileName;

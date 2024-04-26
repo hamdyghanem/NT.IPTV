@@ -9,13 +9,13 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NT.IPTV
 {
     public partial class frmDownloader : Form
     {
         private Thread threadStart;
-        private WebClient client = new WebClient();
         private string saveDir = Path.Combine(clsCore.assemblyFolder, clsCore.DownloadeFolder);
         private IWatch downoadFile;
         private string TitleName;
@@ -30,12 +30,13 @@ namespace NT.IPTV
             InitializeComponent();
             //
             //
-            client = new WebClient();
+            lstLog.Items.Clear();
+            prgBar.Value = 0;
+            prgBarSeries.Value = 0;
             if (!Directory.Exists(saveDir))
                 Directory.CreateDirectory(saveDir);
 
             downoadFile = _downoadFile;
-            lblInfo.Text = downoadFile.Plot;
             picMovie.ImageLocation = downoadFile.IconUrl;
             TitleName = cleanName(downoadFile.Name);
             if (downoadFile.Category == enumCategories.Movies)
@@ -71,8 +72,6 @@ namespace NT.IPTV
         {
             if (downoadFile.Category == enumCategories.Movies)
             {
-                //var movie = (WatchMovie)downoadFile;
-                //startDownload();
                 await download();
             }
             else if (downoadFile.Category == enumCategories.Series)
@@ -100,34 +99,20 @@ namespace NT.IPTV
                         if (!File.Exists(filePath))
                         {
                             lblFileName.Tag = episode.StreamUrl;
-                            //
                             await download();
                         }
                     }
                 }
             }
         }
-        //private void startDownload()
-        //{
-        //    var filePath = lblFileName.Text;
-        //    var url = lblFileName.Tag.ToString();
-        //    //threadStart = new Thread(() =>
-        //    //  {
-        //    //      client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-        //    //      client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-        //    //      client.DownloadFileAsync(new Uri(url), filePath);
-        //    //  });
-        //    //threadStart.Start();
-        //    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-        //    client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-        //    client.DownloadFileAsync(new Uri(url), filePath);
-        //}
         private async Task download()
         {
             try
             {
                 var destinationFilePath = lblFileName.Text;
                 var downloadFileUrl = lblFileName.Tag.ToString();
+                lstLog.Items.Add("Start downloading ...");
+                lstLog.Items.Add(downloadFileUrl);
 
                 using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                 {
@@ -146,10 +131,11 @@ namespace NT.IPTV
                     await client.StartDownload();
                 }
                 lblPercentage.Text = "Completed";
+                lstLog.Items.Add("Completed");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                lstLog.Items.Add(ex.Message);
             }
         }
 
@@ -210,11 +196,6 @@ namespace NT.IPTV
         public virtual void CleanUp()
         {
             bClosing = true;
-            if (client != null)
-            {
-                client.CancelAsync();
-            }
-            //
             if (threadStart != null)
             {
                 threadStart.Interrupt();

@@ -12,6 +12,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Net;
 using System.Reflection;
 using System.Security.Policy;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace NT.IPTV.Utilities
 {
@@ -155,7 +156,11 @@ namespace NT.IPTV.Utilities
                 Debug.WriteLine("Response from server: " + responseFromServer);
 
                 PlayerInfo info = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerInfo>(responseFromServer);
-
+                if (info.user_info.status == "Expired")
+                {
+                    MessageBox.Show("Account is expired");
+                    return false;
+                }
                 clsCore.PlayerInfo = info;
 
                 // Cleanup the streams and the response.
@@ -205,7 +210,7 @@ namespace NT.IPTV.Utilities
                 response.EnsureSuccessStatusCode(); // Throw if not a success code.
                 var responseFromServer = await response.Content.ReadAsStringAsync();
                 ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
-                ChannelCategories.Where(c => Config.FavoritChannelsCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                ChannelCategories.Where(c => currentUser.FavoritChannelsCategory.Contains(c.ID)).All(x => x.Favorite = true);
                 //Add Favorites
                 ChannelCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
                 //
@@ -217,7 +222,7 @@ namespace NT.IPTV.Utilities
                 MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
                 //MoviesCategories.All(x => x.Favorite = Config.FavoritMoviesCategory.Contains(x.ID));
                 //Config.FavoritMoviesCategory.All(x => MoviesCategories.Single(c => x == c.ID).Favorite = true);
-                MoviesCategories.Where(c => Config.FavoritMoviesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                MoviesCategories.Where(c => currentUser.FavoritMoviesCategory.Contains(c.ID)).All(x => x.Favorite = true);
                 MoviesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
                 //
                 lblStatus.Text = "Loading series categories";
@@ -228,7 +233,7 @@ namespace NT.IPTV.Utilities
                 SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
                 //SeriesCategories.All(x => x.Favorite = Config.FavoritSeriesCategory.Contains(x.ID));
                 //Config.FavoritSeriesCategory.All(x => SeriesCategories.Single(c => x == c.ID).Favorite = true);
-                SeriesCategories.Where(c => Config.FavoritSeriesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                SeriesCategories.Where(c => currentUser.FavoritSeriesCategory.Contains(c.ID)).All(x => x.Favorite = true);
                 SeriesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
             }
             catch (HttpRequestException ex)
@@ -255,7 +260,7 @@ namespace NT.IPTV.Utilities
                         {
                             if (selectedItem.ID == "-1")
                             {
-                                StreamChannels = AllStreamChannels.Where(c => Config.FavoritChannels.Contains(c.ID)).ToList();
+                                StreamChannels = AllStreamChannels.Where(c => currentUser.FavoritChannels.Contains(c.ID)).ToList();
                                 StreamChannels.All(c => c.Favorite = true);
                             }
                             else
@@ -272,7 +277,7 @@ namespace NT.IPTV.Utilities
                                 //    var responseFromServer = await response.Content.ReadAsStringAsync();
                                 //    clsCore.StreamChannels = JsonConvert.DeserializeObject<StreamChannel[]>(responseFromServer).ToList();
                                 //}
-                                StreamChannels.Where(c => Config.FavoritChannels.Contains(c.ID)).All(x => x.Favorite = true);
+                                StreamChannels.Where(c => currentUser.FavoritChannels.Contains(c.ID)).All(x => x.Favorite = true);
                             }
                         }
                         break;
@@ -280,7 +285,7 @@ namespace NT.IPTV.Utilities
                         {
                             if (selectedItem.ID == "-1")
                             {
-                                StreamVideos = AllStreamVideos.Where(c => Config.FavoritMovies.Contains(c.ID)).ToList();
+                                StreamVideos = AllStreamVideos.Where(c => currentUser.FavoritMovies.Contains(c.ID)).ToList();
                                 StreamVideos.All(c => c.Favorite = true);
                             }
                             else
@@ -297,7 +302,7 @@ namespace NT.IPTV.Utilities
                                 //    var responseFromServer = await response.Content.ReadAsStringAsync();
                                 //    clsCore.StreamVideos = JsonConvert.DeserializeObject<StreamVideo[]>(responseFromServer).ToList();
                                 //}
-                                StreamVideos.Where(c => Config.FavoritMovies.Contains(c.ID)).All(x => x.Favorite = true);
+                                StreamVideos.Where(c => currentUser.FavoritMovies.Contains(c.ID)).All(x => x.Favorite = true);
                             }
                         }
                         break;
@@ -305,7 +310,7 @@ namespace NT.IPTV.Utilities
                         {
                             if (selectedItem.ID == "-1")
                             {
-                                StreamSerieses = AllStreamSerieses.Where(c => Config.FavoritSeries.Contains(c.ID)).ToList();
+                                StreamSerieses = AllStreamSerieses.Where(c => currentUser.FavoritSeries.Contains(c.ID)).ToList();
                                 StreamSerieses.All(c => c.Favorite = true);
                             }
                             else
@@ -323,7 +328,7 @@ namespace NT.IPTV.Utilities
                                 //    StreamSerieses = JsonConvert.DeserializeObject<StreamSeries[]>(responseFromServer).ToList();
                                 //}
                                 //load favorites
-                                StreamSerieses.Where(c => Config.FavoritSeries.Contains(c.ID)).All(x => x.Favorite = true);
+                                StreamSerieses.Where(c => currentUser.FavoritSeries.Contains(c.ID)).All(x => x.Favorite = true);
                             }
                         }
                         break;
@@ -537,10 +542,15 @@ namespace NT.IPTV.Utilities
             string filePath = Path.Combine(assemblyFolder, settingsFileName);
             string json = JsonConvert.SerializeObject(clsCore.Config, Formatting.Indented);
             File.WriteAllText(filePath, json);
+            //
+            filePath = Path.Combine(assemblyFolder, UserProfiles, currentUser.Name + ".json");
+            json = JsonConvert.SerializeObject(clsCore.currentUser, Formatting.Indented);
+            File.WriteAllText(filePath, json);
         }
 
         public static void LoadConfiguration()
         {
+            var saveDir = Path.Combine(assemblyFolder, UserProfiles);
             string filePath = Path.Combine(assemblyFolder, settingsFileName);
             if (File.Exists(filePath))
             {
