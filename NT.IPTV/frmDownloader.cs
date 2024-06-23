@@ -42,7 +42,7 @@ namespace NT.IPTV
             if (downoadFile.Category == enumCategories.Movies)
             {
                 var movie = (WatchMovie)downoadFile;
-                lblFileName.Text = getFileName(movie.Name, movie.ContainerExtension, 0);
+                lblFileName.Text = getFileName(CleanFileName(movie.Name), movie.ContainerExtension, 0);
                 MyToolTip.Show(lblFileName.Text, lblFileName);
                 lblFileName.Tag = movie.StreamUrl;
                 this.Text = $"Download: {TitleName}";
@@ -132,6 +132,8 @@ namespace NT.IPTV
                 }
                 lblPercentage.Text = "Completed";
                 lstLog.Items.Add("Completed");
+                this.Close();
+                lblFileName_Click(lblFileName, null);
             }
             catch (Exception ex)
             {
@@ -192,6 +194,11 @@ namespace NT.IPTV
             {
                 return file;
             }
+        }
+        private string CleanFileName(string _name)
+        {
+            _name = _name.Replace(":", "_");
+            return _name;
         }
         public virtual void CleanUp()
         {
