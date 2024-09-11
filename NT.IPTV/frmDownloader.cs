@@ -132,8 +132,6 @@ namespace NT.IPTV
                 }
                 lblPercentage.Text = "Completed";
                 lstLog.Items.Add("Completed");
-                this.Close();
-                lblFileName_Click(lblFileName, null);
             }
             catch (Exception ex)
             {
