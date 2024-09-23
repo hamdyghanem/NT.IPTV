@@ -58,10 +58,10 @@
             lblInfo.Dock = DockStyle.Fill;
             lblInfo.Font = new Font("Segoe UI", 18F);
             lblInfo.ForeColor = Color.White;
-            lblInfo.Location = new Point(229, 0);
+            lblInfo.Location = new Point(201, 0);
             lblInfo.Margin = new Padding(0);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(882, 174);
+            lblInfo.Size = new Size(894, 131);
             lblInfo.TabIndex = 3;
             lblInfo.Text = "label1";
             lblInfo.TextAlign = ContentAlignment.TopRight;
@@ -72,28 +72,31 @@
             tabSeries.Controls.Add(tabPage1);
             tabSeries.Controls.Add(tabPage2);
             tabSeries.Font = new Font("Segoe UI", 16F);
-            tabSeries.Location = new Point(84, 320);
+            tabSeries.Location = new Point(74, 240);
+            tabSeries.Margin = new Padding(3, 2, 3, 2);
             tabSeries.Name = "tabSeries";
             tabSeries.SelectedIndex = 0;
-            tabSeries.Size = new Size(407, 184);
+            tabSeries.Size = new Size(356, 138);
             tabSeries.TabIndex = 5;
             // 
             // tabPage1
             // 
             tabPage1.BackColor = Color.Black;
-            tabPage1.Location = new Point(4, 49);
+            tabPage1.Location = new Point(4, 42);
+            tabPage1.Margin = new Padding(3, 2, 3, 2);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(399, 131);
+            tabPage1.Padding = new Padding(3, 2, 3, 2);
+            tabPage1.Size = new Size(348, 92);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             // 
             // tabPage2
             // 
-            tabPage2.Location = new Point(4, 49);
+            tabPage2.Location = new Point(4, 42);
+            tabPage2.Margin = new Padding(3, 2, 3, 2);
             tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(399, 131);
+            tabPage2.Padding = new Padding(3, 2, 3, 2);
+            tabPage2.Size = new Size(348, 92);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "tabPage2";
             tabPage2.UseVisualStyleBackColor = true;
@@ -107,9 +110,10 @@
             pnlHeader.Controls.Add(picCover);
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 82);
+            pnlHeader.Margin = new Padding(3, 2, 3, 2);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Padding = new Padding(0, 0, 0, 5);
-            pnlHeader.Size = new Size(1111, 321);
+            pnlHeader.Padding = new Padding(0, 0, 0, 4);
+            pnlHeader.Size = new Size(1095, 241);
             pnlHeader.TabIndex = 6;
             // 
             // lblCast
@@ -118,10 +122,10 @@
             lblCast.Dock = DockStyle.Bottom;
             lblCast.Font = new Font("Segoe UI", 18F);
             lblCast.ForeColor = Color.Bisque;
-            lblCast.Location = new Point(229, 174);
+            lblCast.Location = new Point(201, 131);
             lblCast.Margin = new Padding(0);
             lblCast.Name = "lblCast";
-            lblCast.Size = new Size(882, 75);
+            lblCast.Size = new Size(894, 56);
             lblCast.TabIndex = 6;
             lblCast.Text = "label1";
             lblCast.TextAlign = ContentAlignment.TopRight;
@@ -132,10 +136,10 @@
             lblData.Dock = DockStyle.Bottom;
             lblData.Font = new Font("Segoe UI", 12F);
             lblData.ForeColor = Color.White;
-            lblData.Location = new Point(229, 249);
+            lblData.Location = new Point(201, 187);
             lblData.Margin = new Padding(0);
             lblData.Name = "lblData";
-            lblData.Size = new Size(882, 67);
+            lblData.Size = new Size(894, 50);
             lblData.TabIndex = 7;
             lblData.Text = "label1";
             lblData.TextAlign = ContentAlignment.TopRight;
@@ -147,9 +151,10 @@
             picCover.Cursor = Cursors.Hand;
             picCover.Dock = DockStyle.Left;
             picCover.Location = new Point(0, 0);
+            picCover.Margin = new Padding(3, 2, 3, 2);
             picCover.Name = "picCover";
-            picCover.Padding = new Padding(5);
-            picCover.Size = new Size(229, 316);
+            picCover.Padding = new Padding(4);
+            picCover.Size = new Size(201, 237);
             picCover.SizeMode = PictureBoxSizeMode.Zoom;
             picCover.TabIndex = 5;
             picCover.TabStop = false;
@@ -160,9 +165,10 @@
             picMovie.BackdropPath = null;
             picMovie.Cursor = Cursors.Hand;
             picMovie.DelayedTextChangedTimeout = 2000;
-            picMovie.Location = new Point(504, 383);
+            picMovie.Location = new Point(441, 287);
+            picMovie.Margin = new Padding(3, 2, 3, 2);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(582, 121);
+            picMovie.Size = new Size(509, 91);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 9;
             picMovie.TabStop = false;
@@ -174,7 +180,7 @@
             MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownloadLinks, btnDownload, btnClose });
             MyToolTip.Location = new Point(0, 0);
             MyToolTip.Name = "MyToolTip";
-            MyToolTip.Size = new Size(1111, 82);
+            MyToolTip.Size = new Size(1095, 82);
             MyToolTip.TabIndex = 10;
             MyToolTip.Text = "toolStrip1";
             // 
@@ -237,12 +243,14 @@
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(59, 79);
             btnClose.Text = "Close";
+            btnClose.Click += btnClose_Click;
             // 
             // btnCancel
             // 
             btnCancel.Location = new Point(0, 0);
+            btnCancel.Margin = new Padding(3, 2, 3, 2);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(94, 29);
+            btnCancel.Size = new Size(82, 22);
             btnCancel.TabIndex = 11;
             btnCancel.Text = "Close";
             btnCancel.UseVisualStyleBackColor = true;
@@ -251,16 +259,18 @@
             // 
             // frmMovieData
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(1111, 516);
+            ClientSize = new Size(1095, 458);
             Controls.Add(btnCancel);
             Controls.Add(picMovie);
             Controls.Add(tabSeries);
             Controls.Add(pnlHeader);
             Controls.Add(MyToolTip);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "frmMovieData";
             Text = "Data";
             WindowState = FormWindowState.Maximized;

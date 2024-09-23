@@ -31,6 +31,7 @@ namespace NT.IPTV
             txtSearchMovies.Clear();
             lstGlobalSearch.Items.Clear();
             this.Text += $" {clsCore.CurrentCategory}";
+            lblFound.Text = "";
         }
 
         private void frmGlobalSearch_FormClosing(object sender, FormClosingEventArgs e)

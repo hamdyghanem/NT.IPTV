@@ -49,10 +49,11 @@
             lstLog.Dock = DockStyle.Right;
             lstLog.Font = new Font("Segoe UI", 9F);
             lstLog.ForeColor = Color.Black;
+            lstLog.ItemHeight = 15;
             lstLog.Location = new Point(625, 0);
             lstLog.Margin = new Padding(0);
             lstLog.Name = "lstLog";
-            lstLog.Size = new Size(721, 341);
+            lstLog.Size = new Size(721, 346);
             lstLog.TabIndex = 5;
             // 
             // picMovie
@@ -63,7 +64,7 @@
             picMovie.Location = new Point(0, 0);
             picMovie.Margin = new Padding(4);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(625, 341);
+            picMovie.Size = new Size(625, 346);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 7;
             picMovie.TabStop = false;
@@ -72,10 +73,10 @@
             // 
             lblFileName.AutoSize = true;
             lblFileName.Dock = DockStyle.Bottom;
-            lblFileName.Location = new Point(0, 341);
+            lblFileName.Location = new Point(0, 346);
             lblFileName.Margin = new Padding(4, 0, 4, 0);
             lblFileName.Name = "lblFileName";
-            lblFileName.Size = new Size(91, 25);
+            lblFileName.Size = new Size(72, 20);
             lblFileName.TabIndex = 10;
             lblFileName.Text = "FileName";
             lblFileName.Click += lblFileName_Click;
@@ -95,29 +96,29 @@
             // 
             lblPercentage.AutoSize = false;
             lblPercentage.Name = "lblPercentage";
-            lblPercentage.Size = new Size(250, 26);
+            lblPercentage.Size = new Size(250, 27);
             lblPercentage.Text = "Percentage";
             lblPercentage.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // prgBar
             // 
             prgBar.Name = "prgBar";
-            prgBar.Size = new Size(250, 24);
+            prgBar.Size = new Size(250, 26);
             // 
             // lblOverallProgress
             // 
             lblOverallProgress.Name = "lblOverallProgress";
-            lblOverallProgress.Size = new Size(116, 26);
+            lblOverallProgress.Size = new Size(92, 27);
             lblOverallProgress.Text = "Overall Progress";
             // 
             // prgBarSeries
             // 
             prgBarSeries.Name = "prgBarSeries";
-            prgBarSeries.Size = new Size(250, 24);
+            prgBarSeries.Size = new Size(250, 26);
             // 
             // frmDownloader
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gray;
             ClientSize = new Size(1346, 398);
