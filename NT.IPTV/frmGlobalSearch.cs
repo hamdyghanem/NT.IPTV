@@ -30,7 +30,7 @@ namespace NT.IPTV
         {
             txtSearchMovies.Clear();
             lstGlobalSearch.Items.Clear();
-            this.Text += $" {clsCore.CurrentCategory}";
+            this.Text += $"frmGlobalSearch : {clsCore.CurrentCategory}";
             lblFound.Text = "";
         }
 
