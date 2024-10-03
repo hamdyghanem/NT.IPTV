@@ -82,6 +82,7 @@ namespace NT.IPTV.Models.Items.StreamObject
     }
     public class Season
     {
+        public int SeasonNum { get; set; }
         public List<EpisodeData> Episodes { get; set; }
     }
 

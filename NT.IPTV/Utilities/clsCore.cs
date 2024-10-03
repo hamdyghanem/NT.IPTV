@@ -435,7 +435,7 @@ namespace NT.IPTV.Utilities
                 {
                     var d = GetPropValue(series.Episodes, $"EpisodeData_{i}");
                     if (d == null) break;
-                    series.Seasons.Add(new Season { Episodes = (List<EpisodeData>)d });
+                    series.Seasons.Add(new Season { SeasonNum = i, Episodes = (List<EpisodeData>)d });
                 }
                 return series;
             }

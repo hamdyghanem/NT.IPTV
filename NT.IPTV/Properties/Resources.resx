@@ -118,6 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="YearDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\YearDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NameDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NameDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="download-1915753_640" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\download-1915753_640.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NameUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NameUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RatingDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RatingDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="YearUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\YearUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="small logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\small logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="2917656[1]" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2917656[1].png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="download" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\download.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="6553523[1]" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\6553523[1].png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -127,28 +154,10 @@
   <data name="noimage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\noimage.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="2917656[1]" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\2917656[1].png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="small logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\small logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NameDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NameDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NameUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NameUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RatingDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RatingDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="RatingUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RatingUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="YearDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\YearDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="YearUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\YearUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="download (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\download (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

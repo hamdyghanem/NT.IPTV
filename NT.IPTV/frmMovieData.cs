@@ -29,6 +29,8 @@ namespace NT.IPTV
         {
             if (cltrParent.Channel.Category == enumCategories.Movies)
             {
+                btnDownloadSeries.Visible = false;
+                btnDownload.Visible = true;
                 tabSeries.Hide();
                 picMovie.Dock = DockStyle.Fill;
                 //Load movie Data
@@ -36,11 +38,25 @@ namespace NT.IPTV
             }
             else if (cltrParent.Channel.Category == enumCategories.Series)
             {
+                btnDownloadSeries.Visible = true;
+                btnDownload.Visible = false;
                 picMovie.Dock = DockStyle.Right;
                 tabSeries.TabPages.Clear();
                 tabSeries.Dock = DockStyle.Fill;
                 //Load movie Data
                 await getSeriesInfo();
+                //
+                foreach (var s in (Selected as WatchSeries).Seasons)
+                {
+                    ToolStripMenuItem btnDownloadSeason = new ToolStripMenuItem();
+                    btnDownloadSeason.Image = Properties.Resources.download__1_;
+                    btnDownloadSeason.Name = $"btnDownloadSeason{s.SeasonNum}";
+                    btnDownloadSeason.Tag = s.SeasonNum;
+                    btnDownloadSeason.Size = new Size(229, 62);
+                    btnDownloadSeason.Text = $"Season {s.SeasonNum}";
+                    btnDownloadSeason.Click += btnDownloadSeason1_Click;
+                    btnDownloadSeries.DropDownItems.Add(btnDownloadSeason);
+                }
             }
         }
 
@@ -94,14 +110,14 @@ namespace NT.IPTV
                 lblData.Text = $"Duration: {Selected.Duration} \t ";
             }
             lblData.Text += $"Director: {Selected.Director} \t Genre: {Selected.Genre}";
-            if (Selected.BackdropPath.Length == 0)
+            if (Selected.BackdropPath?.Length == 0)
             {
                 picMovie.BackdropPath = new string[] { Selected.IconUrl };
             }
             else
             {
                 //ckeck first image
-                if (!await clsCore.Check404(Selected.BackdropPath[0]))
+                if (!await clsCore.Check404(Selected.BackdropPath?[0]))
                 {
                     picMovie.BackdropPath = new string[] { Selected.IconUrl };
                 }
@@ -204,13 +220,25 @@ namespace NT.IPTV
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            using (frmDownloader frm = new frmDownloader(Selected))
+            OpenDownload(new List<string>());
+        }
+        private void btnDownloadSeries_Click(object sender, EventArgs e)
+        {
+            var stringList = (Selected as WatchSeries).Seasons.Select(s => s.SeasonNum.ToString()).ToList(); ;
+            OpenDownload(stringList);
+
+        }
+        private void btnDownloadSeason1_Click(object sender, EventArgs e)
+        {
+            OpenDownload(new List<string>() { ((System.Windows.Forms.ToolStripItem)sender).Tag.ToString() });
+        }
+        private void OpenDownload(List<string> SeassonsToDownload)
+        {
+            using (frmDownloader frm = new frmDownloader(Selected, SeassonsToDownload))
             {
                 frm.ShowDialog();
             }
         }
-
-
         private void btnWatchTrailer_Click(object sender, EventArgs e)
         {
             try
@@ -245,5 +273,7 @@ namespace NT.IPTV
         {
             this.Close();
         }
+
+
     }
 }

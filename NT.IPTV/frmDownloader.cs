@@ -4,6 +4,7 @@ using NT.IPTV.Utilities;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Security.Policy;
 using System.Text;
@@ -20,16 +21,17 @@ namespace NT.IPTV
         private IWatch downoadFile;
         private string TitleName;
         List<string> links = new List<string>();
+        List<string> SeassonsToDownload = new List<string>();
         private bool bClosing;
         public frmDownloader()
         {
             InitializeComponent();
         }
-        public frmDownloader(IWatch _downoadFile)
+        public frmDownloader(IWatch _downoadFile, List<string> _SeassonsToDownload)
         {
             InitializeComponent();
             //
-            //
+            SeassonsToDownload = _SeassonsToDownload;
             lstLog.Items.Clear();
             prgBar.Value = 0;
             prgBarSeries.Value = 0;
@@ -56,11 +58,15 @@ namespace NT.IPTV
                 if (!Directory.Exists(seriesSaveDir))
                     Directory.CreateDirectory(seriesSaveDir);
 
+                //
                 foreach (var seasson in series.Seasons)
                 {
-                    foreach (var episode in seasson.Episodes)
+                    if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
                     {
-                        links.Add(episode.StreamUrl);
+                        foreach (var episode in seasson.Episodes)
+                        {
+                            links.Add(episode.StreamUrl);
+                        }
                     }
                 }
                 lblOverallProgress.Visible = true;
@@ -77,29 +83,30 @@ namespace NT.IPTV
             else if (downoadFile.Category == enumCategories.Series)
             {
                 var series = (WatchSeries)downoadFile;
-                int i = 0;
                 foreach (var seasson in series.Seasons)
                 {
-                    i++;
-                    var seasonPath = Path.Combine(saveDir, TitleName, $"seasons {i}");
-                    if (!Directory.Exists(seasonPath))
-                        Directory.CreateDirectory(seasonPath);
-                    //create folder
-                    foreach (var episode in seasson.Episodes)
+                    if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
                     {
-                        if (bClosing)
+                        var seasonPath = Path.Combine(saveDir, TitleName, $"seasons {seasson.SeasonNum}");
+                        if (!Directory.Exists(seasonPath))
+                            Directory.CreateDirectory(seasonPath);
+                        //create folder
+                        foreach (var episode in seasson.Episodes)
                         {
-                            return;
-                        }
-                        //set name and file
-                        var filePath = Path.Combine(saveDir, TitleName, $"seasons {i}", episode.Name + "." + episode.ContainerExtension);
-                        lblFileName.Text = filePath;
-                        MyToolTip.Show(lblFileName.Text, lblFileName);
-                        prgBarSeries.Value++;
-                        if (!File.Exists(filePath))
-                        {
-                            lblFileName.Tag = episode.StreamUrl;
-                            await download();
+                            if (bClosing)
+                            {
+                                return;
+                            }
+                            //set name and file
+                            var filePath = Path.Combine(saveDir, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                            lblFileName.Text = filePath;
+                            MyToolTip.Show(lblFileName.Text, lblFileName);
+                            prgBarSeries.Value++;
+                            if (!File.Exists(filePath))
+                            {
+                                lblFileName.Tag = episode.StreamUrl;
+                                await download();
+                            }
                         }
                     }
                 }

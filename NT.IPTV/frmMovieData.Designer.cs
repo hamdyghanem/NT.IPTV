@@ -43,6 +43,8 @@
             btnWatchTrailer = new ToolStripButton();
             btnDownloadLinks = new ToolStripButton();
             btnDownload = new ToolStripButton();
+            btnDownloadSeries = new ToolStripDropDownButton();
+            btnDownloadAllSeasons = new ToolStripMenuItem();
             btnClose = new ToolStripButton();
             btnCancel = new Button();
             tabSeries.SuspendLayout();
@@ -177,7 +179,7 @@
             // MyToolTip
             // 
             MyToolTip.ImageScalingSize = new Size(55, 55);
-            MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownloadLinks, btnDownload, btnClose });
+            MyToolTip.Items.AddRange(new ToolStripItem[] { btnOpenInVLC, btnWatchTrailer, btnDownloadLinks, btnDownload, btnDownloadSeries, btnClose });
             MyToolTip.Location = new Point(0, 0);
             MyToolTip.Name = "MyToolTip";
             MyToolTip.Size = new Size(1095, 82);
@@ -234,6 +236,24 @@
             btnDownload.Text = "Download";
             btnDownload.ToolTipText = "Download";
             btnDownload.Click += btnDownload_Click;
+            // 
+            // btnDownloadSeries
+            // 
+            btnDownloadSeries.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDownloadSeries.DropDownItems.AddRange(new ToolStripItem[] { btnDownloadAllSeasons });
+            btnDownloadSeries.Image = Properties.Resources.download_1915753_640;
+            btnDownloadSeries.ImageTransparentColor = Color.Magenta;
+            btnDownloadSeries.Name = "btnDownloadSeries";
+            btnDownloadSeries.Padding = new Padding(10);
+            btnDownloadSeries.Size = new Size(88, 79);
+            // 
+            // btnDownloadAllSeasons
+            // 
+            btnDownloadAllSeasons.Image = Properties.Resources.download;
+            btnDownloadAllSeasons.Name = "btnDownloadAllSeasons";
+            btnDownloadAllSeasons.Size = new Size(229, 62);
+            btnDownloadAllSeasons.Text = "Download All Seasons";
+            btnDownloadAllSeasons.Click += btnDownloadSeries_Click;
             // 
             // btnClose
             // 
@@ -305,5 +325,7 @@
         private ToolStripButton btnDownloadLinks;
         private ToolStripButton btnClose;
         private Button btnCancel;
+        private ToolStripDropDownButton btnDownloadSeries;
+        private ToolStripMenuItem btnDownloadAllSeasons;
     }
 }
