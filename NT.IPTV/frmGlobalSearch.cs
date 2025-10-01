@@ -22,16 +22,21 @@ namespace NT.IPTV
     {
         private CancellationTokenSource _cts = new CancellationTokenSource();
         public List<IChannel> FoundStreamChannel = new List<IChannel>();
+        public string TextToSearch { set; get; } = string.Empty;
         public frmGlobalSearch()
         {
             InitializeComponent();
         }
         private void frmGlobalSearch_Load(object sender, EventArgs e)
         {
-            txtSearchMovies.Clear();
+            txtSearchMovies.Text = TextToSearch;
             lstGlobalSearch.Items.Clear();
-            this.Text += $"frmGlobalSearch : {clsCore.CurrentCategory}";
+            this.Text = $"Global Search : {clsCore.CurrentCategory}";
             lblFound.Text = "";
+            if (!string.IsNullOrEmpty(TextToSearch))
+            {
+                DoSearch();
+            }
         }
 
         private void frmGlobalSearch_FormClosing(object sender, FormClosingEventArgs e)
@@ -51,13 +56,10 @@ namespace NT.IPTV
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
+            TextToSearch = string.Empty;
             this.Close();
         }
-        private void txtSearchMovies_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void txtSearchMovies_DelayedTextChanged(object sender, EventArgs e)
+        private void DoSearch()
         {
             var filterText = txtSearchMovies.Text.ToLower();
             Cursor = Cursors.WaitCursor;
@@ -65,7 +67,6 @@ namespace NT.IPTV
             prgBar.Minimum = 0;
             prgBar.Value = 0;
             lblFound.Text = "";
-            //
             if (string.IsNullOrEmpty(filterText))
             {
                 return;
@@ -100,6 +101,12 @@ namespace NT.IPTV
                 lstGlobalSearch.Items.Add(item.ToString());
             }
             Cursor = Cursors.Default;
+        }
+
+        private void txtSearchMovies_DelayedTextChanged(object sender, EventArgs e)
+        {
+            DoSearch();
+
         }
 
         private void lstGlobalSearch_SelectedIndexChanged(object sender, EventArgs e)

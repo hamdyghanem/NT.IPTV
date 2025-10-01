@@ -49,11 +49,10 @@
             lstLog.Dock = DockStyle.Right;
             lstLog.Font = new Font("Segoe UI", 9F);
             lstLog.ForeColor = Color.Black;
-            lstLog.ItemHeight = 15;
             lstLog.Location = new Point(625, 0);
             lstLog.Margin = new Padding(0);
             lstLog.Name = "lstLog";
-            lstLog.Size = new Size(721, 346);
+            lstLog.Size = new Size(721, 339);
             lstLog.TabIndex = 5;
             // 
             // picMovie
@@ -64,7 +63,7 @@
             picMovie.Location = new Point(0, 0);
             picMovie.Margin = new Padding(4);
             picMovie.Name = "picMovie";
-            picMovie.Size = new Size(625, 346);
+            picMovie.Size = new Size(625, 339);
             picMovie.SizeMode = PictureBoxSizeMode.Zoom;
             picMovie.TabIndex = 7;
             picMovie.TabStop = false;
@@ -73,10 +72,10 @@
             // 
             lblFileName.AutoSize = true;
             lblFileName.Dock = DockStyle.Bottom;
-            lblFileName.Location = new Point(0, 346);
+            lblFileName.Location = new Point(0, 339);
             lblFileName.Margin = new Padding(4, 0, 4, 0);
             lblFileName.Name = "lblFileName";
-            lblFileName.Size = new Size(72, 20);
+            lblFileName.Size = new Size(91, 25);
             lblFileName.TabIndex = 10;
             lblFileName.Text = "FileName";
             lblFileName.Click += lblFileName_Click;
@@ -85,10 +84,10 @@
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblPercentage, prgBar, lblOverallProgress, prgBarSeries });
-            statusStrip1.Location = new Point(0, 366);
+            statusStrip1.Location = new Point(0, 364);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new Padding(1, 0, 18, 0);
-            statusStrip1.Size = new Size(1346, 32);
+            statusStrip1.Size = new Size(1346, 34);
             statusStrip1.TabIndex = 11;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -96,7 +95,7 @@
             // 
             lblPercentage.AutoSize = false;
             lblPercentage.Name = "lblPercentage";
-            lblPercentage.Size = new Size(250, 27);
+            lblPercentage.Size = new Size(250, 28);
             lblPercentage.Text = "Percentage";
             lblPercentage.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -108,7 +107,7 @@
             // lblOverallProgress
             // 
             lblOverallProgress.Name = "lblOverallProgress";
-            lblOverallProgress.Size = new Size(92, 27);
+            lblOverallProgress.Size = new Size(116, 28);
             lblOverallProgress.Text = "Overall Progress";
             // 
             // prgBarSeries
@@ -118,7 +117,7 @@
             // 
             // frmDownloader
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gray;
             ClientSize = new Size(1346, 398);

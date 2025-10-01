@@ -75,7 +75,6 @@
             txtSearchMovies.Size = new Size(680, 27);
             txtSearchMovies.TabIndex = 0;
             txtSearchMovies.DelayedTextChanged += txtSearchMovies_DelayedTextChanged;
-            txtSearchMovies.TextChanged += txtSearchMovies_TextChanged;
             // 
             // label1
             // 

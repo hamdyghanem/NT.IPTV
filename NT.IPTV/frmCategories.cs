@@ -1,18 +1,19 @@
-﻿using System.Configuration;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NT.IPTV.Models.Items;
+using NT.IPTV.Models.Items.Channesl;
+using NT.IPTV.Properties;
+using NT.IPTV.Utilities;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Channels;
 using System.Timers;
-using Microsoft.VisualBasic.ApplicationServices;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using NT.IPTV.Utilities;
-using System.Collections.Generic;
+using System.Windows.Forms;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
-using System.Diagnostics;
-using NT.IPTV.Properties;
-using NT.IPTV.Models.Items.Channesl;
-using NT.IPTV.Models.Items;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Button = System.Windows.Forms.Button;
 
@@ -24,6 +25,7 @@ namespace NT.IPTV
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private List<StreamCategory> categoryies = new List<StreamCategory>();
         private frmGlobalSearch frmGSearch = new frmGlobalSearch();
+        private frmToBeFound frmFindLater = new frmToBeFound();
         private bool bStopProcess = false;
         public frmCategories()
         {
@@ -102,7 +104,7 @@ namespace NT.IPTV
             lblStatus.Text = string.Empty;
             flwCat.LoadCategories(groups, prgBar);
             //select first one
-            flwCat.SelectByIndex(0); ;
+            flwCat.SelectByIndex(0);
         }
 
         private void backToLoginBtn_Click(object sender, EventArgs e)
@@ -113,7 +115,7 @@ namespace NT.IPTV
         private async void lstCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
             prgBar.Visible = true;
-             
+
 
             var selectedItem = this.flwCat.SelectedItem;
             await clsCore.RetrieveStreams(selectedItem, _cts.Token);
@@ -287,7 +289,7 @@ namespace NT.IPTV
             var btn = (ToolStripButton)sender;
             ToggleButtons(btn);
             clsCore.CurrentCategory = (enumCategories)btn.Tag;
-            await clsCore.RetrieveStreams(  _cts.Token);
+            await clsCore.RetrieveStreams(_cts.Token);
 
             loadCategories();
 
@@ -440,6 +442,24 @@ namespace NT.IPTV
         private void flwCat_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private async void btnToBeFound_Click(object sender, EventArgs e)
+        {
+            if (frmFindLater.ShowDialog(this) == DialogResult.OK)
+            {
+                string selectedText = frmFindLater.SelectedNodeText;
+                frmGSearch.TextToSearch = selectedText;
+                clsCore.CurrentCategory = frmFindLater.SelectedNodeCategory;
+                await clsCore.RetrieveStreams(_cts.Token);
+                loadCategories();
+                if (frmGSearch.ShowDialog() == DialogResult.OK)
+                {
+                    //Focus in the right category
+                    flwCat.SelectByIndex((int)frmFindLater.SelectedNodeCategory);
+                    FillSubCategories(frmGSearch.FoundStreamChannel);
+                }
+            }
         }
     }
 }
