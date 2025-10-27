@@ -76,7 +76,7 @@
             txtSearchMovies.DelayedTextChangedTimeout = 2000;
             txtSearchMovies.Location = new Point(72, 16);
             txtSearchMovies.Name = "txtSearchMovies";
-            txtSearchMovies.Size = new Size(546, 27);
+            txtSearchMovies.Size = new Size(483, 27);
             txtSearchMovies.TabIndex = 0;
             txtSearchMovies.DelayedTextChanged += txtSearchMovies_DelayedTextChanged;
             // 
