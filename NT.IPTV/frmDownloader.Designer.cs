@@ -45,7 +45,7 @@
             // 
             // lstLog
             // 
-            lstLog.BackColor = Color.FromArgb(64, 64, 64);
+            lstLog.BackColor = Color.FromArgb(153, 209, 247);
             lstLog.Dock = DockStyle.Right;
             lstLog.Font = new Font("Segoe UI", 9F);
             lstLog.ForeColor = Color.Black;
@@ -57,7 +57,7 @@
             // 
             // picMovie
             // 
-            picMovie.BackColor = Color.FromArgb(64, 64, 64);
+            picMovie.BackColor = Color.Black;
             picMovie.Cursor = Cursors.Hand;
             picMovie.Dock = DockStyle.Fill;
             picMovie.Location = new Point(0, 0);
@@ -119,7 +119,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Gray;
+            BackColor = Color.FromArgb(153, 209, 247);
             ClientSize = new Size(1346, 398);
             Controls.Add(picMovie);
             Controls.Add(lstLog);

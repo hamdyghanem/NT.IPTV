@@ -25,7 +25,6 @@ namespace NT.IPTV
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private List<StreamCategory> categoryies = new List<StreamCategory>();
         private frmGlobalSearch frmGSearch = new frmGlobalSearch();
-        private frmToBeFound frmFindLater = new frmToBeFound();
         private bool bStopProcess = false;
         public frmCategories()
         {
@@ -442,24 +441,6 @@ namespace NT.IPTV
         private void flwCat_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private async void btnToBeFound_Click(object sender, EventArgs e)
-        {
-            if (frmFindLater.ShowDialog(this) == DialogResult.OK)
-            {
-                string selectedText = frmFindLater.SelectedNodeText;
-                frmGSearch.TextToSearch = selectedText;
-                clsCore.CurrentCategory = frmFindLater.SelectedNodeCategory;
-                await clsCore.RetrieveStreams(_cts.Token);
-                loadCategories();
-                if (frmGSearch.ShowDialog() == DialogResult.OK)
-                {
-                    //Focus in the right category
-                    flwCat.SelectByIndex((int)frmFindLater.SelectedNodeCategory);
-                    FillSubCategories(frmGSearch.FoundStreamChannel);
-                }
-            }
         }
     }
 }

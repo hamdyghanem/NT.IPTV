@@ -34,13 +34,17 @@
             statusStrip1 = new StatusStrip();
             prgBar = new ToolStripProgressBar();
             lblFound = new ToolStripStatusLabel();
-            txtSearchMovies = new Models.Channel.SearchTextBox();
+            txtSearchMovies = new NT.IPTV.Models.Channel.SearchTextBox();
             label1 = new Label();
             btnCancel = new Button();
             btnOk = new Button();
             lstGlobalSearch = new ListBox();
             pnlHeader = new Panel();
             pnlBottom = new Panel();
+            treeView1 = new TreeView();
+            btnAdd = new Button();
+            btnEdit = new Button();
+            btnDelete = new Button();
             statusStrip1.SuspendLayout();
             pnlHeader.SuspendLayout();
             pnlBottom.SuspendLayout();
@@ -50,9 +54,9 @@
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { prgBar, lblFound });
-            statusStrip1.Location = new Point(0, 306);
+            statusStrip1.Location = new Point(0, 477);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(809, 26);
+            statusStrip1.Size = new Size(1076, 26);
             statusStrip1.TabIndex = 11;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -72,7 +76,7 @@
             txtSearchMovies.DelayedTextChangedTimeout = 2000;
             txtSearchMovies.Location = new Point(72, 16);
             txtSearchMovies.Name = "txtSearchMovies";
-            txtSearchMovies.Size = new Size(680, 27);
+            txtSearchMovies.Size = new Size(546, 27);
             txtSearchMovies.TabIndex = 0;
             txtSearchMovies.DelayedTextChanged += txtSearchMovies_DelayedTextChanged;
             // 
@@ -87,7 +91,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(562, 8);
+            btnCancel.Location = new Point(652, 6);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(117, 36);
             btnCancel.TabIndex = 16;
@@ -97,7 +101,7 @@
             // 
             // btnOk
             // 
-            btnOk.Location = new Point(685, 8);
+            btnOk.Location = new Point(775, 6);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(117, 36);
             btnOk.TabIndex = 1;
@@ -107,11 +111,10 @@
             // 
             // lstGlobalSearch
             // 
-            lstGlobalSearch.Dock = DockStyle.Fill;
             lstGlobalSearch.FormattingEnabled = true;
             lstGlobalSearch.Location = new Point(0, 51);
             lstGlobalSearch.Name = "lstGlobalSearch";
-            lstGlobalSearch.Size = new Size(809, 205);
+            lstGlobalSearch.Size = new Size(555, 364);
             lstGlobalSearch.TabIndex = 17;
             lstGlobalSearch.SelectedIndexChanged += lstGlobalSearch_SelectedIndexChanged;
             lstGlobalSearch.DoubleClick += lstGlobalSearch_DoubleClick;
@@ -123,7 +126,7 @@
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(809, 51);
+            pnlHeader.Size = new Size(1076, 51);
             pnlHeader.TabIndex = 18;
             // 
             // pnlBottom
@@ -131,22 +134,62 @@
             pnlBottom.Controls.Add(btnCancel);
             pnlBottom.Controls.Add(btnOk);
             pnlBottom.Dock = DockStyle.Bottom;
-            pnlBottom.Location = new Point(0, 256);
+            pnlBottom.Location = new Point(0, 427);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.Size = new Size(809, 50);
+            pnlBottom.Size = new Size(1076, 50);
             pnlBottom.TabIndex = 18;
+            // 
+            // treeView1
+            // 
+            treeView1.Location = new Point(561, 51);
+            treeView1.Name = "treeView1";
+            treeView1.Size = new Size(419, 364);
+            treeView1.TabIndex = 4;
+            treeView1.NodeMouseDoubleClick += treeView1_NodeMouseDoubleClick;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Location = new Point(986, 57);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(80, 30);
+            btnAdd.TabIndex = 5;
+            btnAdd.Text = "Add";
+            btnAdd.Click += btnAdd_Click;
+            // 
+            // btnEdit
+            // 
+            btnEdit.Location = new Point(986, 97);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(80, 30);
+            btnEdit.TabIndex = 6;
+            btnEdit.Text = "Edit";
+            btnEdit.Click += btnEdit_Click;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(986, 137);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(80, 30);
+            btnDelete.TabIndex = 7;
+            btnDelete.Text = "Delete";
+            btnDelete.Click += btnDelete_Click;
             // 
             // frmGlobalSearch
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Gray;
+            BackColor = Color.FromArgb(153, 209, 247);
             CancelButton = btnCancel;
-            ClientSize = new Size(809, 332);
+            ClientSize = new Size(1076, 503);
+            Controls.Add(btnAdd);
+            Controls.Add(btnEdit);
+            Controls.Add(treeView1);
+            Controls.Add(btnDelete);
             Controls.Add(lstGlobalSearch);
             Controls.Add(pnlBottom);
             Controls.Add(pnlHeader);
             Controls.Add(statusStrip1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
@@ -176,5 +219,9 @@
         private ToolStripStatusLabel lblFound;
         private Panel pnlHeader;
         private Panel pnlBottom;
+        private TreeView treeView1;
+        private Button btnAdd;
+        private Button btnEdit;
+        private Button btnDelete;
     }
 }

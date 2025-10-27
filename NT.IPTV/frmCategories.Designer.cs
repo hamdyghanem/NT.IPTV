@@ -54,7 +54,6 @@ namespace NT.IPTV
             btnSeries = new ToolStripButton();
             btnGlobalSearch = new ToolStripButton();
             flwCat = new FlowCatControl();
-            btnToBeFound = new ToolStripButton();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -217,7 +216,7 @@ namespace NT.IPTV
             // toolStrip
             // 
             toolStrip.ImageScalingSize = new Size(55, 55);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnToBeFound, btnGlobalSearch });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries,  btnGlobalSearch });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 82);
@@ -290,18 +289,6 @@ namespace NT.IPTV
             flwCat.SelectedIndexChaged += lstCategories_SelectedIndexChanged;
             flwCat.Load += flwCat_Load;
             // 
-            // btnToBeFound
-            // 
-            btnToBeFound.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnToBeFound.Image = (Image)resources.GetObject("btnToBeFound.Image");
-            btnToBeFound.ImageTransparentColor = Color.Magenta;
-            btnToBeFound.Name = "btnToBeFound";
-            btnToBeFound.Padding = new Padding(10);
-            btnToBeFound.Size = new Size(79, 79);
-            btnToBeFound.Text = "Global Search";
-            btnToBeFound.ToolTipText = "To Be found";
-            btnToBeFound.Click += btnToBeFound_Click;
-            // 
             // frmCategories
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -350,6 +337,5 @@ namespace NT.IPTV
         private Button btnRatingUp;
         private FlowCatControl flwCat;
         private ToolStripButton btnGlobalSearch;
-        private ToolStripButton btnToBeFound;
     }
 }

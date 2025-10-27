@@ -33,7 +33,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\FlowSeriesControl.cs" />
-    <Compile Update="frmToBeFound.cs" />
     <Compile Update="frmGlobalSearch.cs" />
     <Compile Update="frmDownloader.cs">
       <SubType>Form</SubType>

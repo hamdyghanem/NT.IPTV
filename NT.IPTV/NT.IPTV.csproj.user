@@ -25,8 +25,5 @@
     <Compile Update="frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="frmToBeFound.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
