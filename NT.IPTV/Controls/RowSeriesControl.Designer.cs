@@ -42,10 +42,10 @@
             lblName.Dock = DockStyle.Top;
             lblName.Font = new Font("Segoe UI", 12F);
             lblName.ForeColor = Color.FromArgb(255, 255, 192);
-            lblName.Location = new Point(162, 0);
+            lblName.Location = new Point(106, 0);
             lblName.Name = "lblName";
             lblName.Padding = new Padding(5);
-            lblName.Size = new Size(486, 38);
+            lblName.Size = new Size(539, 38);
             lblName.TabIndex = 0;
             lblName.Text = "Series Name";
             lblName.TextAlign = ContentAlignment.MiddleLeft;
@@ -61,7 +61,7 @@
             picLogo.InitialImage = (Image)resources.GetObject("picLogo.InitialImage");
             picLogo.Location = new Point(0, 0);
             picLogo.Name = "picLogo";
-            picLogo.Size = new Size(162, 139);
+            picLogo.Size = new Size(106, 111);
             picLogo.SizeMode = PictureBoxSizeMode.Zoom;
             picLogo.TabIndex = 1;
             picLogo.TabStop = false;
@@ -74,10 +74,10 @@
             lblPlot.Dock = DockStyle.Top;
             lblPlot.Font = new Font("Segoe UI", 10F);
             lblPlot.ForeColor = Color.White;
-            lblPlot.Location = new Point(162, 38);
+            lblPlot.Location = new Point(106, 38);
             lblPlot.Name = "lblPlot";
             lblPlot.Padding = new Padding(5);
-            lblPlot.Size = new Size(486, 33);
+            lblPlot.Size = new Size(539, 33);
             lblPlot.TabIndex = 2;
             lblPlot.Text = "Series Name";
             lblPlot.TextAlign = ContentAlignment.MiddleLeft;
@@ -90,10 +90,10 @@
             lblDuration.Dock = DockStyle.Top;
             lblDuration.Font = new Font("Segoe UI", 10F);
             lblDuration.ForeColor = Color.White;
-            lblDuration.Location = new Point(162, 71);
+            lblDuration.Location = new Point(106, 71);
             lblDuration.Name = "lblDuration";
             lblDuration.Padding = new Padding(5);
-            lblDuration.Size = new Size(486, 33);
+            lblDuration.Size = new Size(539, 33);
             lblDuration.TabIndex = 3;
             lblDuration.Text = "0:0:0";
             lblDuration.TextAlign = ContentAlignment.MiddleLeft;
@@ -111,7 +111,7 @@
             Controls.Add(lblName);
             Controls.Add(picLogo);
             Name = "RowSeriesControl";
-            Size = new Size(648, 139);
+            Size = new Size(645, 111);
             ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             ResumeLayout(false);
         }

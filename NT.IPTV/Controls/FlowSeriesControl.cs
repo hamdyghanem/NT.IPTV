@@ -44,8 +44,15 @@ namespace NT.IPTV
             {
                 RowSeriesControl ctrl = new RowSeriesControl(item, defaultImage);
                 ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
-                ctrl.MouseEnter += row_MouseEnter;
-                ctrl.MouseLeave += row_MouseLeave;
+                if (!item.IsDownloaded)
+                {
+                    ctrl.MouseEnter += row_MouseEnter;
+                    ctrl.MouseLeave += row_MouseLeave;
+                }
+                if (item.IsDownloaded)
+                {
+                    ctrl.BackColor = Color.DarkSeaGreen;
+                }
                 flowLayoutPanel.Controls.Add(ctrl);
             }
         }
@@ -62,8 +69,8 @@ namespace NT.IPTV
             foreach (Control ctrl in flowLayoutPanel.Controls)
             {
                 Application.DoEvents();
-                 ctrl.Width = flowLayoutPanel.ClientSize.Width;
-              
+                ctrl.Width = flowLayoutPanel.ClientSize.Width;
+
             }
             flowLayoutPanel.ResumeLayout();
 
@@ -71,7 +78,7 @@ namespace NT.IPTV
         private void row_MouseEnter(object sender, EventArgs e)
         {
             var ctrl = (RowSeriesControl)sender;
-            ctrl.BackColor = Color.LightSkyBlue;   
+            ctrl.BackColor = Color.LightSkyBlue;
 
         }
         private void row_MouseLeave(object sender, EventArgs e)

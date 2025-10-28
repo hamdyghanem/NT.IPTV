@@ -40,10 +40,9 @@
             // btnClose
             // 
             btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnClose.Location = new Point(683, 218);
-            btnClose.Margin = new Padding(3, 2, 3, 2);
+            btnClose.Location = new Point(781, 291);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(102, 27);
+            btnClose.Size = new Size(117, 36);
             btnClose.TabIndex = 0;
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
@@ -57,34 +56,32 @@
             // 
             lblStatus.AutoSize = true;
             lblStatus.Dock = DockStyle.Bottom;
-            lblStatus.Location = new Point(0, 239);
+            lblStatus.Location = new Point(0, 319);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(0, 15);
+            lblStatus.Size = new Size(0, 20);
             lblStatus.TabIndex = 2;
             // 
             // txtLinks
             // 
             txtLinks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            txtLinks.Location = new Point(10, 9);
-            txtLinks.Margin = new Padding(3, 2, 3, 2);
+            txtLinks.Location = new Point(11, 12);
             txtLinks.Multiline = true;
             txtLinks.Name = "txtLinks";
             txtLinks.ScrollBars = ScrollBars.Both;
-            txtLinks.Size = new Size(776, 198);
+            txtLinks.Size = new Size(886, 263);
             txtLinks.TabIndex = 3;
             // 
             // frmGetDownloadLinks
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnClose;
-            ClientSize = new Size(796, 254);
+            ClientSize = new Size(910, 339);
             Controls.Add(txtLinks);
             Controls.Add(lblStatus);
             Controls.Add(btnClose);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmGetDownloadLinks";

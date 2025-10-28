@@ -35,32 +35,32 @@ namespace NT.IPTV.Models.Channel
         public string EpisodeRuntime { get; set; }
 
         [JsonProperty("youtube_trailer")]
-        public string YoutubeTrailer { get; set; }
+        public string YoutubeTrailer { get; set; } = string.Empty;
 
         [JsonProperty("backdrop_path")]
-        public string[] BackdropPath { get; set; }
+        public string[] BackdropPath { get; set; } 
 
         [JsonProperty("rating_5based")]
-        public string Rating5based { get; set; }
+        public string Rating5based { get; set; } = string.Empty;
 
         [JsonProperty("rating")]
-        public string rating { get; set; }
+        public string rating { get; set; } = string.Empty;
 
         [JsonProperty("last_modified")]
-        public string LastModified { get; set; }
+        public string LastModified { get; set; } = string.Empty;
 
         [JsonProperty("releaseDate")]
-        public string releaseDate { get; set; }
-        
+        public string releaseDate { get; set; } = string.Empty;
+
 
         [JsonProperty("added")]
-        public string added { get; set; }
+        public string added { get; set; } = string.Empty;
 
         [JsonProperty("director")]
-        public string Director { get; set; }
+        public string Director { get; set; } = string.Empty;
 
         [JsonProperty("genre")]
-        public string Genre { get; set; }
+        public string Genre { get; set; } = string.Empty;
         public string Streamurl
         {
             get
@@ -82,6 +82,8 @@ namespace NT.IPTV.Models.Channel
         public enumItemType ItemType => enumItemType.Channel;
         private bool favorite = false;
         public bool Favorite { get => favorite; set => favorite = value; }
+        private bool _hasNewEpisodes;
+        public bool HasNewEpisodes { get => _hasNewEpisodes; set => _hasNewEpisodes = value; }
         public override string ToString()
         {
             return Name;

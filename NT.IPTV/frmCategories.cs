@@ -195,9 +195,14 @@ namespace NT.IPTV
             Cursor = Cursors.WaitCursor;
             foreach (var ch in channels)
             {
+                var c = (IChannel)ch;
                 Application.DoEvents();
-                var ctrl = new ChannelControl((IChannel)ch);
+                var ctrl = new ChannelControl(c);
                 ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
+                if (!c.HasNewEpisodes)
+                {
+                    ctrl.BackColor = Color.DarkSeaGreen;
+                }
                 flwChannel.Controls.Add(ctrl);
             }
             Cursor = Cursors.Default;

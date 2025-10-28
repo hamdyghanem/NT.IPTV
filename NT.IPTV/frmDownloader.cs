@@ -17,7 +17,6 @@ namespace NT.IPTV
     public partial class frmDownloader : Form
     {
         private Thread threadStart;
-        private string saveDir = Path.Combine(clsCore.assemblyFolder, clsCore.DownloadeFolder);
         private IWatch downoadFile;
         private string TitleName;
         List<string> links = new List<string>();
@@ -35,12 +34,11 @@ namespace NT.IPTV
             lstLog.Items.Clear();
             prgBar.Value = 0;
             prgBarSeries.Value = 0;
-            if (!Directory.Exists(saveDir))
-                Directory.CreateDirectory(saveDir);
+
 
             downoadFile = _downoadFile;
             picMovie.ImageLocation = downoadFile.IconUrl;
-            TitleName = cleanName(downoadFile.Name);
+            TitleName = clsCore.CleanName(downoadFile.Name);
             if (downoadFile.Category == enumCategories.Movies)
             {
                 var movie = (WatchMovie)downoadFile;
@@ -54,11 +52,11 @@ namespace NT.IPTV
             {
 
                 var series = (WatchSeries)downoadFile;
-                var seriesSaveDir = Path.Combine(saveDir, TitleName);
+                var seriesSaveDir = Path.Combine(clsCore.DownloadeFolder, TitleName);
                 if (!Directory.Exists(seriesSaveDir))
+                {
                     Directory.CreateDirectory(seriesSaveDir);
-
-                //
+                }
                 foreach (var seasson in series.Seasons)
                 {
                     if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
@@ -87,9 +85,11 @@ namespace NT.IPTV
                 {
                     if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
                     {
-                        var seasonPath = Path.Combine(saveDir, TitleName, $"seasons {seasson.SeasonNum}");
+                        var seasonPath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}");
                         if (!Directory.Exists(seasonPath))
+                        {
                             Directory.CreateDirectory(seasonPath);
+                        }
                         //create folder
                         foreach (var episode in seasson.Episodes)
                         {
@@ -98,7 +98,7 @@ namespace NT.IPTV
                                 return;
                             }
                             //set name and file
-                            var filePath = Path.Combine(saveDir, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                            var filePath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
                             lblFileName.Text = filePath;
                             MyToolTip.Show(lblFileName.Text, lblFileName);
                             prgBarSeries.Value++;
@@ -179,17 +179,12 @@ namespace NT.IPTV
             lblPercentage.Text = "100%";
         });
         }
-
-        public string cleanName(string name)
-        {
-            return name.Replace(":", " ").Replace("\\", " ").Replace("/", " ");
-        }
         private string getFileName(string _name, string _extenstion, int i)
         {
-            var file = Path.Combine(saveDir, _name + "." + _extenstion);
+            var file = Path.Combine(clsCore.DownloadeFolder, _name + "." + _extenstion);
             if (i > 0)
             {
-                file = Path.Combine(saveDir, _name + "_" + i.ToString() + "." + _extenstion);
+                file = Path.Combine(clsCore.DownloadeFolder, _name + "_" + i.ToString() + "." + _extenstion);
             }
             if (File.Exists(file))
             {

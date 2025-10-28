@@ -132,6 +132,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmDownloader";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Downloader";
             FormClosing += frmDownloader_FormClosing;
             Load += frmDownloader_Load;

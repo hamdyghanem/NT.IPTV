@@ -12,6 +12,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Net;
 using System.Reflection;
 using System.Security.Policy;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace NT.IPTV.Utilities
@@ -21,8 +22,22 @@ namespace NT.IPTV.Utilities
         private static readonly HttpClient _httpClient = CreateHttpClient();
         public static readonly string UserProfiles = "UserProfiles";
         private const string settingsFileName = "settings.json";
-        public static readonly string DownloadeFolder = "Downloades";
         public static readonly string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static CancellationTokenSource _cts = new CancellationTokenSource();
+        public static string DownloadeFolder
+        {
+            get
+            {
+                var f = Path.Combine(assemblyFolder, "Downloades");
+                if (!Directory.Exists(f))
+                    Directory.CreateDirectory(f);
+                return f;
+            }
+        }
+        public static string CleanName(string name)
+        {
+            return name.Replace(":", " ").Replace("\\", " ").Replace("/", " ");
+        }
 
         #region clsCore Data Storage
         public static enumCategories CurrentCategory { get; set; } = enumCategories.Live;
@@ -286,7 +301,7 @@ namespace NT.IPTV.Utilities
                             if (selectedItem.ID == "-1")
                             {
                                 StreamVideos = AllStreamVideos.Where(c => currentUser.FavoritMovies.Contains(c.ID)).ToList();
-                                StreamVideos.All(c => c.Favorite = true);
+
                             }
                             else
                             {
@@ -312,6 +327,14 @@ namespace NT.IPTV.Utilities
                             {
                                 StreamSerieses = AllStreamSerieses.Where(c => currentUser.FavoritSeries.Contains(c.ID)).ToList();
                                 StreamSerieses.All(c => c.Favorite = true);
+                                foreach(StreamSeries s in  StreamSerieses)
+                                {
+                                    var x = await clsCore.GetSeriesInfo(s.StreamID,clsCore. _cts.Token);
+                                    if (x.HasNewEpisodes)
+                                    {
+                                        s.HasNewEpisodes = true;    
+                                    }
+                                }
                             }
                             else
                             {
@@ -435,7 +458,7 @@ namespace NT.IPTV.Utilities
                 {
                     var d = GetPropValue(series.Episodes, $"EpisodeData_{i}");
                     if (d == null) break;
-                    series.Seasons.Add(new Season { SeasonNum = i, Episodes = (List<EpisodeData>)d });
+                    series.AddSeason(new Season { SeasonNum = i, Episodes = (List<EpisodeData>)d });
                 }
                 return series;
             }

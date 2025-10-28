@@ -61,7 +61,9 @@ namespace NT.IPTV.Models.Items.Channesl
         public enumItemType ItemType => enumItemType.Channel;
         private bool favorite = false;
         public bool Favorite { get => favorite; set => favorite = value; }
+        private bool _hasNewEpisodes;
 
+        public bool HasNewEpisodes { get => _hasNewEpisodes; set => _hasNewEpisodes = value; }
         public override string ToString()
         {
             return Name;

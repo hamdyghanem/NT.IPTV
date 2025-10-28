@@ -108,6 +108,8 @@ namespace NT.IPTV.Models.Items.StreamObject
                 return $"{(clsCore.currentUser.UseHttps ? "https" : "http")}://{clsCore.PlayerInfo.server_info.url}:{clsCore.PlayerInfo.server_info.port}/movie/{clsCore.currentUser.UserName}/{clsCore.currentUser.Password}/{StreamID}.{ContainerExtension}";
             }
         }
+        public bool IsDownloaded { set; get; }
+
     }
 
 }
