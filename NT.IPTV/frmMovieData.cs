@@ -30,6 +30,7 @@ namespace NT.IPTV
             if (cltrParent.Channel.Category == enumCategories.Movies)
             {
                 btnDownloadSeries.Visible = false;
+                btnFakeDownloadSeries.Visible = false;
                 btnDownload.Visible = true;
                 tabSeries.Hide();
                 picMovie.Dock = DockStyle.Fill;
@@ -39,6 +40,7 @@ namespace NT.IPTV
             else if (cltrParent.Channel.Category == enumCategories.Series)
             {
                 btnDownloadSeries.Visible = true;
+                btnFakeDownloadSeries.Visible = true;
                 btnDownload.Visible = false;
                 picMovie.Dock = DockStyle.Right;
                 tabSeries.TabPages.Clear();
@@ -56,6 +58,15 @@ namespace NT.IPTV
                     btnDownloadSeason.Text = $"Season {s.SeasonNum}";
                     btnDownloadSeason.Click += btnDownloadSeason1_Click;
                     btnDownloadSeries.DropDownItems.Add(btnDownloadSeason);
+                    //Fake
+                    ToolStripMenuItem btnFakeDownloadSeason = new ToolStripMenuItem();
+                    btnFakeDownloadSeason.Image = Properties.Resources.download__1_;
+                    btnFakeDownloadSeason.Name = $"btnDownloadSeason{s.SeasonNum}";
+                    btnFakeDownloadSeason.Tag = s.SeasonNum;
+                    btnFakeDownloadSeason.Size = new Size(229, 62);
+                    btnFakeDownloadSeason.Text = $"Fake Season {s.SeasonNum}";
+                    btnFakeDownloadSeason.Click += btnDownloadFakseSeason1_Click;
+                    btnFakeDownloadSeries.DropDownItems.Add(btnFakeDownloadSeason);
                 }
             }
         }
@@ -223,6 +234,7 @@ namespace NT.IPTV
         {
             OpenDownload(new List<string>());
         }
+
         private void btnDownloadSeries_Click(object sender, EventArgs e)
         {
             var stringList = (Selected as WatchSeries).Seasons.Select(s => s.SeasonNum.ToString()).ToList(); ;
@@ -233,11 +245,43 @@ namespace NT.IPTV
         {
             OpenDownload(new List<string>() { ((System.Windows.Forms.ToolStripItem)sender).Tag.ToString() });
         }
+        private void btnDownloadFakseSeason1_Click(object sender, EventArgs e)
+        {
+            //OpenDownload(new List<string>() { ((System.Windows.Forms.ToolStripItem)sender).Tag.ToString() });
+            var SeassonsToDownload = new List<string>() { ((System.Windows.Forms.ToolStripItem)sender).Tag.ToString() };
+            var series = (WatchSeries)Selected;
+            var TitleName = clsCore.CleanName(series.Name);
+            var seriesSaveDir = Path.Combine(clsCore.DownloadeFolder, TitleName);
+            if (!Directory.Exists(seriesSaveDir))
+            {
+                Directory.CreateDirectory(seriesSaveDir);
+            }
+            foreach (var seasson in series.Seasons)
+            {
+                if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
+                {
+                    var seasonPath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}");
+                    if (!Directory.Exists(seasonPath))
+                    {
+                        Directory.CreateDirectory(seasonPath);
+                    }
+                    foreach (var episode in seasson.Episodes)
+                    {
+                        var filePath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                        File.WriteAllText(filePath, "This is a dummy file.");
+                    }
+                }
+            }
+        }
         private void OpenDownload(List<string> SeassonsToDownload)
         {
-            using (frmDownloader frm = new frmDownloader(Selected, SeassonsToDownload))
+            var series = (WatchSeries)Selected;
+            if (series.HasNewEpisodes)
             {
-                frm.ShowDialog();
+                using (frmDownloader frm = new frmDownloader(Selected, SeassonsToDownload))
+                {
+                    frm.ShowDialog();
+                }
             }
         }
         private void btnWatchTrailer_Click(object sender, EventArgs e)

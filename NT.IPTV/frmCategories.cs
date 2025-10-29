@@ -199,9 +199,9 @@ namespace NT.IPTV
                 Application.DoEvents();
                 var ctrl = new ChannelControl(c);
                 ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
-                if (!c.HasNewEpisodes)
+                if (c.HasNewEpisodes)
                 {
-                    ctrl.BackColor = Color.DarkSeaGreen;
+                    ctrl.BackColor = Color.Yellow;
                 }
                 flwChannel.Controls.Add(ctrl);
             }

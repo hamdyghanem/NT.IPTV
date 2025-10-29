@@ -46,12 +46,12 @@ namespace NT.IPTV
                 ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
                 if (!item.IsDownloaded)
                 {
+                    ctrl.BackColor = Color.Yellow;
+                }
+                else
+                {
                     ctrl.MouseEnter += row_MouseEnter;
                     ctrl.MouseLeave += row_MouseLeave;
-                }
-                if (item.IsDownloaded)
-                {
-                    ctrl.BackColor = Color.DarkSeaGreen;
                 }
                 flowLayoutPanel.Controls.Add(ctrl);
             }
