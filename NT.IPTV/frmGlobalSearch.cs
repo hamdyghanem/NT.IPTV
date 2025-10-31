@@ -36,6 +36,8 @@ namespace NT.IPTV
             lstGlobalSearch.Items.Clear();
             this.Text = $"Global Search : {clsCore.CurrentCategory}";
             lblFound.Text = "";
+            txtSearchMovies.Focus();
+            txtSearchMovies.Clear();
         }
         private void LoadTree()
         {

@@ -275,13 +275,9 @@ namespace NT.IPTV
         }
         private void OpenDownload(List<string> SeassonsToDownload)
         {
-            var series = (WatchSeries)Selected;
-            if (series.HasNewEpisodes)
+            using (frmDownloader frm = new frmDownloader(Selected, SeassonsToDownload))
             {
-                using (frmDownloader frm = new frmDownloader(Selected, SeassonsToDownload))
-                {
-                    frm.ShowDialog();
-                }
+                frm.ShowDialog();
             }
         }
         private void btnWatchTrailer_Click(object sender, EventArgs e)

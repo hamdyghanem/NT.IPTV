@@ -144,7 +144,7 @@
             treeView1.Location = new Point(561, 51);
             treeView1.Name = "treeView1";
             treeView1.Size = new Size(419, 364);
-            treeView1.TabIndex = 4;
+            treeView1.TabIndex = 3;
             treeView1.NodeMouseDoubleClick += treeView1_NodeMouseDoubleClick;
             // 
             // btnAdd
