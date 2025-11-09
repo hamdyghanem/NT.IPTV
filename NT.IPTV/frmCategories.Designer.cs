@@ -54,6 +54,7 @@ namespace NT.IPTV
             btnSeries = new ToolStripButton();
             btnGlobalSearch = new ToolStripButton();
             flwCat = new FlowCatControl();
+            btnRefresh = new ToolStripButton();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -216,7 +217,7 @@ namespace NT.IPTV
             // toolStrip
             // 
             toolStrip.ImageScalingSize = new Size(55, 55);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries,  btnGlobalSearch });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 82);
@@ -289,6 +290,16 @@ namespace NT.IPTV
             flwCat.SelectedIndexChaged += lstCategories_SelectedIndexChanged;
             flwCat.Load += flwCat_Load;
             // 
+            // btnRefresh
+            // 
+            btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnRefresh.Image = (Image)resources.GetObject("btnRefresh.Image");
+            btnRefresh.ImageTransparentColor = Color.Magenta;
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(59, 79);
+            btnRefresh.Text = "Refresh";
+            btnRefresh.Click += btnRefresh_Click;
+            // 
             // frmCategories
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -337,5 +348,6 @@ namespace NT.IPTV
         private Button btnRatingUp;
         private FlowCatControl flwCat;
         private ToolStripButton btnGlobalSearch;
+        private ToolStripButton btnRefresh;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NT.IPTV.Models.Channel;
 using NT.IPTV.Models.Items;
 using NT.IPTV.Models.Items.Channesl;
 using NT.IPTV.Properties;
@@ -446,6 +447,23 @@ namespace NT.IPTV
         private void flwCat_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private async void btnRefresh_Click(object sender, EventArgs e)
+        {
+            categoryies.Clear() ;  
+
+            clsCore.AllStreamChannels.Clear();
+            clsCore.AllStreamSerieses.Clear();
+            clsCore.AllStreamVideos.Clear();
+            clsCore.StreamChannels.Clear();
+            clsCore.StreamSerieses.Clear();
+            clsCore.StreamVideos.Clear();
+
+            await clsCore.RetrieveCategories(lblStatus, _cts.Token);
+            await clsCore.RetrieveStreams(_cts.Token);
+
+            loadCategories();
         }
     }
 }
