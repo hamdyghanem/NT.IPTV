@@ -454,7 +454,7 @@ namespace NT.IPTV.Utilities
                 var responseFromServer = await response.Content.ReadAsStringAsync();
                 var series = JsonConvert.DeserializeObject<WatchSeries>(responseFromServer);
                 //get season
-                for (int i = 1; i <= 12; i++)
+                for (int i = 1; i <= 15; i++)
                 {
                     var d = GetPropValue(series.Episodes, $"EpisodeData_{i}");
                     if (d == null) break;
