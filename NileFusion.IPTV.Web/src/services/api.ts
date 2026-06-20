@@ -1,3 +1,5 @@
+import { ApiSession, PlayerInfoResponse, StreamCategory, StreamChannel, StreamVideo, StreamSeries, WatchMovie, WatchSeries } from '../types';
+
 const API_BASE = (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_BASE_URL || '';
 
 export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T> {
@@ -17,28 +19,127 @@ export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T
 }
 
 export function buildXtreamUrl(
-  session: {
-    server: string;
-    port: string;
-    useHttps: boolean;
-    username: string;
-    password: string;
-  },
-  action: string,
-) {
+  session: ApiSession,
+  action?: string,
+  extraParams: Record<string, string> = {}
+): string {
   const protocol = session.useHttps ? 'https' : 'http';
-  const base = `${protocol}://${session.server}:${session.port}`;
-  return `${base}/player_api.php?username=${session.username}&password=${session.password}&action=${action}`;
+  // Strip protocol from server name if user typed it in the server field
+  const serverClean = session.server.replace(/^https?:\/\//i, '');
+  const targetHost = `${serverClean}${session.port ? `:${session.port}` : ''}`;
+  const baseUrl = `${protocol}://${targetHost}/player_api.php`;
+
+  const params = new URLSearchParams({
+    username: session.username,
+    password: session.password,
+    ...extraParams,
+  });
+
+  if (action) {
+    params.append('action', action);
+  }
+
+  const directUrl = `${baseUrl}?${params.toString()}`;
+
+  if (API_BASE) {
+    if (API_BASE.includes('?')) {
+      return `${API_BASE}&url=${encodeURIComponent(directUrl)}`;
+    } else {
+      return `${API_BASE}/${directUrl.replace(/^https?:\/\//i, '')}`;
+    }
+  }
+
+  return directUrl;
 }
 
-export async function testConnection(session: {
-  server: string;
-  port: string;
-  useHttps: boolean;
-  username: string;
-  password: string;
-}) {
-  const url = buildXtreamUrl(session, 'get_live_categories');
-  const data = await fetchJson<{ user_info?: { status?: string } }>(url);
+export async function testConnection(session: ApiSession): Promise<PlayerInfoResponse> {
+  // Xtream Codes login authentication is done by calling player_api.php with credentials but no action parameter
+  const url = buildXtreamUrl(session);
+  const data = await fetchJson<PlayerInfoResponse>(url);
   return data;
+}
+
+export async function fetchCategories(
+  session: ApiSession,
+  type: 'live' | 'movies' | 'series'
+): Promise<StreamCategory[]> {
+  let action = 'get_live_categories';
+  if (type === 'movies') action = 'get_vod_categories';
+  else if (type === 'series') action = 'get_series_categories';
+
+  const url = buildXtreamUrl(session, action);
+  return fetchJson<StreamCategory[]>(url);
+}
+
+export async function fetchStreams(
+  session: ApiSession,
+  type: 'live' | 'movies' | 'series',
+  categoryId?: string
+): Promise<any[]> {
+  let action = 'get_live_streams';
+  if (type === 'movies') action = 'get_vod_streams';
+  else if (type === 'series') action = 'get_series';
+
+  const params: Record<string, string> = {};
+  if (categoryId && categoryId !== '-1') {
+    params['category_id'] = categoryId;
+  }
+
+  const url = buildXtreamUrl(session, action, params);
+  
+  if (type === 'live') {
+    return fetchJson<StreamChannel[]>(url);
+  } else if (type === 'movies') {
+    return fetchJson<StreamVideo[]>(url);
+  } else {
+    return fetchJson<StreamSeries[]>(url);
+  }
+}
+
+export async function fetchMovieDetails(
+  session: ApiSession,
+  streamId: string | number
+): Promise<WatchMovie> {
+  const url = buildXtreamUrl(session, 'get_vod_info', { vod_id: String(streamId) });
+  return fetchJson<WatchMovie>(url);
+}
+
+export async function fetchSeriesDetails(
+  session: ApiSession,
+  seriesId: string | number
+): Promise<WatchSeries> {
+  const url = buildXtreamUrl(session, 'get_series_info', { series_id: String(seriesId) });
+  return fetchJson<WatchSeries>(url);
+}
+
+export function buildStreamUrl(
+  session: ApiSession,
+  type: 'live' | 'movies' | 'series',
+  streamId: string | number,
+  extension: string
+): string {
+  const protocol = session.useHttps ? 'https' : 'http';
+  const serverClean = session.server.replace(/^https?:\/\//i, '');
+  const targetHost = `${serverClean}${session.port ? `:${session.port}` : ''}`;
+  
+  let path = '';
+  if (type === 'live') {
+    path = `live/${session.username}/${session.password}/${streamId}.ts`;
+  } else if (type === 'movies') {
+    path = `movie/${session.username}/${session.password}/${streamId}.${extension || 'ts'}`;
+  } else if (type === 'series') {
+    path = `series/${session.username}/${session.password}/${streamId}.${extension || 'ts'}`;
+  }
+
+  const directUrl = `${protocol}://${targetHost}/${path}`;
+
+  if (API_BASE) {
+    if (API_BASE.includes('?')) {
+      return `${API_BASE}&url=${encodeURIComponent(directUrl)}`;
+    } else {
+      return `${API_BASE}/${directUrl.replace(/^https?:\/\//i, '')}`;
+    }
+  }
+
+  return directUrl;
 }
