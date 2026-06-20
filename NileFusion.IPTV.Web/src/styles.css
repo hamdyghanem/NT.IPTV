@@ -254,26 +254,28 @@ button, .btn {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(15, 17, 23, 0.85);
-  border: 1px solid var(--border-light);
-  border-radius: 50%;
+  background: transparent;
+  border: none;
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   transition: var(--transition-smooth);
   z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  padding: 0;
+  cursor: pointer;
 }
 .fav-btn-bubble:hover {
-  transform: scale(1.1);
-  color: #ef4444;
+  transform: scale(1.25);
+  color: #fbbf24;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.8));
 }
 .fav-btn-bubble.active {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.35);
+  color: #fbbf24;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
 }
 
 /* Skeleton Loading Pulse */

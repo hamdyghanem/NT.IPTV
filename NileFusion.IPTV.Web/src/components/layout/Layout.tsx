@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../app/AuthContext'
 import { Home, Tv, Film, MonitorPlay, Settings, LogOut, Menu, X, User } from 'lucide-react'
 
 export default function Layout() {
   const { activeSession, playerInfo, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = () => {
@@ -24,6 +25,44 @@ export default function Layout() {
   const expiryString = playerInfo?.user_info?.exp_date 
     ? new Date(Number(playerInfo.user_info.exp_date) * 1000).toLocaleDateString()
     : 'N/A'
+
+  const getLinkStyles = (label: string, isActive: boolean) => {
+    switch (label) {
+      case 'Live TV':
+        return {
+          background: isActive 
+            ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 100%)' 
+            : 'rgba(6, 182, 212, 0.03)',
+          borderLeft: isActive ? '3.5px solid #06b6d4' : '3.5px solid transparent',
+          color: isActive ? '#22d3ee' : 'rgba(255, 255, 255, 0.65)',
+          textShadow: isActive ? '0 0 10px rgba(6, 182, 212, 0.4)' : 'none',
+        }
+      case 'Movies':
+        return {
+          background: isActive 
+            ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.25) 0%, rgba(236, 72, 153, 0.05) 100%)' 
+            : 'rgba(236, 72, 153, 0.03)',
+          borderLeft: isActive ? '3.5px solid #ec4899' : '3.5px solid transparent',
+          color: isActive ? '#f472b6' : 'rgba(255, 255, 255, 0.65)',
+          textShadow: isActive ? '0 0 10px rgba(236, 72, 153, 0.4)' : 'none',
+        }
+      case 'Series':
+        return {
+          background: isActive 
+            ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.05) 100%)' 
+            : 'rgba(245, 158, 11, 0.03)',
+          borderLeft: isActive ? '3.5px solid #fbbf24' : '3.5px solid transparent',
+          color: isActive ? '#fbbf24' : 'rgba(255, 255, 255, 0.65)',
+          textShadow: isActive ? '0 0 10px rgba(251, 191, 36, 0.4)' : 'none',
+        }
+      default:
+        return {
+          background: isActive ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+          borderLeft: isActive ? '3.5px solid var(--text-secondary)' : '3.5px solid transparent',
+          color: isActive ? '#fff' : 'var(--text-secondary)',
+        }
+    }
+  }
 
   return (
     <div className="layout-container" style={{ minHeight: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
@@ -82,31 +121,38 @@ export default function Layout() {
 
           {/* Navigation Links */}
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                onClick={() => setMobileOpen(false)}
-                style={({ isActive }) => ({
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.8rem 1rem',
-                  borderRadius: '8px',
-                  color: isActive ? '#fff' : 'var(--text-secondary)',
-                  background: isActive ? 'var(--bg-hover)' : 'transparent',
-                  borderLeft: isActive ? '3px solid var(--accent-color)' : '3px solid transparent',
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                  fontSize: '0.95rem',
-                  transition: 'var(--transition-smooth)',
-                })}
-                className="nav-link"
-              >
-                {link.icon}
-                <span>{link.label}</span>
-              </NavLink>
-            ))}
+            {navLinks.map((link) => {
+              // For browse links, match both path AND query param
+              const isBrowseLink = link.to.startsWith('/browse?')
+              const isActive = isBrowseLink
+                ? location.pathname + location.search === link.to
+                : location.pathname === link.to && !location.search
+
+              const customStyles = getLinkStyles(link.label, isActive)
+              return (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.8rem 1rem',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                    fontSize: '0.95rem',
+                    transition: 'var(--transition-smooth)',
+                    ...customStyles,
+                  }}
+                  className={`nav-link nav-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </NavLink>
+              )
+            })}
           </nav>
         </div>
 
@@ -166,6 +212,30 @@ export default function Layout() {
 
       {/* CSS details to manage responsiveness */}
       <style>{`
+        .nav-link:hover {
+        .nav-link:hover {
+          transform: translateX(6px);
+        }
+        .nav-link-live-tv:hover {
+          background: rgba(6, 182, 212, 0.3) !important;
+          color: #22d3ee !important;
+          filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.4));
+        }
+        .nav-link-movies:hover {
+          background: rgba(236, 72, 153, 0.3) !important;
+          color: #f472b6 !important;
+          filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
+        }
+        .nav-link-series:hover {
+          background: rgba(245, 158, 11, 0.3) !important;
+          color: #fbbf24 !important;
+          filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4));
+        }
+        .nav-link-dashboard:hover, .nav-link-settings:hover {
+          background: rgba(255, 255, 255, 0.15) !important;
+          color: #fff !important;
+        }
+
         @media (max-width: 768px) {
           .mobile-header {
             display: flex !important;

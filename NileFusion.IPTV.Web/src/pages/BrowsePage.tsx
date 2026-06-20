@@ -9,13 +9,14 @@ type TabType = 'live' | 'movies' | 'series'
 
 export default function BrowsePage() {
   const { activeSession, toggleFavorite, isFavorite } = useAuth()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
   const activeTab = (searchParams.get('type') as TabType) || 'live'
   const [categories, setCategories] = useState<StreamCategory[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [categorySearchQuery, setCategorySearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name-asc')
   
   const [streams, setStreams] = useState<any[]>([])
@@ -27,9 +28,9 @@ export default function BrowsePage() {
 
   // Reset category and search on tab switch
   useEffect(() => {
-    const defaultCat = (activeTab === 'movies' || activeTab === 'series') ? '-1' : 'all'
-    setSelectedCategory(defaultCat)
+    setSelectedCategory('-1')
     setSearchQuery('')
+    setCategorySearchQuery('')
     setVisibleCount(60)
     
     if (activeSession) {
@@ -82,9 +83,8 @@ export default function BrowsePage() {
       setCategories(catData)
       setStreams(streamData)
 
-      // Default category selection: 'Favorites' for movies/series, 'all' for live
-      const defaultCat = (activeTab === 'movies' || activeTab === 'series') ? '-1' : 'all'
-      setSelectedCategory(defaultCat)
+      // Default category selection: Favorites for all tabs
+      setSelectedCategory('-1')
     } catch (err: any) {
       console.error("Failed to load catalog data", err)
       setError(`Failed to fetch catalog. Please check your CORS configuration or proxy server.`)
@@ -97,17 +97,17 @@ export default function BrowsePage() {
   const filteredStreams = useMemo(() => {
     let result = [...streams]
 
-    // Category filter
-    if (selectedCategory === '-1') {
-      result = result.filter(item => isFavorite(activeTab, item.stream_id || item.series_id))
-    } else if (selectedCategory !== 'all') {
-      result = result.filter(item => String(item.category_id) === String(selectedCategory))
-    }
-
-    // Search query filter
+    // If a search query is present, perform a global/public search across all categories
     if (searchQuery) {
       const q = searchQuery.toLowerCase()
       result = result.filter(item => (item.name || item.title || '').toLowerCase().includes(q))
+    } else {
+      // Otherwise, filter by the selected category
+      if (selectedCategory === '-1') {
+        result = result.filter(item => isFavorite(activeTab, item.stream_id || item.series_id))
+      } else if (selectedCategory !== 'all') {
+        result = result.filter(item => String(item.category_id) === String(selectedCategory))
+      }
     }
 
     // Sorting
@@ -162,46 +162,17 @@ export default function BrowsePage() {
     }
   }
 
-  const handleTabChange = (type: TabType) => {
-    setSearchParams({ type })
-  }
 
   const activeCategoryName = useMemo(() => {
+    if (searchQuery) return 'Search Results'
     if (selectedCategory === 'all') return 'All Channels'
     if (selectedCategory === '-1') return 'Favorites'
     return categories.find(c => String(c.category_id) === String(selectedCategory))?.category_name || 'Category'
-  }, [selectedCategory, categories])
+  }, [selectedCategory, categories, searchQuery])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%' }}>
       
-      {/* Top Tabs */}
-      <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '1rem' }}>
-        {(['live', 'movies', 'series'] as TabType[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => handleTabChange(tab)}
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: activeTab === tab ? 'var(--primary-gradient)' : 'var(--bg-card)',
-              color: '#fff',
-              border: activeTab === tab ? 'none' : '1px solid var(--border-light)',
-              boxShadow: activeTab === tab ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
-              textTransform: 'capitalize',
-            }}
-          >
-            {tab === 'live' && <Tv size={16} />}
-            {tab === 'movies' && <Film size={16} />}
-            {tab === 'series' && <MonitorPlay size={16} />}
-            <span>{tab === 'live' ? 'Live TV' : tab}</span>
-          </button>
-        ))}
-      </div>
 
       {/* Main Browse Panel */}
       <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }} className="browse-layout">
@@ -218,27 +189,24 @@ export default function BrowsePage() {
           overflowY: 'auto'
         }}>
           <h3 style={{ fontSize: '1rem', color: '#fff', fontWeight: 600 }}>Categories</h3>
+          <div style={{ position: 'relative' }}>
+            <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <input
+              type="text"
+              placeholder="Filter categories..."
+              className="form-input"
+              style={{
+                padding: '0.45rem 0.75rem 0.45rem 2rem',
+                fontSize: '0.8rem',
+                borderRadius: '6px',
+                height: '32px'
+              }}
+              value={categorySearchQuery}
+              onChange={(e) => setCategorySearchQuery(e.target.value)}
+            />
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-            {/* Special Categories */}
-            {activeTab !== 'movies' && activeTab !== 'series' && (
-              <button
-                onClick={() => setSelectedCategory('all')}
-                style={{
-                  justifyContent: 'space-between',
-                  padding: '0.6rem 0.8rem',
-                  borderRadius: '6px',
-                  fontSize: '0.85rem',
-                  textAlign: 'left',
-                  width: '100%',
-                  background: selectedCategory === 'all' ? 'var(--bg-hover)' : 'transparent',
-                  color: selectedCategory === 'all' ? '#fff' : 'var(--text-secondary)',
-                  borderLeft: selectedCategory === 'all' ? '3px solid var(--accent-color)' : '3px solid transparent',
-                }}
-              >
-                <span>All Streams</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({categoryCounts.all})</span>
-              </button>
-            )}
+            {/* Special Categories — "All Streams" intentionally hidden for all tabs */}
             
             <button
               onClick={() => setSelectedCategory('-1')}
@@ -264,8 +232,10 @@ export default function BrowsePage() {
             <div style={{ height: '1px', background: 'var(--border-light)', margin: '0.5rem 0' }} />
 
             {/* Dyn Categories */}
-            {categories.map((cat) => {
-              const count = categoryCounts[String(cat.category_id)] || 0
+            {categories
+              .filter(cat => cat.category_name.toLowerCase().includes(categorySearchQuery.toLowerCase()))
+              .map((cat) => {
+                const count = categoryCounts[String(cat.category_id)] || 0
               if (count === 0) return null // Hide empty categories
               
               return (
@@ -417,7 +387,7 @@ export default function BrowsePage() {
                         toggleFavorite(activeTab, id)
                       }}
                     >
-                      <Star size={16} fill={isFav ? '#ef4444' : 'transparent'} />
+                      <Star size={20} fill={isFav ? '#fbbf24' : 'transparent'} />
                     </button>
 
                     {/* Image / Fallback Icon */}
