@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../app/AuthContext'
 import { Home, Tv, Film, MonitorPlay, Settings, LogOut, Menu, X, User } from 'lucide-react'
+import nilefusionLogo from '../../assets/logo.png'
 
 export default function Layout() {
   const { activeSession, playerInfo, logout } = useAuth()
@@ -80,7 +81,7 @@ export default function Layout() {
         zIndex: 100,
       }} className="mobile-header">
         <h2 style={{ fontSize: '1.25rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          NileFusion IPTV
+          Nile TV
         </h2>
         <button 
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -113,9 +114,16 @@ export default function Layout() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Logo */}
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textAlign: 'center' }}>
-              NileFusion IPTV
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <img
+                src="/favicon.png"
+                alt="Nile TV"
+                style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover', filter: 'drop-shadow(0 0 6px rgba(229,57,53,0.4))' }}
+              />
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Nile TV
+              </h2>
+            </div>
             <div style={{ height: '1px', background: 'var(--border-light)', marginTop: '1.5rem' }} />
           </div>
 
@@ -221,7 +229,7 @@ export default function Layout() {
             }}
           >
             <img
-              src="/favicon.png"
+              src={nilefusionLogo}
               alt="NileFusion"
               style={{ width: '16px', height: '16px', borderRadius: '3px', objectFit: 'cover' }}
             />

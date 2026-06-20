@@ -11,7 +11,7 @@ export default function SettingsPage() {
   const [cleared, setCleared] = useState(false)
 
   const handleClearData = () => {
-    if (window.confirm("Are you sure you want to clear all NileFusion IPTV profiles, favorites, and application settings? This action cannot be undone.")) {
+    if (window.confirm("Are you sure you want to clear all Nile TV profiles, favorites, and application settings? This action cannot be undone.")) {
       setClearing(true)
       setTimeout(() => {
         localStorage.clear()

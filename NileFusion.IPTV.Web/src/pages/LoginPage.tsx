@@ -231,16 +231,16 @@ export default function LoginPage() {
         {/* Login Form Section */}
         <div style={{ padding: '2.5rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
               <img
-                src={server.toLowerCase().includes('lionztv') ? lionzLogo : defaultLogo}
-                alt={server.toLowerCase().includes('lionztv') ? 'Lionz TV Logo' : 'NileFusion IPTV'}
-                style={{ maxHeight: '72px', width: 'auto', display: 'block', filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.12))' }}
+                src="/favicon.png"
+                alt="Nile TV Icon"
+                style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover', filter: 'drop-shadow(0 0 8px rgba(229,57,53,0.4))' }}
               />
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                Nile TV
+              </h2>
             </div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              NileFusion IPTV
-            </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.3rem' }}>
               Connect your IPTV subscription catalog
             </p>
@@ -480,7 +480,7 @@ export default function LoginPage() {
         onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
       >
         <img
-          src="/favicon.png"
+          src={defaultLogo}
           alt="NileFusion"
           style={{ width: '16px', height: '16px', borderRadius: '3px', objectFit: 'cover' }}
         />
