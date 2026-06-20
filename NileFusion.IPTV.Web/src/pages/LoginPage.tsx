@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../app/AuthContext'
 import { Server, User, Lock, Trash2, Eye, EyeOff, AlertCircle, Play, Globe } from 'lucide-react'
 import lionzLogo from '../assets/Lionz-TV-Logo.png'
@@ -26,7 +26,7 @@ export default function LoginPage() {
   
   const [profileName, setProfileName] = useState(() => getCookie('nilefusion_last_profile_name') || '')
   const [server, setServer] = useState(() => getCookie('nilefusion_last_server') || '')
-  const [port, setPort] = useState(() => getCookie('nilefusion_last_port') || '')
+  const [port, setPort] = useState(() => getCookie('nilefusion_last_port') || '8080')
   const [username, setUsername] = useState(() => getCookie('nilefusion_last_username') || '')
   const [password, setPassword] = useState('')
   const [useHttps, setUseHttps] = useState(() => getCookie('nilefusion_last_use_https') === 'true')
@@ -36,9 +36,25 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [isConnecting, setIsConnecting] = useState(false)
 
+  // ── Connection log ──────────────────────────────────────────────
+  type LogLine = { text: string; status: 'info' | 'ok' | 'err' }
+  const [logLines, setLogLines] = useState<LogLine[]>([])
+  const logRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
+  }, [logLines])
+
+  const stamp = () => new Date().toLocaleTimeString('en-GB', { hour12: false })
+  const pushLog = (text: string, status: LogLine['status'] = 'info') =>
+    setLogLines(prev => [...prev, { text: `[${stamp()}]  ${text}`, status }])
+  const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+  // ───────────────────────────────────────────────────────────────
+
   const handleConnect = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setLogLines([])
 
     if (!server || !username || !password) {
       setError('Please fill in Server, Username, and Password.')
@@ -46,25 +62,33 @@ export default function LoginPage() {
     }
 
     const cleanServer = server.replace(/^https?:\/\//i, '').trim()
-    const session = {
-      server: cleanServer,
-      port: port.trim(),
-      username: username.trim(),
-      password: password.trim(),
-      useHttps,
-    }
-
+    const displayPort = port.trim() || (useHttps ? '443' : '80')
+    const session = { server: cleanServer, port: port.trim(), username: username.trim(), password: password.trim(), useHttps }
     const finalProfileName = profileName.trim() || cleanServer
 
     setIsConnecting(true)
     try {
+      pushLog(`Resolving  ${cleanServer}:${displayPort} …`)
+      await sleep(380)
+      pushLog(`Establishing connection …`)
+      await sleep(250)
+      pushLog(`Sending authentication request …`)
+
       await login(session, saveProfile, finalProfileName)
+
+      pushLog(`✓  Authenticated as "${username.trim()}"`, 'ok')
+      await sleep(180)
+      pushLog(`✓  Session established`, 'ok')
+      await sleep(150)
+      pushLog(`✓  All systems go — launching dashboard …`, 'ok')
+
       setCookie('nilefusion_last_profile_name', finalProfileName)
       setCookie('nilefusion_last_server', cleanServer)
       setCookie('nilefusion_last_port', port.trim())
       setCookie('nilefusion_last_username', username.trim())
       setCookie('nilefusion_last_use_https', String(useHttps))
     } catch (err: any) {
+      pushLog(`✗  ${err.message || 'Connection failed'}`, 'err')
       setError(err.message || 'Failed to connect. Please check your credentials and server details.')
     } finally {
       setIsConnecting(false)
@@ -73,9 +97,9 @@ export default function LoginPage() {
 
   const handleQuickLogin = async (profile: typeof savedProfiles[0]) => {
     setError(null)
+    setLogLines([])
     setIsConnecting(true)
-    
-    // Auto-fill form fields
+
     setProfileName(profile.profileName)
     setServer(profile.server)
     setPort(profile.port)
@@ -83,24 +107,31 @@ export default function LoginPage() {
     setPassword(profile.password)
     setUseHttps(profile.useHttps)
 
+    const displayPort = profile.port || (profile.useHttps ? '443' : '80')
     try {
+      pushLog(`Loading profile “${profile.profileName}” …`)
+      await sleep(280)
+      pushLog(`Connecting to ${profile.server}:${displayPort} …`)
+      await sleep(300)
+      pushLog(`Authenticating …`)
+
       await login(
-        {
-          server: profile.server,
-          port: profile.port,
-          username: profile.username,
-          password: profile.password,
-          useHttps: profile.useHttps,
-        },
+        { server: profile.server, port: profile.port, username: profile.username, password: profile.password, useHttps: profile.useHttps },
         true,
         profile.profileName
       )
+
+      pushLog(`✓  Authenticated as "${profile.username}"`, 'ok')
+      await sleep(150)
+      pushLog(`✓  Session established — launching dashboard …`, 'ok')
+
       setCookie('nilefusion_last_profile_name', profile.profileName)
       setCookie('nilefusion_last_server', profile.server)
       setCookie('nilefusion_last_port', profile.port)
       setCookie('nilefusion_last_username', profile.username)
       setCookie('nilefusion_last_use_https', String(profile.useHttps))
     } catch (err: any) {
+      pushLog(`✗  ${err.message || 'Connection failed'}`, 'err')
       setError(err.message || 'Failed to connect using selected profile.')
     } finally {
       setIsConnecting(false)
@@ -114,7 +145,7 @@ export default function LoginPage() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem',
-      background: 'radial-gradient(circle at top right, #1a103c 0%, var(--bg-darker) 100%)',
+      background: 'radial-gradient(circle at top right, #2a0808 0%, var(--bg-darker) 100%)',
     }}>
       <div className="glass-panel" style={{
         display: 'grid',
@@ -246,13 +277,19 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Predefined server suggestions */}
+            <datalist id="server-suggestions">
+              <option value="Lionztv.com" />
+            </datalist>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '1rem' }}>
               <div className="form-group">
                 <label>Server address</label>
                 <div style={{ position: 'relative' }}>
-                  <Server size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <Server size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none', zIndex: 1 }} />
                   <input 
-                    type="text" 
+                    type="text"
+                    list="server-suggestions"
                     className="form-input" 
                     style={{ paddingLeft: '2.25rem' }}
                     placeholder="provider.com" 
@@ -260,6 +297,7 @@ export default function LoginPage() {
                     onChange={(e) => setServer(e.target.value)}
                     disabled={isConnecting}
                     required
+                    autoComplete="off"
                   />
                 </div>
               </div>
@@ -351,16 +389,62 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <button 
-              type="submit" 
-              className="glow-btn" 
+            {/* ── Animated Connection Log Terminal ── */}
+            {logLines.length > 0 && (
+              <div
+                ref={logRef}
+                style={{
+                  background: '#05060a',
+                  border: '1px solid rgba(229,57,53,0.25)',
+                  borderRadius: '8px',
+                  padding: '0.85rem 1rem',
+                  fontFamily: "'Courier New', Consolas, monospace",
+                  fontSize: '0.78rem',
+                  maxHeight: '140px',
+                  overflowY: 'auto',
+                  marginBottom: '1.25rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.22rem',
+                  boxShadow: '0 0 20px rgba(229,57,53,0.08)',
+                }}
+              >
+                {logLines.map((line, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      color: line.status === 'ok'
+                        ? '#fbbf24'
+                        : line.status === 'err'
+                        ? '#f87171'
+                        : '#6b7280',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.4rem',
+                      animation: 'fadeInLog 0.25s ease',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <span style={{ color: line.status === 'ok' ? '#e53935' : line.status === 'err' ? '#ef4444' : '#374151', flexShrink: 0 }}>›</span>
+                    {line.text}
+                  </div>
+                ))}
+                {isConnecting && (
+                  <span className="blink-cursor" style={{ marginTop: '0.1rem', display: 'inline-block', fontSize: '0.85rem' }}>█</span>
+                )}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="glow-btn"
               style={{ width: '100%', padding: '0.85rem' }}
               disabled={isConnecting}
             >
               {isConnecting ? (
                 <>
                   <div className="spinner" style={{ width: 18, height: 18, borderTopColor: '#fff' }} />
-                  <span>Connecting...</span>
+                  <span>Connecting…</span>
                 </>
               ) : (
                 <>
@@ -371,7 +455,7 @@ export default function LoginPage() {
             </button>
           </form>
         </div>
-        
+
       </div>
     </div>
   )

@@ -3,19 +3,41 @@ import { ApiSession, PlayerInfoResponse, StreamCategory, StreamChannel, StreamVi
 const API_BASE = (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_BASE_URL || '';
 
 export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(input, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init?.headers || {}),
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+  let response: Response
+  try {
+    response = await fetch(input, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(init?.headers || {}),
+      },
+    })
+  } catch (networkErr: any) {
+    throw new Error('Network error — could not reach the proxy server. Is the dev server running?')
   }
 
-  return response.json() as Promise<T>;
+  if (!response.ok) {
+    // Try to read a structured error from our proxy
+    let detail = ''
+    try {
+      const body = await response.clone().json() as any
+      detail = body?.detail || body?.error || ''
+    } catch { /* ignore */ }
+
+    if (response.status === 502) {
+      throw new Error(
+        detail
+          ? `Cannot reach IPTV server: ${detail}`
+          : 'Cannot reach IPTV server (502). Check the server address, port, and that the server is online.'
+      )
+    }
+    if (response.status === 504) {
+      throw new Error('IPTV server timed out. The server may be offline or the address is wrong.')
+    }
+    throw new Error(`Request failed: ${response.status}`)
+  }
+
+  return response.json() as Promise<T>
 }
 
 export function buildXtreamUrl(
