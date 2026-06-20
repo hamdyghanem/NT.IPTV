@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NT.IPTV", "NT.IPTV\NT.IPTV.csproj", "{8CC539DD-FC38-4CA6-8D40-0811B81978B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NileFusion.IPTV.Web", "NileFusion.IPTV.Web\NileFusion.IPTV.Web.esproj", "{BFD8C0E7-CBD9-4A52-B6E9-7B61DC4ACEC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8CC539DD-FC38-4CA6-8D40-0811B81978B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CC539DD-FC38-4CA6-8D40-0811B81978B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CC539DD-FC38-4CA6-8D40-0811B81978B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD8C0E7-CBD9-4A52-B6E9-7B61DC4ACEC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD8C0E7-CBD9-4A52-B6E9-7B61DC4ACEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD8C0E7-CBD9-4A52-B6E9-7B61DC4ACEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD8C0E7-CBD9-4A52-B6E9-7B61DC4ACEC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

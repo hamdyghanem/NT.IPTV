@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2199630">
+  <PropertyGroup>
+    <StartupCommand>npm run dev</StartupCommand>
+    <JavaScriptTestRoot>src</JavaScriptTestRoot>
+    <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
+    <BuildOutputFolder>dist</BuildOutputFolder>
+    <RootNamespace>NileFusion.IPTV.Web</RootNamespace>
+  </PropertyGroup>
+</Project>
