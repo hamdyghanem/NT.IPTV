@@ -390,7 +390,7 @@ export default function LoginPage() {
             </div>
 
             {/* ── Animated Connection Log Terminal ── */}
-            {logLines.length > 0 && (
+            {logLines.length > 0 && !error && (
               <div
                 ref={logRef}
                 style={{

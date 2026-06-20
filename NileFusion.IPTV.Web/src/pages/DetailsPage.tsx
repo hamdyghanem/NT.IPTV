@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../app/AuthContext'
 import { fetchMovieDetails, fetchSeriesDetails, buildStreamUrl } from '../services/api'
 import { WatchMovie, WatchSeries, EpisodeData } from '../types'
-import { ArrowLeft, Play, Star, Calendar, Clock, Film, ExternalLink, Copy, Check, X, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Play, Star, Calendar, Clock, Film, ExternalLink, Copy, Check, X, AlertCircle, Download } from 'lucide-react'
 
 export default function DetailsPage() {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -91,6 +91,10 @@ export default function DetailsPage() {
 
   const streamUrl = type === 'movies' && movieDetails && activeSession
     ? buildStreamUrl(activeSession, 'movies', movieDetails.movie_data.stream_id, movieDetails.movie_data.container_extension)
+    : ''
+
+  const downloadStreamUrl = type === 'movies' && movieDetails && activeSession
+    ? buildStreamUrl(activeSession, 'movies', movieDetails.movie_data.stream_id, movieDetails.movie_data.container_extension, true)
     : ''
 
   // Series details season & episodes list
@@ -215,6 +219,17 @@ export default function DetailsPage() {
                 <ExternalLink size={16} />
                 <span>Stream & Download Link</span>
               </button>
+              {downloadStreamUrl && (
+                <a 
+                  href={downloadStreamUrl}
+                  download
+                  className="btn btn-secondary" 
+                  style={{ width: '100%', textDecoration: 'none' }}
+                >
+                  <Download size={16} />
+                  <span>Download Direct</span>
+                </a>
+              )}
             </div>
           </div>
 
@@ -298,6 +313,7 @@ export default function DetailsPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {episodesList.map((ep) => {
                   const epUrl = buildStreamUrl(activeSession!, 'series', ep.id, ep.container_extension)
+                  const epDownloadUrl = buildStreamUrl(activeSession!, 'series', ep.id, ep.container_extension, true)
 
                   return (
                     <div 
@@ -354,6 +370,15 @@ export default function DetailsPage() {
                         >
                           <ExternalLink size={12} />
                         </button>
+                        <a 
+                          href={epDownloadUrl}
+                          download
+                          className="btn btn-secondary" 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="Download directly"
+                        >
+                          <Download size={12} />
+                        </a>
                       </div>
                     </div>
                   )
@@ -480,12 +505,10 @@ export default function DetailsPage() {
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
                 <a
                   href={activeEpisode && activeSession
-                    ? buildStreamUrl(activeSession, 'series', activeEpisode.id, activeEpisode.container_extension)
-                    : streamUrl
+                    ? buildStreamUrl(activeSession, 'series', activeEpisode.id, activeEpisode.container_extension, true)
+                    : downloadStreamUrl
                   }
                   download
-                  target="_blank"
-                  rel="noreferrer"
                   className="btn btn-secondary"
                   style={{ flex: 1, textDecoration: 'none' }}
                 >

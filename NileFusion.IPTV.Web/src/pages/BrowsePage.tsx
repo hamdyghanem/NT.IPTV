@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../app/AuthContext'
-import { fetchCategories, fetchStreams } from '../services/api'
+import { fetchCategories, fetchStreams, getCacheItem, setCacheItem } from '../services/api'
 import { StreamCategory } from '../types'
-import { Search, Star, Tv, Film, MonitorPlay, Play, ArrowUpDown, AlertCircle } from 'lucide-react'
+import { Search, Star, Tv, Film, MonitorPlay, Play, ArrowUpDown, AlertCircle, RefreshCw } from 'lucide-react'
 
 type TabType = 'live' | 'movies' | 'series'
 
@@ -25,12 +25,10 @@ export default function BrowsePage() {
   // Infinite Scroll state
   const [visibleCount, setVisibleCount] = useState(60)
 
-  // Cache loaded streams in memory to avoid refetching when switching categories
-  const cache = useRef<Record<string, any[]>>({})
-
   // Reset category and search on tab switch
   useEffect(() => {
-    setSelectedCategory('all')
+    const defaultCat = (activeTab === 'movies' || activeTab === 'series') ? '-1' : 'all'
+    setSelectedCategory(defaultCat)
     setSearchQuery('')
     setVisibleCount(60)
     
@@ -55,23 +53,38 @@ export default function BrowsePage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const loadCatalogData = async () => {
+  const loadCatalogData = async (forceUpdate = false) => {
     if (!activeSession) return
     setIsLoading(true)
     setError(null)
     
+    const userKey = `${activeSession.username}_${activeSession.server}`.replace(/[^a-zA-Z0-9]/g, '_')
+    const categoriesCacheKey = `categories_${userKey}_${activeTab}`
+    const streamsCacheKey = `streams_${userKey}_${activeTab}`
+    
     try {
-      // 1. Fetch categories for tab
-      const catData = await fetchCategories(activeSession, activeTab)
-      setCategories(catData)
+      let catData: StreamCategory[] | null = null
+      let streamData: any[] | null = null
 
-      // 2. Fetch streams (check cache first)
-      let streamData = cache.current[activeTab]
-      if (!streamData) {
-        streamData = await fetchStreams(activeSession, activeTab)
-        cache.current[activeTab] = streamData
+      if (!forceUpdate) {
+        catData = await getCacheItem<StreamCategory[]>(categoriesCacheKey)
+        streamData = await getCacheItem<any[]>(streamsCacheKey)
       }
+
+      if (!catData || !streamData) {
+        catData = await fetchCategories(activeSession, activeTab)
+        streamData = await fetchStreams(activeSession, activeTab)
+
+        await setCacheItem(categoriesCacheKey, catData)
+        await setCacheItem(streamsCacheKey, streamData)
+      }
+
+      setCategories(catData)
       setStreams(streamData)
+
+      // Default category selection: 'Favorites' for movies/series, 'all' for live
+      const defaultCat = (activeTab === 'movies' || activeTab === 'series') ? '-1' : 'all'
+      setSelectedCategory(defaultCat)
     } catch (err: any) {
       console.error("Failed to load catalog data", err)
       setError(`Failed to fetch catalog. Please check your CORS configuration or proxy server.`)
@@ -207,23 +220,25 @@ export default function BrowsePage() {
           <h3 style={{ fontSize: '1rem', color: '#fff', fontWeight: 600 }}>Categories</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
             {/* Special Categories */}
-            <button
-              onClick={() => setSelectedCategory('all')}
-              style={{
-                justifyContent: 'space-between',
-                padding: '0.6rem 0.8rem',
-                borderRadius: '6px',
-                fontSize: '0.85rem',
-                textAlign: 'left',
-                width: '100%',
-                background: selectedCategory === 'all' ? 'var(--bg-hover)' : 'transparent',
-                color: selectedCategory === 'all' ? '#fff' : 'var(--text-secondary)',
-                borderLeft: selectedCategory === 'all' ? '3px solid var(--accent-color)' : '3px solid transparent',
-              }}
-            >
-              <span>All Streams</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({categoryCounts.all})</span>
-            </button>
+            {activeTab !== 'movies' && activeTab !== 'series' && (
+              <button
+                onClick={() => setSelectedCategory('all')}
+                style={{
+                  justifyContent: 'space-between',
+                  padding: '0.6rem 0.8rem',
+                  borderRadius: '6px',
+                  fontSize: '0.85rem',
+                  textAlign: 'left',
+                  width: '100%',
+                  background: selectedCategory === 'all' ? 'var(--bg-hover)' : 'transparent',
+                  color: selectedCategory === 'all' ? '#fff' : 'var(--text-secondary)',
+                  borderLeft: selectedCategory === 'all' ? '3px solid var(--accent-color)' : '3px solid transparent',
+                }}
+              >
+                <span>All Streams</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({categoryCounts.all})</span>
+              </button>
+            )}
             
             <button
               onClick={() => setSelectedCategory('-1')}
@@ -312,6 +327,28 @@ export default function BrowsePage() {
                 {activeTab !== 'live' && <option value="added-desc">Recently Added</option>}
               </select>
             </div>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => loadCatalogData(true)}
+              title="Force update catalog streams"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.75rem 1.25rem',
+                flexShrink: 0,
+                cursor: 'pointer',
+              }}
+            >
+              <RefreshCw 
+                size={15} 
+                style={{ 
+                  animation: isLoading ? 'spin 1s linear infinite' : 'none' 
+                }} 
+              />
+              <span>Force Refresh</span>
+            </button>
           </div>
 
           <h2 style={{ fontSize: '1.25rem', color: '#fff', fontWeight: 600, marginTop: '0.5rem' }}>
@@ -343,8 +380,18 @@ export default function BrowsePage() {
               </div>
             </div>
           ) : filteredStreams.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '5rem 0', color: 'var(--text-secondary)', border: '1px dashed var(--border-light)', borderRadius: '12px' }}>
-              No matches found in this category.
+            <div style={{ textAlign: 'center', padding: '4rem 2rem', color: 'var(--text-secondary)', border: '1px dashed var(--border-light)', borderRadius: '12px' }}>
+              {selectedCategory === '-1' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                  <Star size={36} style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }} />
+                  <h4 style={{ color: '#fff', fontWeight: 600 }}>Your Favorites List is Empty</h4>
+                  <p style={{ fontSize: '0.85rem', maxWidth: '360px', margin: '0 auto', lineHeight: '1.5' }}>
+                    Select a category from the sidebar to browse movies or series, and click the star icon on any card to add it to your favorites.
+                  </p>
+                </div>
+              ) : (
+                "No matches found in this category."
+              )}
             </div>
           ) : (
             /* Stream Cards Grid */

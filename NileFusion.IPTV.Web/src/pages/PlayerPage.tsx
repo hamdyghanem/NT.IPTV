@@ -3,6 +3,8 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../app/AuthContext'
 import { buildStreamUrl } from '../services/api'
 import { ArrowLeft, Play, Pause, ExternalLink, Copy, Download, AlertTriangle, Check, Info } from 'lucide-react'
+import Hls from 'hls.js'
+import mpegts from 'mpegts.js'
 
 export default function PlayerPage() {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -11,6 +13,8 @@ export default function PlayerPage() {
   const { activeSession } = useAuth()
 
   const videoRef = useRef<HTMLVideoElement>(null)
+  const hlsRef = useRef<Hls | null>(null)
+  const mpegtsRef = useRef<mpegts.Player | null>(null)
   
   // Parse parameters from query string
   const name = searchParams.get('name') || 'Stream'
@@ -22,10 +26,127 @@ export default function PlayerPage() {
   const [copied, setCopied] = useState(false)
   const [hasError, setHasError] = useState(false)
 
-  // Construct stream URL
+  // Construct stream URL for copy link / download (direct un-proxied URL)
   const streamUrl = activeSession && id && type
     ? buildStreamUrl(activeSession, type as any, id, ext)
     : ''
+
+  const proxiedStreamUrl = activeSession && id && type
+    ? buildStreamUrl(activeSession, type as any, id, ext, true)
+    : ''
+
+  const destroyPlayers = () => {
+    if (hlsRef.current) {
+      hlsRef.current.destroy()
+      hlsRef.current = null
+    }
+    if (mpegtsRef.current) {
+      try {
+        mpegtsRef.current.unload()
+        mpegtsRef.current.detachMediaElement()
+        mpegtsRef.current.destroy()
+      } catch (e) {
+        console.warn("Error destroying mpegts player:", e)
+      }
+      mpegtsRef.current = null
+    }
+    if (videoRef.current) {
+      videoRef.current.removeAttribute('src')
+      videoRef.current.load()
+    }
+  }
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !activeSession || !id || !type) return
+
+    // Reset error state
+    setHasError(false)
+
+    // Clean up any existing players before starting
+    destroyPlayers()
+
+    // Construct proxied URL for Chrome browser playback to bypass CORS
+    const browserPlayUrl = buildStreamUrl(activeSession, type as any, id, ext, true)
+    if (!browserPlayUrl) return
+
+    const extension = ext.toLowerCase()
+    const isTsStream = extension === 'ts' || type === 'live'
+    const isM3u8Stream = extension === 'm3u8'
+
+    if (isTsStream) {
+      if (mpegts.isSupported()) {
+        const player = mpegts.createPlayer({
+          type: 'mpegts',
+          isLive: type === 'live',
+          url: browserPlayUrl,
+        }, {
+          enableStashBuffer: false,
+          liveBufferLatencyChasing: true,
+        })
+        
+        mpegtsRef.current = player
+        player.attachMediaElement(video)
+        player.load()
+        
+        try {
+          const playPromise = player.play()
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch((err: any) => {
+              console.warn("mpegts.js play failed, fallback:", err)
+            })
+          }
+        } catch (err: any) {
+          console.warn("mpegts.js play failed synchronously:", err)
+        }
+
+        player.on(mpegts.Events.ERROR, (errType: any, errDetail: any, errInfo: any) => {
+          console.error("mpegts.js player error:", errType, errDetail, errInfo)
+          setHasError(true)
+        })
+      } else {
+        console.warn("mpegts.js is not supported, attempting native fallback")
+        video.src = browserPlayUrl
+      }
+    } else if (isM3u8Stream) {
+      if (Hls.isSupported()) {
+        const hls = new Hls()
+        hlsRef.current = hls
+        hls.loadSource(browserPlayUrl)
+        hls.attachMedia(video)
+        
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().then(() => {
+            setIsPlaying(true)
+          }).catch(e => console.error("HLS play failed:", e))
+        })
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (data.fatal) {
+            console.error("Fatal HLS error:", data)
+            setHasError(true)
+          }
+        })
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = browserPlayUrl
+      } else {
+        console.warn("hls.js is not supported, attempting native fallback")
+        video.src = browserPlayUrl
+      }
+    } else {
+      // Other formats (MP4, etc.)
+      video.src = browserPlayUrl
+      video.play().then(() => {
+        setIsPlaying(true)
+      }).catch((err) => {
+        console.warn("Native video play failed, might need user interaction or codec is unsupported:", err)
+      })
+    }
+
+    return () => {
+      destroyPlayers()
+    }
+  }, [activeSession, id, type, ext])
 
   const handleCopyLink = () => {
     if (!streamUrl) return
@@ -35,7 +156,7 @@ export default function PlayerPage() {
   }
 
   const handleVideoError = () => {
-    console.warn("HTML5 Video playback failed. This is typical for TS/MKV formats in browser.")
+    console.warn("HTML5 Video playback failed.")
     setHasError(true)
   }
 
@@ -125,7 +246,6 @@ export default function PlayerPage() {
         {streamUrl && (
           <video
             ref={videoRef}
-            src={streamUrl}
             autoPlay
             controls
             onPlay={() => setIsPlaying(true)}
@@ -143,7 +263,7 @@ export default function PlayerPage() {
         )}
 
         {/* Format Warning Overlay */}
-        {(hasError || ext === 'ts' || ext === 'mkv') && (
+        {(hasError || ext === 'mkv') && (
           <div style={{
             position: 'absolute',
             inset: 0,
@@ -186,7 +306,7 @@ export default function PlayerPage() {
 
                 <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '0.5rem' }}>
                   <a
-                    href={streamUrl}
+                    href={proxiedStreamUrl}
                     download
                     className="btn btn-secondary"
                     style={{ flex: 1, textDecoration: 'none', fontSize: '0.85rem' }}

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ApiSession, PlayerInfoResponse, UserProfile } from '../types';
-import { testConnection } from '../services/api';
+import { testConnection, clearCache } from '../services/api';
 
 interface Favorites {
   live: string[];
@@ -110,6 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setFavorites({ live: [], movies: [], series: [] });
     localStorage.removeItem('nilefusion_active_session');
     localStorage.removeItem('nilefusion_player_info');
+    clearCache();
   };
 
   const deleteProfile = (profileName: string) => {

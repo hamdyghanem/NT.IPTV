@@ -15,89 +15,117 @@ function corsProxyPlugin(): Plugin {
     name: 'cors-proxy',
     configureServer(server) {
       server.middlewares.use('/proxy', (req, res) => {
-        const rawUrl = new URL(req.url ?? '', 'http://localhost').searchParams.get('url')
-        if (!rawUrl) {
+        const initialUrl = new URL(req.url ?? '', 'http://localhost').searchParams.get('url')
+        if (!initialUrl) {
           res.statusCode = 400
           res.end(JSON.stringify({ error: 'Missing ?url= parameter' }))
           return
         }
 
-        let targetUrl: URL
-        try {
-          targetUrl = new URL(rawUrl)
-        } catch {
-          res.statusCode = 400
-          res.end(JSON.stringify({ error: 'Invalid target URL' }))
-          return
-        }
-
-        const isHttps = targetUrl.protocol === 'https:'
-        const transport = isHttps ? https : http
-
-        const options: http.RequestOptions = {
-          hostname: targetUrl.hostname,
-          port: targetUrl.port || (isHttps ? 443 : 80),
-          path: targetUrl.pathname + targetUrl.search,
-          method: 'GET',
-          timeout: 30000,
-          // Accept self-signed / expired certs that IPTV providers commonly use
-          ...(isHttps ? { rejectUnauthorized: false } : {}),
-        }
-
-        const proxyReq = transport.request(options, (proxyRes) => {
-          const ct = (proxyRes.headers['content-type'] ?? '').toLowerCase()
-          const isM3u8 = ct.includes('mpegurl') || rawUrl.includes('.m3u8')
-
-          res.setHeader('Access-Control-Allow-Origin', '*')
-
-          if (isM3u8) {
-            // Buffer the full playlist and rewrite segment URLs so that
-            // HLS.js requests all segments through this proxy (no browser CORS)
-            const chunks: Buffer[] = []
-            proxyRes.on('data', (chunk: Buffer) => chunks.push(chunk))
-            proxyRes.on('end', () => {
-              const playlist = Buffer.concat(chunks).toString('utf8')
-              const rewritten = playlist.split('\n').map(line => {
-                const trimmed = line.trim()
-                if (trimmed === '' || trimmed.startsWith('#')) return line
-                try {
-                  const absUrl = new URL(trimmed, rawUrl).href
-                  return `/proxy?url=${encodeURIComponent(absUrl)}`
-                } catch {
-                  return line
-                }
-              }).join('\n')
-
-              if (!res.headersSent) {
-                res.statusCode = proxyRes.statusCode ?? 200
-                res.setHeader('Content-Type', 'application/vnd.apple.mpegurl')
-                res.end(rewritten)
-              }
-            })
-          } else {
-            // All other content (TS segments, JSON API, images) — stream directly
-            res.statusCode = proxyRes.statusCode ?? 200
-            res.setHeader('Content-Type', ct || 'application/octet-stream')
-            proxyRes.pipe(res)
-          }
-        })
-
-        proxyReq.on('timeout', () => {
-          proxyReq.destroy()
-          if (!res.headersSent) {
-            res.statusCode = 504
-            res.end(JSON.stringify({ error: 'Gateway timeout — server did not respond in 30 s' }))
-          }
-        })
-
-        proxyReq.on('error', (err) => {
-          if (!res.headersSent) {
+        const performProxyRequest = (urlStr: string, redirectCount = 0) => {
+          if (redirectCount > 5) {
             res.statusCode = 502
-            res.end(JSON.stringify({ error: 'Proxy request failed', detail: err.message }))
+            res.end(JSON.stringify({ error: 'Too many redirects' }))
+            return
           }
-        })
 
-        proxyReq.end()
+          let targetUrl: URL
+          try {
+            targetUrl = new URL(urlStr)
+          } catch {
+            res.statusCode = 400
+            res.end(JSON.stringify({ error: 'Invalid target URL: ' + urlStr }))
+            return
+          }
+
+          const isHttps = targetUrl.protocol === 'https:'
+          const transport = isHttps ? https : http
+
+          const options: http.RequestOptions = {
+            hostname: targetUrl.hostname,
+            port: targetUrl.port || (isHttps ? 443 : 80),
+            path: targetUrl.pathname + targetUrl.search,
+            method: 'GET',
+            timeout: 30000,
+            headers: {
+              'User-Agent': req.headers['user-agent'] || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            },
+            ...(isHttps ? { rejectUnauthorized: false } : {}),
+          }
+
+          const proxyReq = transport.request(options, (proxyRes) => {
+            const statusCode = proxyRes.statusCode ?? 200
+
+            // Intercept HTTP redirects (301, 302, 303, 307, 308) and follow them server-side
+            if ([301, 302, 303, 307, 308].includes(statusCode)) {
+              const location = proxyRes.headers['location']
+              if (location) {
+                try {
+                  const resolvedLocation = new URL(location, urlStr).href
+                  performProxyRequest(resolvedLocation, redirectCount + 1)
+                  return
+                } catch (e: any) {
+                  console.error('Failed to resolve redirect location:', location, e.message)
+                }
+              }
+            }
+
+            const ct = (proxyRes.headers['content-type'] ?? '').toLowerCase()
+            const isM3u8 = ct.includes('mpegurl') || urlStr.includes('.m3u8')
+
+            res.setHeader('Access-Control-Allow-Origin', '*')
+
+            if (isM3u8) {
+              // Buffer the full playlist and rewrite segment URLs so that
+              // HLS.js requests all segments through this proxy (no browser CORS)
+              const chunks: Buffer[] = []
+              proxyRes.on('data', (chunk: Buffer) => chunks.push(chunk))
+              proxyRes.on('end', () => {
+                const playlist = Buffer.concat(chunks).toString('utf8')
+                const rewritten = playlist.split('\n').map(line => {
+                  const trimmed = line.trim()
+                  if (trimmed === '' || trimmed.startsWith('#')) return line
+                  try {
+                    const absUrl = new URL(trimmed, urlStr).href
+                    return `/proxy?url=${encodeURIComponent(absUrl)}`
+                  } catch {
+                    return line
+                  }
+                }).join('\n')
+
+                if (!res.headersSent) {
+                  res.statusCode = statusCode
+                  res.setHeader('Content-Type', 'application/vnd.apple.mpegurl')
+                  res.end(rewritten)
+                }
+              })
+            } else {
+              // All other content (TS segments, JSON API, images) — stream directly
+              res.statusCode = statusCode
+              res.setHeader('Content-Type', ct || 'application/octet-stream')
+              proxyRes.pipe(res)
+            }
+          })
+
+          proxyReq.on('timeout', () => {
+            proxyReq.destroy()
+            if (!res.headersSent) {
+              res.statusCode = 504
+              res.end(JSON.stringify({ error: 'Gateway timeout — server did not respond in 30 s' }))
+            }
+          })
+
+          proxyReq.on('error', (err) => {
+            if (!res.headersSent) {
+              res.statusCode = 502
+              res.end(JSON.stringify({ error: 'Proxy request failed', detail: err.message }))
+            }
+          })
+
+          proxyReq.end()
+        }
+
+        performProxyRequest(initialUrl)
       })
     },
   }

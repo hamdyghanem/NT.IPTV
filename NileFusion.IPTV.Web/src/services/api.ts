@@ -140,7 +140,8 @@ export function buildStreamUrl(
   session: ApiSession,
   type: 'live' | 'movies' | 'series',
   streamId: string | number,
-  extension: string
+  extension: string,
+  forceProxy = false
 ): string {
   const protocol = session.useHttps ? 'https' : 'http';
   const serverClean = session.server.replace(/^https?:\/\//i, '');
@@ -165,5 +166,75 @@ export function buildStreamUrl(
     }
   }
 
+  if (forceProxy) {
+    return `/proxy?url=${encodeURIComponent(directUrl)}`;
+  }
+
   return directUrl;
 }
+
+// Simple IndexedDB wrapper for caching stream catalog
+const DB_NAME = 'nilefusion_db';
+const DB_VERSION = 1;
+const STORE_NAME = 'catalog_cache';
+
+function getDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function setCacheItem(key: string, val: any): Promise<void> {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.put(val, key);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) {
+    console.warn("IndexedDB cache save failed", e);
+  }
+}
+
+export async function getCacheItem<T>(key: string): Promise<T | null> {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get(key);
+      req.onsuccess = () => resolve((req.result as T) || null);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) {
+    console.warn("IndexedDB cache load failed", e);
+    return null;
+  }
+}
+
+export async function clearCache(): Promise<void> {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.clear();
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) {
+    console.warn("IndexedDB cache clear failed", e);
+  }
+}
+
