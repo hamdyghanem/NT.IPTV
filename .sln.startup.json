@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "projects": {
+    "NileFusion.IPTV.Web": {
+      "path": "NileFusion.IPTV.Web/NileFusion.IPTV.Web.esproj",
+      "action": "Start"
+    }
+  }
+}

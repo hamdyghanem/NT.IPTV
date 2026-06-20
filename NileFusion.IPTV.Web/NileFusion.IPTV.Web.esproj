@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2206083">
   <PropertyGroup>
-    <StartupCommand>npm run dev</StartupCommand>
+    <StartupCommand>npm run dev -- --host 0.0.0.0</StartupCommand>
+    <LaunchUrl>http://localhost:5173</LaunchUrl>
     <JavaScriptTestRoot>src</JavaScriptTestRoot>
     <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
     <BuildOutputFolder>dist</BuildOutputFolder>
     <RootNamespace>NileFusion.IPTV.Web</RootNamespace>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 </Project>

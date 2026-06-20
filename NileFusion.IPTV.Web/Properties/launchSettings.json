@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "NileFusion.IPTV.Web": {
+      "commandName": "npm",
+      "workingDirectory": ".",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5173",
+      "commandLineArgs": "run dev -- --host 0.0.0.0"
+    }
+  }
+}
