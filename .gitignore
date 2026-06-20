@@ -9,3 +9,4 @@
 /NT.IPTV/Properties/PublishProfiles
 /NileFusion.IPTV.Web/node_modules
 dist/
+/NileFusion.IPTV.Web/dist.zip
