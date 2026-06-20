@@ -1,16 +1,35 @@
 import React, { useState } from 'react'
 import { useAuth } from '../app/AuthContext'
 import { Server, User, Lock, Trash2, Eye, EyeOff, AlertCircle, Play, Globe } from 'lucide-react'
+import lionzLogo from '../assets/Lionz-TV-Logo.png'
+import defaultLogo from '../assets/logo.png'
+
+function setCookie(name: string, value: string, days = 30) {
+  const expires = new Date()
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`
+}
+
+function getCookie(name: string): string {
+  const nameEQ = `${name}=`
+  const ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length)
+    if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length))
+  }
+  return ''
+}
 
 export default function LoginPage() {
   const { login, savedProfiles, deleteProfile } = useAuth()
   
-  const [profileName, setProfileName] = useState('')
-  const [server, setServer] = useState('')
-  const [port, setPort] = useState('')
-  const [username, setUsername] = useState('')
+  const [profileName, setProfileName] = useState(() => getCookie('nilefusion_last_profile_name') || '')
+  const [server, setServer] = useState(() => getCookie('nilefusion_last_server') || '')
+  const [port, setPort] = useState(() => getCookie('nilefusion_last_port') || '')
+  const [username, setUsername] = useState(() => getCookie('nilefusion_last_username') || '')
   const [password, setPassword] = useState('')
-  const [useHttps, setUseHttps] = useState(false)
+  const [useHttps, setUseHttps] = useState(() => getCookie('nilefusion_last_use_https') === 'true')
   const [saveProfile, setSaveProfile] = useState(true)
   
   const [showPassword, setShowPassword] = useState(false)
@@ -40,6 +59,11 @@ export default function LoginPage() {
     setIsConnecting(true)
     try {
       await login(session, saveProfile, finalProfileName)
+      setCookie('nilefusion_last_profile_name', finalProfileName)
+      setCookie('nilefusion_last_server', cleanServer)
+      setCookie('nilefusion_last_port', port.trim())
+      setCookie('nilefusion_last_username', username.trim())
+      setCookie('nilefusion_last_use_https', String(useHttps))
     } catch (err: any) {
       setError(err.message || 'Failed to connect. Please check your credentials and server details.')
     } finally {
@@ -71,6 +95,11 @@ export default function LoginPage() {
         true,
         profile.profileName
       )
+      setCookie('nilefusion_last_profile_name', profile.profileName)
+      setCookie('nilefusion_last_server', profile.server)
+      setCookie('nilefusion_last_port', profile.port)
+      setCookie('nilefusion_last_username', profile.username)
+      setCookie('nilefusion_last_use_https', String(profile.useHttps))
     } catch (err: any) {
       setError(err.message || 'Failed to connect using selected profile.')
     } finally {
@@ -169,6 +198,13 @@ export default function LoginPage() {
         {/* Login Form Section */}
         <div style={{ padding: '2.5rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.75rem' }}>
+              <img
+                src={server.toLowerCase().includes('lionztv') ? lionzLogo : defaultLogo}
+                alt={server.toLowerCase().includes('lionztv') ? 'Lionz TV Logo' : 'NileFusion IPTV'}
+                style={{ maxHeight: '72px', width: 'auto', display: 'block', filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.12))' }}
+              />
+            </div>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               NileFusion IPTV
             </h2>

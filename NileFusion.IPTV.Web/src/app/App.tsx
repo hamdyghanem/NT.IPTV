@@ -37,11 +37,12 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginRoute />} />
         <Route element={<ProtectedRoute />}>
+          {/* Player is fullscreen — render it outside Layout so no sidebar appears */}
+          <Route path="/player/:type/:id" element={<PlayerPage />} />
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/browse" element={<BrowsePage />} />
             <Route path="/details/:type/:id" element={<DetailsPage />} />
-            <Route path="/player/:type/:id" element={<PlayerPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Route>

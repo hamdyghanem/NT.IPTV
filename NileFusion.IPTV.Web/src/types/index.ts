@@ -100,6 +100,8 @@ export interface MovieInfo {
   backdrop_path: string[];
   duration: string;
   duration_secs: string | number;
+  rating?: string;
+  rating_5based?: string;
 }
 
 export interface MovieData {
@@ -128,6 +130,8 @@ export interface SeriesInfo {
   cast: string;
   backdrop_path: string[];
   duration_secs?: string | number;
+  rating?: string;
+  rating_5based?: string;
 }
 
 export interface SeasonData {

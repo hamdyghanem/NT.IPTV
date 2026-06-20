@@ -75,9 +75,7 @@ export default function DetailsPage() {
     ? movieDetails?.movie_data?.name || ''
     : seriesDetails?.info?.name || ''
   const plot = info?.plot || 'No synopsis available.'
-  const rating = type === 'movies' 
-    ? movieDetails?.movie_data?.added // placeholder if rating is null, but let's check
-    : seriesDetails?.info?.tmdb_id
+  const rating = info?.rating || info?.rating_5based || ''
 
   const genre = info?.genre || 'N/A'
   const director = info?.director || 'N/A'

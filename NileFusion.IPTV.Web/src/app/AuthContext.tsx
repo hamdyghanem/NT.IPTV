@@ -60,7 +60,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (session: ApiSession, saveProfile: boolean, profileName: string) => {
-    setIsLoading(true);
     try {
       const info = await testConnection(session);
       
@@ -101,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
     } finally {
-      setIsLoading(false);
+      // No global loading update needed here as isConnecting is tracked on the login page locally
     }
   };
 

@@ -41,6 +41,7 @@ export function buildXtreamUrl(
 
   const directUrl = `${baseUrl}?${params.toString()}`;
 
+  // If a custom proxy base URL is configured (for production), use it
   if (API_BASE) {
     if (API_BASE.includes('?')) {
       return `${API_BASE}&url=${encodeURIComponent(directUrl)}`;
@@ -49,7 +50,8 @@ export function buildXtreamUrl(
     }
   }
 
-  return directUrl;
+  // In dev (and any local deploy), route through the built-in Vite CORS proxy
+  return `/proxy?url=${encodeURIComponent(directUrl)}`;
 }
 
 export async function testConnection(session: ApiSession): Promise<PlayerInfoResponse> {
