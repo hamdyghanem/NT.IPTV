@@ -81,8 +81,13 @@ export default function PlayerPage() {
           isLive: type === 'live',
           url: browserPlayUrl,
         }, {
-          enableStashBuffer: false,
+          enableStashBuffer: true,
+          stashInitialSize: 384 * 1024, // 384KB buffer to smooth out network jitter
+          enableWorker: false,         // disable worker to prevent cross-origin/Azure worker loading crash
+          lazyLoad: false,             // continuously load live data
           liveBufferLatencyChasing: true,
+          liveBufferLatencyMaxLatency: 3.5,
+          autoCleanupSourceBuffer: true,
         })
         
         mpegtsRef.current = player
@@ -110,7 +115,11 @@ export default function PlayerPage() {
       }
     } else if (isM3u8Stream) {
       if (Hls.isSupported()) {
-        const hls = new Hls()
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 30,
+        })
         hlsRef.current = hls
         hls.loadSource(browserPlayUrl)
         hls.attachMedia(video)
@@ -222,11 +231,12 @@ export default function PlayerPage() {
             color: '#fff',
             cursor: 'pointer',
             transition: 'background 0.2s',
+            flexShrink: 0,
           }}
           onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)' }}
           onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={20} style={{ flexShrink: 0, display: 'block' }} />
         </button>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>{headerTitle()}</h2>

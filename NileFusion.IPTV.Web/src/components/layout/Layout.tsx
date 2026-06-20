@@ -202,6 +202,45 @@ export default function Layout() {
             <LogOut size={16} />
             <span>Logout</span>
           </button>
+
+          {/* Powered by NileFusion */}
+          <a
+            href="https://NileFusion.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nilefusion-credit"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem',
+              textDecoration: 'none',
+              padding: '0.5rem',
+              borderRadius: '6px',
+              transition: 'var(--transition-smooth)',
+            }}
+          >
+            <img
+              src="/favicon.png"
+              alt="NileFusion"
+              style={{ width: '16px', height: '16px', borderRadius: '3px', objectFit: 'cover' }}
+            />
+            <span style={{
+              fontSize: '0.72rem',
+              color: 'var(--text-muted)',
+              letterSpacing: '0.02em',
+            }}>
+              Powered by{' '}
+              <span style={{
+                background: 'var(--primary-gradient)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontWeight: 700,
+              }}>
+                NileFusion
+              </span>
+            </span>
+          </a>
         </div>
       </aside>
 
@@ -212,7 +251,6 @@ export default function Layout() {
 
       {/* CSS details to manage responsiveness */}
       <style>{`
-        .nav-link:hover {
         .nav-link:hover {
           transform: translateX(6px);
         }
@@ -234,6 +272,14 @@ export default function Layout() {
         .nav-link-dashboard:hover, .nav-link-settings:hover {
           background: rgba(255, 255, 255, 0.15) !important;
           color: #fff !important;
+        }
+        .nilefusion-credit:hover {
+          background: rgba(99, 102, 241, 0.08);
+          filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.25));
+        }
+        .nilefusion-credit:hover img {
+          transform: scale(1.15);
+          transition: transform 0.2s ease;
         }
 
         @media (max-width: 768px) {

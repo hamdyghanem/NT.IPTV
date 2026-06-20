@@ -12,6 +12,10 @@ if (-not (Test-Path "dist")) {
     throw "Build output folder 'dist' was not found."
 }
 
+# Copy the Node.js proxy server into dist so it's included in the deployment
+Write-Host "Copying server.js into dist..."
+Copy-Item -Path (Join-Path $PSScriptRoot "server.js") -Destination (Join-Path $PSScriptRoot "dist\server.js") -Force
+
 $zipPath = Join-Path $PSScriptRoot "dist.zip"
 if (Test-Path $zipPath) {
     Remove-Item $zipPath -Force

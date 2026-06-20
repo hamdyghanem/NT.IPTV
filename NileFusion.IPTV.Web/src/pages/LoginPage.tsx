@@ -142,10 +142,12 @@ export default function LoginPage() {
     <div style={{
       minHeight: '100vh',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem',
       background: 'radial-gradient(circle at top right, #2a0808 0%, var(--bg-darker) 100%)',
+      position: 'relative',
     }}>
       <div className="glass-panel" style={{
         display: 'grid',
@@ -390,7 +392,7 @@ export default function LoginPage() {
             </div>
 
             {/* ── Animated Connection Log Terminal ── */}
-            {logLines.length > 0 && !error && (
+            {logLines.length > 0 && (
               <div
                 ref={logRef}
                 style={{
@@ -457,6 +459,43 @@ export default function LoginPage() {
         </div>
 
       </div>
+
+      {/* Powered by NileFusion */}
+      <a
+        href="https://NileFusion.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'absolute',
+          bottom: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.45rem',
+          textDecoration: 'none',
+          padding: '0.4rem 0.75rem',
+          borderRadius: '6px',
+          transition: 'background 0.2s ease',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(99,102,241,0.08)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+      >
+        <img
+          src="/favicon.png"
+          alt="NileFusion"
+          style={{ width: '16px', height: '16px', borderRadius: '3px', objectFit: 'cover' }}
+        />
+        <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.02em' }}>
+          Powered by{' '}
+          <span style={{
+            background: 'var(--primary-gradient)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 700,
+          }}>
+            NileFusion
+          </span>
+        </span>
+      </a>
     </div>
   )
 }

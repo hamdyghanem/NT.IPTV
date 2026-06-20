@@ -183,9 +183,9 @@ export default function BrowsePage() {
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
-          maxHeight: 'calc(100vh - 200px)',
+          maxHeight: 'calc(100vh - 120px)',
           position: 'sticky',
-          top: '20px',
+          top: '80px',
           overflowY: 'auto'
         }}>
           <h3 style={{ fontSize: '1rem', color: '#fff', fontWeight: 600 }}>Categories</h3>
