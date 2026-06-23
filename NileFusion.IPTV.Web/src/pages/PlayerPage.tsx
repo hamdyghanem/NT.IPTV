@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../app/AuthContext'
 import { buildStreamUrl } from '../services/api'
 import { ArrowLeft, Play, Pause, ExternalLink, Copy, Download, AlertTriangle, Check, Info } from 'lucide-react'
+import { useDownloads } from '../app/DownloadContext'
 import Hls from 'hls.js'
 import mpegts from 'mpegts.js'
 
@@ -11,6 +12,8 @@ export default function PlayerPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { activeSession } = useAuth()
+  const { startDownload, activeDownloads } = useDownloads()
+  const activeTask = activeDownloads[id || '']
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const hlsRef = useRef<Hls | null>(null)
@@ -315,15 +318,25 @@ export default function PlayerPage() {
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '0.5rem' }}>
-                  <a
-                    href={proxiedStreamUrl}
-                    download
+                  <button
                     className="btn btn-secondary"
-                    style={{ flex: 1, textDecoration: 'none', fontSize: '0.85rem' }}
+                    style={{ flex: 1, fontSize: '0.85rem' }}
+                    disabled={!!activeTask}
+                    onClick={() => startDownload(
+                      id!, 
+                      name, 
+                      proxiedStreamUrl, 
+                      ext
+                    )}
                   >
-                    <Download size={15} />
-                    Download File
-                  </a>
+                    <Download size={15} style={{ animation: activeTask ? 'spin 1.5s linear infinite' : 'none' }} />
+                    <span>
+                      {activeTask 
+                        ? `Downloading (${activeTask.progress}%)` 
+                        : 'Download File'
+                      }
+                    </span>
+                  </button>
                   <button
                     className="btn btn-secondary"
                     style={{ flex: 1, fontSize: '0.85rem' }}

@@ -4,11 +4,13 @@ import { useAuth } from '../app/AuthContext'
 import { fetchMovieDetails, fetchSeriesDetails, buildStreamUrl } from '../services/api'
 import { WatchMovie, WatchSeries, EpisodeData } from '../types'
 import { ArrowLeft, Play, Star, Calendar, Clock, Film, ExternalLink, Copy, Check, X, AlertCircle, Download } from 'lucide-react'
+import { useDownloads } from '../app/DownloadContext'
 
 export default function DetailsPage() {
   const { type, id } = useParams<{ type: string; id: string }>()
   const navigate = useNavigate()
   const { activeSession, toggleFavorite, isFavorite } = useAuth()
+  const { startDownload, activeDownloads } = useDownloads()
 
   const [movieDetails, setMovieDetails] = useState<WatchMovie | null>(null)
   const [seriesDetails, setSeriesDetails] = useState<WatchSeries | null>(null)
@@ -146,7 +148,7 @@ export default function DetailsPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100%', paddingBottom: '3rem' }}>
+    <div className="animate-slide-up" style={{ position: 'relative', minHeight: '100%', paddingBottom: '3rem' }}>
       
       {/* Blurred Backdrop image */}
       {backdrop && (
@@ -220,15 +222,25 @@ export default function DetailsPage() {
                 <span>Stream & Download Link</span>
               </button>
               {downloadStreamUrl && (
-                <a 
-                  href={downloadStreamUrl}
-                  download
+                <button
                   className="btn btn-secondary" 
-                  style={{ width: '100%', textDecoration: 'none' }}
+                  style={{ width: '100%' }}
+                  disabled={!!activeDownloads[id || '']}
+                  onClick={() => startDownload(
+                    id!, 
+                    title, 
+                    downloadStreamUrl, 
+                    movieDetails!.movie_data.container_extension
+                  )}
                 >
-                  <Download size={16} />
-                  <span>Download Direct</span>
-                </a>
+                  <Download size={16} style={{ animation: activeDownloads[id || ''] ? 'spin 1.5s linear infinite' : 'none' }} />
+                  <span>
+                    {activeDownloads[id || ''] 
+                      ? `Downloading (${activeDownloads[id || ''].progress}%)` 
+                      : 'Download Direct'
+                    }
+                  </span>
+                </button>
               )}
             </div>
           </div>
@@ -370,15 +382,24 @@ export default function DetailsPage() {
                         >
                           <ExternalLink size={12} />
                         </button>
-                        <a 
-                          href={epDownloadUrl}
-                          download
-                          className="btn btn-secondary" 
-                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                          title="Download directly"
+                        <button 
+                          className="btn-secondary" 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          title={activeDownloads[ep.id] ? `Downloading: ${activeDownloads[ep.id].progress}%` : "Download directly"}
+                          disabled={!!activeDownloads[ep.id]}
+                          onClick={() => startDownload(
+                            String(ep.id),
+                            `${title} - S${selectedSeason}E${ep.episode_num}`,
+                            epDownloadUrl,
+                            ep.container_extension
+                          )}
                         >
-                          <Download size={12} />
-                        </a>
+                          {activeDownloads[ep.id] ? (
+                            <span style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>{activeDownloads[ep.id].progress}%</span>
+                          ) : (
+                            <Download size={12} />
+                          )}
+                        </button>
                       </div>
                     </div>
                   )
@@ -503,18 +524,58 @@ export default function DetailsPage() {
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                <a
-                  href={activeEpisode && activeSession
-                    ? buildStreamUrl(activeSession, 'series', activeEpisode.id, activeEpisode.container_extension, true)
-                    : downloadStreamUrl
-                  }
-                  download
-                  className="btn btn-secondary"
-                  style={{ flex: 1, textDecoration: 'none' }}
-                >
-                  <Film size={16} />
-                  <span>Download File</span>
-                </a>
+                {activeEpisode ? (
+                  (() => {
+                    const epUrl = buildStreamUrl(activeSession!, 'series', activeEpisode.id, activeEpisode.container_extension, true)
+                    const activeEpTask = activeDownloads[activeEpisode.id]
+                    return (
+                      <button
+                        className="btn btn-secondary"
+                        style={{ flex: 1 }}
+                        disabled={!!activeEpTask}
+                        onClick={() => startDownload(
+                          String(activeEpisode.id),
+                          `${title} - S${selectedSeason}E${activeEpisode.episode_num}`,
+                          epUrl,
+                          activeEpisode.container_extension
+                        )}
+                      >
+                        <Film size={16} />
+                        <span>
+                          {activeEpTask 
+                            ? `Downloading (${activeEpTask.progress}%)` 
+                            : 'Download File'
+                          }
+                        </span>
+                      </button>
+                    )
+                  })()
+                ) : (
+                  (() => {
+                    const activeMovieTask = activeDownloads[id || '']
+                    return (
+                      <button
+                        className="btn btn-secondary"
+                        style={{ flex: 1 }}
+                        disabled={!!activeMovieTask}
+                        onClick={() => startDownload(
+                          id!, 
+                          title, 
+                          downloadStreamUrl, 
+                          movieDetails!.movie_data.container_extension
+                        )}
+                      >
+                        <Film size={16} />
+                        <span>
+                          {activeMovieTask 
+                            ? `Downloading (${activeMovieTask.progress}%)` 
+                            : 'Download File'
+                          }
+                        </span>
+                      </button>
+                    )
+                  })()
+                )}
               </div>
             </div>
           </div>

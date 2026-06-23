@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../app/AuthContext'
-import { Home, Tv, Film, MonitorPlay, Settings, LogOut, Menu, X, User } from 'lucide-react'
+import { Home, Tv, Film, MonitorPlay, Settings, LogOut, Menu, X, User, Download } from 'lucide-react'
 import nilefusionLogo from '../../assets/logo.png'
+import { useDownloads } from '../../app/DownloadContext'
+import DownloadManager from './DownloadManager'
 
 export default function Layout() {
   const { activeSession, playerInfo, logout } = useAuth()
+  const { activeDownloads } = useDownloads()
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [downloadOpen, setDownloadOpen] = useState(false)
+
+  const activeCount = Object.keys(activeDownloads).length
 
   const handleLogout = () => {
     logout()
@@ -154,10 +160,10 @@ export default function Layout() {
                     transition: 'var(--transition-smooth)',
                     ...customStyles,
                   }}
-                  className={`nav-link nav-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  className={`nav-link hover-shimmer nav-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   {link.icon}
-                  <span>{link.label}</span>
+                  <span style={{ position: 'relative', zIndex: 2 }}>{link.label}</span>
                 </NavLink>
               )
             })}
@@ -201,6 +207,41 @@ export default function Layout() {
               </div>
             </div>
           )}
+
+          <button
+            onClick={() => setDownloadOpen(true)}
+            className="btn btn-secondary"
+            style={{ 
+              width: '100%', 
+              justifyContent: 'center',
+              position: 'relative',
+              borderColor: activeCount > 0 ? 'var(--accent-color)' : 'var(--border-light)',
+              boxShadow: activeCount > 0 ? '0 0 10px rgba(229,57,53,0.2)' : 'none',
+            }}
+          >
+            <Download size={16} style={{ animation: activeCount > 0 ? 'spin 3s linear infinite' : 'none' }} />
+            <span>Downloads</span>
+            {activeCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-5px',
+                right: '-5px',
+                background: 'var(--primary-gradient)',
+                color: '#fff',
+                borderRadius: '50%',
+                width: '20px',
+                height: '20px',
+                fontSize: '0.7rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                boxShadow: '0 0 8px rgba(229,57,53,0.5)',
+              }}>
+                {activeCount}
+              </span>
+            )}
+          </button>
 
           <button 
             onClick={handleLogout}
@@ -253,9 +294,11 @@ export default function Layout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="main-content">
+      <main className="main-content page-transition" key={location.pathname}>
         <Outlet />
       </main>
+
+      <DownloadManager isOpen={downloadOpen} onClose={() => setDownloadOpen(false)} />
 
       {/* CSS details to manage responsiveness */}
       <style>{`

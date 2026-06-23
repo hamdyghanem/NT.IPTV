@@ -18,6 +18,7 @@ namespace NT.IPTV
         public frmMovieData(ChannelControl cltr)
         {
             InitializeComponent();
+            clsCore.ApplyTheme(this);
             cltrParent = cltr;
             lblInfo.Text = string.Empty;
             lblCast.Text = string.Empty;
@@ -149,10 +150,8 @@ namespace NT.IPTV
         {
             try
             {
-                //handle the event 
                 var ctrl = (RowSeriesControl)sender;
-                frmPlayMovie frm = new frmPlayMovie(ctrl.EpisodeData.StreamUrl);
-                frm.ShowDialog();
+                clsCore.PlayStream(ctrl.EpisodeData.StreamUrl);
             }
             catch (Exception ex)
             {
@@ -163,42 +162,13 @@ namespace NT.IPTV
         {
             try
             {
-                string vlcLocatedPath = clsCore.GetVLCPath(); // Use the dedicated method to get or find the VLC path
-
-                if (string.IsNullOrEmpty(vlcLocatedPath) || !File.Exists(vlcLocatedPath))
+                if (Selected != null && !string.IsNullOrEmpty(Selected.StreamUrl))
                 {
-                    OpenFileDialog openFileDialog = new OpenFileDialog
-                    {
-                        InitialDirectory = "c:\\",
-                        Filter = "VLC Executable File (*.exe)|*.exe",
-                        RestoreDirectory = true
-                    };
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        vlcLocatedPath = openFileDialog.FileName;
-                        // Optionally, update the configuration with the newly selected path
-                        clsCore.Config.VlcLocationPath = vlcLocatedPath;
-                        clsCore.SaveConfiguration();
-                    }
-                    else
-                    {
-                        MessageBox.Show("VLC path selection was canceled.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                    clsCore.PlayStream(Selected.StreamUrl);
                 }
-
-                if (!string.IsNullOrEmpty(cltrParent.Channel.StreamUrl))
+                else if (cltrParent != null && cltrParent.Channel != null && !string.IsNullOrEmpty(cltrParent.Channel.StreamUrl))
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        Arguments = $"/C \"{vlcLocatedPath}\" {Selected.StreamUrl}",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    };
-
-                    Process.Start(startInfo);
+                    clsCore.PlayStream(cltrParent.Channel.StreamUrl);
                 }
                 else
                 {
@@ -207,7 +177,7 @@ namespace NT.IPTV
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to open VLC: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Failed to open player: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -224,9 +194,7 @@ namespace NT.IPTV
             if (!string.IsNullOrEmpty(Selected.StreamUrl))
             {
                 this.Close();
-                frmPlayMovie frm = new frmPlayMovie(Selected.StreamUrl);
-                frm.ShowDialog();
-                frm.Dispose();
+                clsCore.PlayStream(Selected.StreamUrl);
             }
         }
 
@@ -286,8 +254,7 @@ namespace NT.IPTV
             {
                 if (!string.IsNullOrEmpty(Selected.YoutubeTrailer))
                 {
-                    frmPlayMovie frm = new frmPlayMovie($"https://www.youtube.com/watch?v={Selected.YoutubeTrailer}");
-                    frm.ShowDialog();
+                    clsCore.PlayStream($"https://www.youtube.com/watch?v={Selected.YoutubeTrailer}");
                 }
             }
             catch (System.Exception other)

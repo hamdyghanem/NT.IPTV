@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.ApplicationServices;
+using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NT.IPTV.Models.Channel;
@@ -30,6 +30,7 @@ namespace NT.IPTV
         public frmCategories()
         {
             InitializeComponent();
+            clsCore.ApplyTheme(this);
             loadCategories();//loads the categories into the listbox view
             InitializeUpdateCheckTimer(); // Initialize the update check timer
 
@@ -217,55 +218,13 @@ namespace NT.IPTV
                 var ctrl = (ChannelControl)sender;
                 if (ctrl.Channel.Category == enumCategories.Live)
                 {
-                    //frmStream frm = new frmStream(ctrl.Channel.StreamUrl);
-                    //frm.ShowDialog();
-                    try
+                    if (!string.IsNullOrEmpty(ctrl.Channel.StreamUrl))
                     {
-                        string vlcLocatedPath = clsCore.GetVLCPath(); // Use the dedicated method to get or find the VLC path
-
-                        if (string.IsNullOrEmpty(vlcLocatedPath) || !File.Exists(vlcLocatedPath))
-                        {
-                            OpenFileDialog openFileDialog = new OpenFileDialog
-                            {
-                                InitialDirectory = "c:\\",
-                                Filter = "VLC Executable File (*.exe)|*.exe",
-                                RestoreDirectory = true
-                            };
-
-                            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                            {
-                                vlcLocatedPath = openFileDialog.FileName;
-                                // Optionally, update the configuration with the newly selected path
-                                clsCore.Config.VlcLocationPath = vlcLocatedPath;
-                                clsCore.SaveConfiguration();
-                            }
-                            else
-                            {
-                                MessageBox.Show("VLC path selection was canceled.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(ctrl.Channel.StreamUrl))
-                        {
-                            ProcessStartInfo startInfo = new ProcessStartInfo
-                            {
-                                FileName = "cmd.exe",
-                                Arguments = $"/C \"{vlcLocatedPath}\" {ctrl.Channel.StreamUrl}",
-                                UseShellExecute = false,
-                                CreateNoWindow = true
-                            };
-
-                            Process.Start(startInfo);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Stream URL not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        clsCore.PlayStream(ctrl.Channel.StreamUrl);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show($"Failed to open VLC: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Stream URL not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -460,10 +419,34 @@ namespace NT.IPTV
             clsCore.StreamSerieses.Clear();
             clsCore.StreamVideos.Clear();
 
+            clsCore.InvalidateCatalogCache();
             await clsCore.RetrieveCategories(lblStatus, _cts.Token);
             await clsCore.RetrieveStreams(_cts.Token);
+            clsCore.SaveCatalogCache();
 
             loadCategories();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            // Disable Auto-Login so it doesn't trigger next time
+            clsCore.Config.AutoLogin = false;
+            clsCore.SaveConfiguration();
+
+            // Find the hidden login form and show it
+            Form loginForm = Application.OpenForms.OfType<frmLogin>().FirstOrDefault();
+            if (loginForm != null)
+            {
+                loginForm.Show();
+                // Unregister the FormClosing exit thread handler so closing this form doesn't kill the app
+                this.FormClosing -= frmCategories_FormClosing;
+                this.Close();
+            }
+            else
+            {
+                // Fallback: exit thread if login form is not found
+                Application.ExitThread();
+            }
         }
     }
 }

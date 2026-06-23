@@ -31,6 +31,7 @@ namespace NT.IPTV
         }
         private void frmGlobalSearch_Load(object sender, EventArgs e)
         {
+            clsCore.ApplyTheme(this);
             LoadTree();
 
             lstGlobalSearch.Items.Clear();

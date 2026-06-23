@@ -1,4 +1,4 @@
-﻿namespace NT.IPTV
+namespace NT.IPTV
 {
     partial class frmLogin
     {
@@ -34,20 +34,25 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             txtUsername = new TextBox();
             lblUserName = new Label();
-            lblServer = new Label();
             lblPassword = new Label();
             txtPassword = new TextBox();
-            txtServer = new TextBox();
             lblProfile = new Label();
             cboProfile = new ComboBox();
-            lblPort = new Label();
-            txtPort = new TextBox();
             errorProvider1 = new ErrorProvider(components);
             btnSave = new Button();
             statusStrip = new StatusStrip();
             lblVersion = new ToolStripStatusLabel();
             lblStatus = new ToolStripStatusLabel();
             picLogo = new PictureBox();
+            btnCancel = new Button();
+            chkUseProxy = new CheckBox();
+            chkAutoLogin = new CheckBox();
+            chkUseBuiltInPlayer = new CheckBox();
+            chkDarkMode = new CheckBox();
+            txtServer = new TextBox();
+            lblServer = new Label();
+            lblPort = new Label();
+            txtPort = new TextBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             statusStrip.SuspendLayout();
@@ -56,10 +61,9 @@
             // 
             // btnGo
             // 
-            btnGo.Location = new Point(458, 193);
-            btnGo.Margin = new Padding(3, 2, 3, 2);
+            btnGo.Location = new Point(517, 205);
             btnGo.Name = "btnGo";
-            btnGo.Size = new Size(102, 27);
+            btnGo.Size = new Size(117, 36);
             btnGo.TabIndex = 0;
             btnGo.Text = "Go";
             btnGo.UseVisualStyleBackColor = true;
@@ -67,9 +71,11 @@
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnCount = 4;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.7513237F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.24868F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 75F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 141F));
             tableLayoutPanel1.Controls.Add(txtUsername, 1, 2);
             tableLayoutPanel1.Controls.Add(lblUserName, 0, 2);
             tableLayoutPanel1.Controls.Add(lblServer, 0, 4);
@@ -80,8 +86,7 @@
             tableLayoutPanel1.Controls.Add(cboProfile, 1, 0);
             tableLayoutPanel1.Controls.Add(lblPort, 0, 5);
             tableLayoutPanel1.Controls.Add(txtPort, 1, 5);
-            tableLayoutPanel1.Location = new Point(99, 17);
-            tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
+            tableLayoutPanel1.Location = new Point(113, 23);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 6;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -89,96 +94,59 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(496, 161);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(659, 176);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(115, 29);
-            txtUsername.Margin = new Padding(3, 2, 3, 2);
+            txtUsername.Location = new Point(103, 37);
             txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(275, 23);
+            txtUsername.Size = new Size(314, 27);
             txtUsername.TabIndex = 1;
             // 
             // lblUserName
             // 
             lblUserName.AutoSize = true;
-            lblUserName.Location = new Point(3, 27);
+            lblUserName.Location = new Point(3, 34);
             lblUserName.Name = "lblUserName";
-            lblUserName.Size = new Size(60, 15);
+            lblUserName.Size = new Size(75, 20);
             lblUserName.TabIndex = 0;
             lblUserName.Text = "Username";
-            // 
-            // lblServer
-            // 
-            lblServer.AutoSize = true;
-            lblServer.Location = new Point(3, 81);
-            lblServer.Name = "lblServer";
-            lblServer.Size = new Size(39, 15);
-            lblServer.TabIndex = 0;
-            lblServer.Text = "Server";
             // 
             // lblPassword
             // 
             lblPassword.AutoSize = true;
-            lblPassword.Location = new Point(3, 54);
+            lblPassword.Location = new Point(3, 67);
             lblPassword.Name = "lblPassword";
-            lblPassword.Size = new Size(57, 15);
+            lblPassword.Size = new Size(70, 20);
             lblPassword.TabIndex = 0;
             lblPassword.Text = "Password";
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(115, 56);
-            txtPassword.Margin = new Padding(3, 2, 3, 2);
+            txtPassword.Location = new Point(103, 70);
             txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(275, 23);
+            txtPassword.Size = new Size(314, 27);
             txtPassword.TabIndex = 2;
-            // 
-            // txtServer
-            // 
-            txtServer.Location = new Point(115, 83);
-            txtServer.Margin = new Padding(3, 2, 3, 2);
-            txtServer.Name = "txtServer";
-            txtServer.Size = new Size(275, 23);
-            txtServer.TabIndex = 3;
             // 
             // lblProfile
             // 
             lblProfile.AutoSize = true;
             lblProfile.Location = new Point(3, 0);
             lblProfile.Name = "lblProfile";
-            lblProfile.Size = new Size(41, 15);
+            lblProfile.Size = new Size(52, 20);
             lblProfile.TabIndex = 0;
             lblProfile.Text = "Profile";
             // 
             // cboProfile
             // 
             cboProfile.FormattingEnabled = true;
-            cboProfile.Location = new Point(115, 2);
-            cboProfile.Margin = new Padding(3, 2, 3, 2);
+            cboProfile.Location = new Point(103, 3);
             cboProfile.Name = "cboProfile";
-            cboProfile.Size = new Size(275, 23);
+            cboProfile.Size = new Size(314, 28);
             cboProfile.TabIndex = 4;
             cboProfile.SelectedIndexChanged += cboProfile_SelectedIndexChanged;
-            // 
-            // lblPort
-            // 
-            lblPort.AutoSize = true;
-            lblPort.Location = new Point(3, 108);
-            lblPort.Name = "lblPort";
-            lblPort.Size = new Size(29, 15);
-            lblPort.TabIndex = 0;
-            lblPort.Text = "Port";
-            // 
-            // txtPort
-            // 
-            txtPort.Location = new Point(115, 110);
-            txtPort.Margin = new Padding(3, 2, 3, 2);
-            txtPort.Name = "txtPort";
-            txtPort.Size = new Size(275, 23);
-            txtPort.TabIndex = 3;
             // 
             // errorProvider1
             // 
@@ -186,10 +154,9 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(351, 193);
-            btnSave.Margin = new Padding(3, 2, 3, 2);
+            btnSave.Location = new Point(395, 205);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(102, 27);
+            btnSave.Size = new Size(117, 36);
             btnSave.TabIndex = 1;
             btnSave.Text = "Save Profile";
             btnSave.UseVisualStyleBackColor = true;
@@ -199,55 +166,148 @@
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { lblVersion, lblStatus });
-            statusStrip.Location = new Point(0, 238);
+            statusStrip.Location = new Point(0, 371);
             statusStrip.Name = "statusStrip";
-            statusStrip.Padding = new Padding(1, 0, 12, 0);
-            statusStrip.Size = new Size(650, 22);
+            statusStrip.Size = new Size(794, 26);
             statusStrip.TabIndex = 8;
             statusStrip.Text = "statusStrip1";
             // 
             // lblVersion
             // 
             lblVersion.Name = "lblVersion";
-            lblVersion.Size = new Size(40, 17);
+            lblVersion.Size = new Size(50, 20);
             lblVersion.Text = "0.0.0.1";
             // 
             // lblStatus
             // 
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(19, 17);
+            lblStatus.Size = new Size(21, 20);
             lblStatus.Text = "....";
             // 
             // picLogo
             // 
             picLogo.Image = Properties.Resources.small_logo;
-            picLogo.Location = new Point(2, 183);
-            picLogo.Margin = new Padding(3, 2, 3, 2);
+            picLogo.Location = new Point(12, 23);
             picLogo.Name = "picLogo";
-            picLogo.Size = new Size(59, 56);
+            picLogo.Size = new Size(67, 75);
             picLogo.SizeMode = PictureBoxSizeMode.Zoom;
             picLogo.TabIndex = 9;
             picLogo.TabStop = false;
             picLogo.Click += picLogo_Click;
             // 
+            // btnCancel
+            // 
+            btnCancel.Location = new Point(272, 205);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(117, 36);
+            btnCancel.TabIndex = 2;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // chkUseProxy
+            // 
+            chkUseProxy.AutoSize = true;
+            chkUseProxy.Location = new Point(107, 251);
+            chkUseProxy.Margin = new Padding(3, 4, 3, 4);
+            chkUseProxy.Name = "chkUseProxy";
+            chkUseProxy.Size = new Size(298, 24);
+            chkUseProxy.TabIndex = 10;
+            chkUseProxy.Text = "Route via Azure Proxy (bypass ISP block)";
+            chkUseProxy.UseVisualStyleBackColor = true;
+            chkUseProxy.CheckedChanged += chkUseProxy_CheckedChanged;
+            // 
+            // chkAutoLogin
+            // 
+            chkAutoLogin.AutoSize = true;
+            chkAutoLogin.Location = new Point(107, 279);
+            chkAutoLogin.Margin = new Padding(3, 4, 3, 4);
+            chkAutoLogin.Name = "chkAutoLogin";
+            chkAutoLogin.Size = new Size(174, 24);
+            chkAutoLogin.TabIndex = 11;
+            chkAutoLogin.Text = "Auto-login on startup";
+            chkAutoLogin.UseVisualStyleBackColor = true;
+            chkAutoLogin.CheckedChanged += chkAutoLogin_CheckedChanged;
+            // 
+            // chkUseBuiltInPlayer
+            // 
+            chkUseBuiltInPlayer.AutoSize = true;
+            chkUseBuiltInPlayer.Location = new Point(107, 307);
+            chkUseBuiltInPlayer.Margin = new Padding(3, 4, 3, 4);
+            chkUseBuiltInPlayer.Name = "chkUseBuiltInPlayer";
+            chkUseBuiltInPlayer.Size = new Size(152, 24);
+            chkUseBuiltInPlayer.TabIndex = 12;
+            chkUseBuiltInPlayer.Text = "Use built-in player";
+            chkUseBuiltInPlayer.UseVisualStyleBackColor = true;
+            chkUseBuiltInPlayer.CheckedChanged += chkUseBuiltInPlayer_CheckedChanged;
+            // 
+            // chkDarkMode
+            // 
+            chkDarkMode.AutoSize = true;
+            chkDarkMode.Location = new Point(107, 335);
+            chkDarkMode.Margin = new Padding(3, 4, 3, 4);
+            chkDarkMode.Name = "chkDarkMode";
+            chkDarkMode.Size = new Size(105, 24);
+            chkDarkMode.TabIndex = 13;
+            chkDarkMode.Text = "Dark mode";
+            chkDarkMode.UseVisualStyleBackColor = true;
+            chkDarkMode.CheckedChanged += chkDarkMode_CheckedChanged;
+            // 
+            // txtServer
+            // 
+            txtServer.Location = new Point(103, 103);
+            txtServer.Name = "txtServer";
+            txtServer.Size = new Size(314, 27);
+            txtServer.TabIndex = 3;
+            // 
+            // lblServer
+            // 
+            lblServer.AutoSize = true;
+            lblServer.Location = new Point(3, 100);
+            lblServer.Name = "lblServer";
+            lblServer.Size = new Size(50, 20);
+            lblServer.TabIndex = 0;
+            lblServer.Text = "Server";
+            // 
+            // lblPort
+            // 
+            lblPort.AutoSize = true;
+            lblPort.Location = new Point(3, 133);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(35, 20);
+            lblPort.TabIndex = 0;
+            lblPort.Text = "Port";
+            // 
+            // txtPort
+            // 
+            txtPort.Location = new Point(103, 136);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(136, 27);
+            txtPort.TabIndex = 3;
+            // 
             // frmLogin
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(650, 260);
+            ClientSize = new Size(794, 397);
             Controls.Add(picLogo);
             Controls.Add(statusStrip);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(btnSave);
+            Controls.Add(btnCancel);
+            Controls.Add(chkUseProxy);
+            Controls.Add(chkAutoLogin);
+            Controls.Add(chkUseBuiltInPlayer);
+            Controls.Add(chkDarkMode);
             Controls.Add(btnGo);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";
+            Load += frmLogin_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
@@ -264,19 +324,24 @@
         private TableLayoutPanel tableLayoutPanel1;
         private TextBox txtUsername;
         private Label lblUserName;
-        private Label lblServer;
         private Label lblPassword;
         private TextBox txtPassword;
-        private TextBox txtServer;
         private ErrorProvider errorProvider1;
         private Label lblProfile;
         private ComboBox cboProfile;
-        private Label lblPort;
-        private TextBox txtPort;
         private Button btnSave;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel lblVersion;
         private ToolStripStatusLabel lblStatus;
         private PictureBox picLogo;
+        private Button btnCancel;
+        private CheckBox chkUseProxy;
+        private CheckBox chkAutoLogin;
+        private CheckBox chkUseBuiltInPlayer;
+        private CheckBox chkDarkMode;
+        private Label lblServer;
+        private TextBox txtServer;
+        private Label lblPort;
+        private TextBox txtPort;
     }
 }

@@ -1,4 +1,4 @@
-﻿using NT.IPTV.Models.Items;
+using NT.IPTV.Models.Items;
 using NT.IPTV.Models.Items.Channesl;
 using NT.IPTV.Utilities;
 using System;
@@ -39,10 +39,7 @@ namespace NT.IPTV
             //System.IO.Stream responseSwtream =
             //    response.GetResponseStream();
             //picLogo.BackgroundImage = new Bitmap(responseStream);
-            if (!string.IsNullOrEmpty(Channel?.IconUrl))
-            {
-                picLogo.ImageLocation = Channel.IconUrl;
-            }
+            LoadImageAsync(Channel?.IconUrl);
             lblChannelName.Tag = Channel.Favorite ? "1" : "0";
             if (lblChannelName.Tag == "1")
             {
@@ -50,6 +47,19 @@ namespace NT.IPTV
                 lblChannelName.ForeColor = Color.Black;
             }
             this.Size = new Size(clsCore.Config.ThumbnailSize, clsCore.Config.ThumbnailSize);
+        }
+
+        private async void LoadImageAsync(string url)
+        {
+            Bitmap img = null;
+            if (!string.IsNullOrEmpty(url))
+            {
+                img = await clsCore.ImageCache.GetImageAsync(url);
+            }
+            if (!this.IsDisposed)
+            {
+                picLogo.Image = img ?? Properties.Resources.noimage;
+            }
         }
 
         private void picLogo_DoubleClick(object sender, EventArgs e)

@@ -171,7 +171,7 @@ export default function BrowsePage() {
   }, [selectedCategory, categories, searchQuery])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%' }}>
+    <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%' }}>
       
 
       {/* Main Browse Panel */}

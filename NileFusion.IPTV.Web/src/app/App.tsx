@@ -31,22 +31,26 @@ function LoginRoute() {
   return activeSession ? <Navigate to="/" replace /> : <LoginPage />
 }
 
+import { DownloadProvider } from './DownloadContext'
+
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginRoute />} />
-        <Route element={<ProtectedRoute />}>
-          {/* Player is fullscreen — render it outside Layout so no sidebar appears */}
-          <Route path="/player/:type/:id" element={<PlayerPage />} />
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/browse" element={<BrowsePage />} />
-            <Route path="/details/:type/:id" element={<DetailsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+      <DownloadProvider>
+        <Routes>
+          <Route path="/login" element={<LoginRoute />} />
+          <Route element={<ProtectedRoute />}>
+            {/* Player is fullscreen — render it outside Layout so no sidebar appears */}
+            <Route path="/player/:type/:id" element={<PlayerPage />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/browse" element={<BrowsePage />} />
+              <Route path="/details/:type/:id" element={<DetailsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </DownloadProvider>
     </AuthProvider>
   )
 }

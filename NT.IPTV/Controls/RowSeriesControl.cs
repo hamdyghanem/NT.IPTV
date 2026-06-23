@@ -1,5 +1,6 @@
-﻿using NT.IPTV.Models.Channel;
+using NT.IPTV.Models.Channel;
 using NT.IPTV.Models.Items.StreamObject;
+using NT.IPTV.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,20 +35,25 @@ namespace NT.IPTV
             lblName.Text = EpisodeData.Name;
             lblPlot.Text = EpisodeData.Info.plot;
             lblDuration.Text = EpisodeData.Info.Duration;
-            if (!string.IsNullOrEmpty(EpisodeData.Info.movie_image))
-            {
-                picLogo.ImageLocation = EpisodeData.Info.movie_image;
-            }
-            else
-            {
-                picLogo.ImageLocation = defaultImage;
-
-            }
+            LoadImageAsync(EpisodeData.Info?.movie_image);
         }
 
         private void picLogo_DoubleClick(object sender, EventArgs e)
         {
 
+        }
+
+        private async void LoadImageAsync(string url)
+        {
+            Bitmap img = null;
+            if (!string.IsNullOrEmpty(url))
+            {
+                img = await clsCore.ImageCache.GetImageAsync(url);
+            }
+            if (!this.IsDisposed)
+            {
+                picLogo.Image = img ?? Properties.Resources.noimage;
+            }
         }
 
         private void picLogo_Click(object sender, EventArgs e)

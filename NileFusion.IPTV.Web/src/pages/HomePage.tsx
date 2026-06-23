@@ -80,7 +80,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+    <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
       
       {/* Header Banner */}
       <div>
@@ -153,7 +153,7 @@ export default function HomePage() {
                 background: 'var(--bg-card)',
                 transition: 'var(--transition-smooth)',
               }}
-              className="dashboard-card"
+              className="dashboard-card hover-shimmer"
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-6px)'
                 e.currentTarget.style.borderColor = 'var(--accent-color)'

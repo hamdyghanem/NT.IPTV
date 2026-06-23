@@ -1,4 +1,4 @@
-﻿namespace NT.IPTV
+namespace NT.IPTV
 {
     partial class frmPlayMovie
     {
@@ -29,40 +29,38 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPlayMovie));
-            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
-            ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
+            videoView = new LibVLCSharp.WinForms.VideoView();
+            ((System.ComponentModel.ISupportInitialize)videoView).BeginInit();
             SuspendLayout();
             // 
-            // webView
+            // videoView
             // 
-            webView.AllowExternalDrop = true;
-            webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = Color.White;
-            webView.Dock = DockStyle.Fill;
-            webView.Location = new Point(0, 0);
-            webView.Name = "webView";
-            webView.Size = new Size(894, 358);
-            webView.TabIndex = 0;
-            webView.ZoomFactor = 1D;
+            videoView.BackColor = Color.Black;
+            videoView.Dock = DockStyle.Fill;
+            videoView.Location = new Point(0, 0);
+            videoView.MediaPlayer = null;
+            videoView.Name = "videoView";
+            videoView.Size = new Size(894, 358);
+            videoView.TabIndex = 0;
             // 
             // frmPlayMovie
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(894, 358);
-            Controls.Add(webView);
+            Controls.Add(videoView);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmPlayMovie";
             Text = "Play";
             WindowState = FormWindowState.Maximized;
             FormClosing += frmStreamMovie_FormClosing;
             Load += frmStreamMovie_Load;
-            ((System.ComponentModel.ISupportInitialize)webView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)videoView).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView;
+        private LibVLCSharp.WinForms.VideoView videoView;
     }
 }

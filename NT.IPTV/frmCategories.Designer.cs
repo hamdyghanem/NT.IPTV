@@ -1,4 +1,4 @@
-﻿using NT.IPTV.Models.Channel;
+using NT.IPTV.Models.Channel;
 using NT.IPTV.Utilities;
 
 namespace NT.IPTV
@@ -55,6 +55,7 @@ namespace NT.IPTV
             btnGlobalSearch = new ToolStripButton();
             flwCat = new FlowCatControl();
             btnRefresh = new ToolStripButton();
+            btnLogout = new ToolStripButton();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -217,7 +218,7 @@ namespace NT.IPTV
             // toolStrip
             // 
             toolStrip.ImageScalingSize = new Size(55, 55);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnLogout });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 82);
@@ -300,6 +301,18 @@ namespace NT.IPTV
             btnRefresh.Text = "Refresh";
             btnRefresh.Click += btnRefresh_Click;
             // 
+            // btnLogout
+            // 
+            btnLogout.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnLogout.Image = Properties.Resources.logout;
+            btnLogout.ImageTransparentColor = Color.Magenta;
+            btnLogout.Name = "btnLogout";
+            btnLogout.Padding = new Padding(10);
+            btnLogout.Size = new Size(79, 79);
+            btnLogout.Text = "Log Out";
+            btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
+            btnLogout.Click += btnLogout_Click;
+            // 
             // frmCategories
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -349,5 +362,6 @@ namespace NT.IPTV
         private FlowCatControl flwCat;
         private ToolStripButton btnGlobalSearch;
         private ToolStripButton btnRefresh;
+        private ToolStripButton btnLogout;
     }
 }

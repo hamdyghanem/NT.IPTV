@@ -29,6 +29,7 @@ namespace NT.IPTV
         public frmDownloader(IWatch _downoadFile, List<string> _SeassonsToDownload)
         {
             InitializeComponent();
+            clsCore.ApplyTheme(this);
             //
             SeassonsToDownload = _SeassonsToDownload;
             lstLog.Items.Clear();

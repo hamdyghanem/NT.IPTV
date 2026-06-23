@@ -26,7 +26,31 @@ namespace NT.IPTV
             if (!string.IsNullOrEmpty(clsCore.Config.LastProfile))
             {
                 cboProfile.Text = clsCore.Config.LastProfile;
-                //cboProfile.SelectedIndex = 0;
+            }
+
+            // Restore proxy toggle
+            chkUseProxy.Checked = clsCore.Config.UseAzureProxy;
+            chkAutoLogin.Checked = clsCore.Config.AutoLogin;
+            chkUseBuiltInPlayer.Checked = clsCore.Config.UseBuiltInPlayer;
+            chkDarkMode.Checked = clsCore.Config.DarkMode;
+
+            // Apply saved theme immediately so the login window already looks themed
+            clsCore.ApplyTheme(this);
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+            // If the user holds the Shift key down on startup, bypass auto-login
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                lblStatus.Text = "Auto-login bypassed (Shift held)";
+                return;
+            }
+
+            // Auto-login: if enabled and profile data is present, connect immediately
+            if (clsCore.Config.AutoLogin && !string.IsNullOrEmpty(clsCore.Config.LastProfile))
+            {
+                btnGo_Click(this, EventArgs.Empty);
             }
         }
 
@@ -47,14 +71,21 @@ namespace NT.IPTV
                 lblStatus.Text = "Attempting to connect...";
                 if (await clsCore.CheckLoginConnection(_cts.Token)) // Connect to the server
                 {
-                    await clsCore.RetrieveCategories(lblStatus, _cts.Token);
-                    await clsCore.RetrieveStreams(_cts.Token);
-
-                    //  //await clsCore.RetrieveStreams(lblStatus, _cts.Token);
-                    //  _ = Task.Run(async () =>
-                    //{
-                    //    await clsCore.RetrieveStreams(_cts.Token);
-                    //});
+                    // Try loading catalog from local cache first for instant startup
+                    if (clsCore.TryLoadCatalogCache())
+                    {
+                        var age = DateTime.UtcNow - clsCore.CatalogTimestamp;
+                        lblStatus.Text = $"Loaded from cache ({(int)age.TotalHours}h {age.Minutes}m ago). Tap Refresh to update.";
+                    }
+                    else
+                    {
+                        // Fresh fetch from server
+                        clsCore.CatalogLoadedFromCache = false;
+                        await clsCore.RetrieveCategories(lblStatus, _cts.Token);
+                        await clsCore.RetrieveStreams(_cts.Token);
+                        // Persist to cache for next launch
+                        clsCore.SaveCatalogCache();
+                    }
 
                     if (!_cts.IsCancellationRequested)
                     {
@@ -90,6 +121,32 @@ namespace NT.IPTV
         private void btnCancel_Click(object sender, EventArgs e)
         {
             _cts.Cancel();
+        }
+
+        private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
+        {
+            clsCore.Config.UseAzureProxy = chkUseProxy.Checked;
+            clsCore.SaveConfiguration();
+        }
+
+        private void chkAutoLogin_CheckedChanged(object sender, EventArgs e)
+        {
+            clsCore.Config.AutoLogin = chkAutoLogin.Checked;
+            clsCore.SaveConfiguration();
+        }
+
+        private void chkUseBuiltInPlayer_CheckedChanged(object sender, EventArgs e)
+        {
+            clsCore.Config.UseBuiltInPlayer = chkUseBuiltInPlayer.Checked;
+            clsCore.SaveConfiguration();
+        }
+
+        private void chkDarkMode_CheckedChanged(object sender, EventArgs e)
+        {
+            clsCore.Config.DarkMode = chkDarkMode.Checked;
+            clsCore.SaveConfiguration();
+            // Re-skin the login form live
+            clsCore.ApplyTheme(this);
         }
 
         private void cboProfile_SelectedIndexChanged(object sender, EventArgs e)
