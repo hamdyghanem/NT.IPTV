@@ -1,5 +1,6 @@
-﻿using NT.IPTV.Models.Items;
+using NT.IPTV.Models.Items;
 using System.ComponentModel;
+using NT.IPTV.Utilities;
 
 
 namespace NT.IPTV
@@ -49,6 +50,8 @@ namespace NT.IPTV
             {
                 progBar.Value++;
                 RowCatControl ctrl = new RowCatControl(item, defaultImage);
+                ctrl.BackColor = clsCore.GetThemeSurface();
+                ctrl.ForeColor = clsCore.GetThemeForeground();
                 ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
                 ctrl.MouseEnter += row_MouseEnter;
                 ctrl.MouseLeave += row_MouseLeave;
@@ -65,8 +68,8 @@ namespace NT.IPTV
                     //same one
                     return;
                 }
-                lastestRowCatControl.BackColor = Color.Black;
-                lastestRowCatControl.ForeColor = Color.White;
+                lastestRowCatControl.BackColor = clsCore.GetThemeSurface();
+                lastestRowCatControl.ForeColor = clsCore.GetThemeForeground();
                 lastestRowCatControl.Selected = false;
             }
             SelectedItem = ((RowCatControl)sender).Category;
@@ -106,8 +109,8 @@ namespace NT.IPTV
             var ctrl = (RowCatControl)sender;
             if (!ctrl.Selected)
             {
-                ctrl.BackColor = Color.Black;
-                ctrl.ForeColor = Color.White;
+                ctrl.BackColor = clsCore.GetThemeSurface();
+                ctrl.ForeColor = clsCore.GetThemeForeground();
             }
         }
         public void SelectByIndex(int i)
@@ -117,8 +120,8 @@ namespace NT.IPTV
                 SelectedItem = null;
                 if (lastestRowCatControl != null)
                 {
-                    lastestRowCatControl.BackColor = Color.Black;
-                    lastestRowCatControl.ForeColor = Color.White;
+                    lastestRowCatControl.BackColor = clsCore.GetThemeSurface();
+                    lastestRowCatControl.ForeColor = clsCore.GetThemeForeground();
                     lastestRowCatControl.Selected = false;
                 }
             }

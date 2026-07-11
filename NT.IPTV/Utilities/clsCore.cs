@@ -731,7 +731,11 @@ namespace NT.IPTV.Utilities
 
         private static readonly Color LightBackground = SystemColors.Control;
         private static readonly Color LightSurface    = SystemColors.Window;
-        private static readonly Color LightForeground = SystemColors.ControlText;
+        private static readonly Color LightForeground = Color.Black;
+
+        public static Color GetThemeBackground() => Config.DarkMode ? DarkBackground : LightBackground;
+        public static Color GetThemeSurface() => Config.DarkMode ? DarkSurface : LightSurface;
+        public static Color GetThemeForeground() => Config.DarkMode ? DarkForeground : LightForeground;
 
         /// <summary>
         /// Recursively applies the current dark / light theme to every control on

@@ -46,6 +46,13 @@ namespace NT.IPTV
                 lblChannelName.BackColor = Color.Gold;
                 lblChannelName.ForeColor = Color.Black;
             }
+            else
+            {
+                lblChannelName.BackColor = Color.Transparent;
+                lblChannelName.ForeColor = clsCore.GetThemeForeground();
+            }
+            this.BackColor = clsCore.GetThemeSurface();
+            this.ForeColor = clsCore.GetThemeForeground();
             this.Size = new Size(clsCore.Config.ThumbnailSize, clsCore.Config.ThumbnailSize);
         }
 
@@ -112,8 +119,8 @@ namespace NT.IPTV
             else
             {
                 lblChannelName.Tag = "0";
-                lblChannelName.BackColor = Color.Black;
-                lblChannelName.ForeColor = Color.White;
+                lblChannelName.BackColor = Color.Transparent;
+                lblChannelName.ForeColor = clsCore.GetThemeForeground();
                 if (lst.Contains(Channel.ID))
                 {
                     lst.Remove(Channel.ID);

@@ -281,6 +281,7 @@ export default function LoginPage() {
 
             {/* Predefined server suggestions */}
             <datalist id="server-suggestions">
+              <option value="marcoapi.xyz" />
               <option value="Lionztv.com" />
             </datalist>
 

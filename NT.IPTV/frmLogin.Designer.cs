@@ -34,10 +34,14 @@ namespace NT.IPTV
             tableLayoutPanel1 = new TableLayoutPanel();
             txtUsername = new TextBox();
             lblUserName = new Label();
+            lblServer = new Label();
             lblPassword = new Label();
             txtPassword = new TextBox();
+            txtServer = new TextBox();
             lblProfile = new Label();
             cboProfile = new ComboBox();
+            lblPort = new Label();
+            txtPort = new TextBox();
             errorProvider1 = new ErrorProvider(components);
             btnSave = new Button();
             statusStrip = new StatusStrip();
@@ -49,10 +53,6 @@ namespace NT.IPTV
             chkAutoLogin = new CheckBox();
             chkUseBuiltInPlayer = new CheckBox();
             chkDarkMode = new CheckBox();
-            txtServer = new TextBox();
-            lblServer = new Label();
-            lblPort = new Label();
-            txtPort = new TextBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             statusStrip.SuspendLayout();
@@ -114,6 +114,15 @@ namespace NT.IPTV
             lblUserName.TabIndex = 0;
             lblUserName.Text = "Username";
             // 
+            // lblServer
+            // 
+            lblServer.AutoSize = true;
+            lblServer.Location = new Point(3, 100);
+            lblServer.Name = "lblServer";
+            lblServer.Size = new Size(50, 20);
+            lblServer.TabIndex = 0;
+            lblServer.Text = "Server";
+            // 
             // lblPassword
             // 
             lblPassword.AutoSize = true;
@@ -129,6 +138,13 @@ namespace NT.IPTV
             txtPassword.Name = "txtPassword";
             txtPassword.Size = new Size(314, 27);
             txtPassword.TabIndex = 2;
+            // 
+            // txtServer
+            // 
+            txtServer.Location = new Point(103, 103);
+            txtServer.Name = "txtServer";
+            txtServer.Size = new Size(314, 27);
+            txtServer.TabIndex = 3;
             // 
             // lblProfile
             // 
@@ -147,6 +163,22 @@ namespace NT.IPTV
             cboProfile.Size = new Size(314, 28);
             cboProfile.TabIndex = 4;
             cboProfile.SelectedIndexChanged += cboProfile_SelectedIndexChanged;
+            // 
+            // lblPort
+            // 
+            lblPort.AutoSize = true;
+            lblPort.Location = new Point(3, 133);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(35, 20);
+            lblPort.TabIndex = 0;
+            lblPort.Text = "Port";
+            // 
+            // txtPort
+            // 
+            txtPort.Location = new Point(103, 136);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(314, 27);
+            txtPort.TabIndex = 3;
             // 
             // errorProvider1
             // 
@@ -252,38 +284,6 @@ namespace NT.IPTV
             chkDarkMode.Text = "Dark mode";
             chkDarkMode.UseVisualStyleBackColor = true;
             chkDarkMode.CheckedChanged += chkDarkMode_CheckedChanged;
-            // 
-            // txtServer
-            // 
-            txtServer.Location = new Point(103, 103);
-            txtServer.Name = "txtServer";
-            txtServer.Size = new Size(314, 27);
-            txtServer.TabIndex = 3;
-            // 
-            // lblServer
-            // 
-            lblServer.AutoSize = true;
-            lblServer.Location = new Point(3, 100);
-            lblServer.Name = "lblServer";
-            lblServer.Size = new Size(50, 20);
-            lblServer.TabIndex = 0;
-            lblServer.Text = "Server";
-            // 
-            // lblPort
-            // 
-            lblPort.AutoSize = true;
-            lblPort.Location = new Point(3, 133);
-            lblPort.Name = "lblPort";
-            lblPort.Size = new Size(35, 20);
-            lblPort.TabIndex = 0;
-            lblPort.Text = "Port";
-            // 
-            // txtPort
-            // 
-            txtPort.Location = new Point(103, 136);
-            txtPort.Name = "txtPort";
-            txtPort.Size = new Size(136, 27);
-            txtPort.TabIndex = 3;
             // 
             // frmLogin
             // 
