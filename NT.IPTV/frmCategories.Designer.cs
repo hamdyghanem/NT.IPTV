@@ -219,7 +219,7 @@ namespace NT.IPTV
             // 
             toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip.ImageScalingSize = new Size(59, 59);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnSettings, btnLogout });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnSettings2, btnLogout });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 86);
@@ -297,17 +297,17 @@ namespace NT.IPTV
             btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
             btnLogout.Click += btnLogout_Click;
             // 
-            // btnSettings
+            // btnSettings2
             // 
-            btnSettings.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnSettings.Image = (Image)resources.GetObject("btnSettings.Image");
-            btnSettings.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            btnSettings.Name = "btnSettings";
-            btnSettings.Padding = new Padding(10);
-            btnSettings.Size = new Size(83, 83);
-            btnSettings.Text = "Settings";
-            btnSettings.ToolTipText = "Application Settings";
-            btnSettings.Click += btnSettings_Click;
+            btnSettings2.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnSettings2.Image = (Image)resources.GetObject("btnSettings2.Image");
+            btnSettings2.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+            btnSettings2.Name = "btnSettings2";
+            btnSettings2.Padding = new Padding(10);
+            btnSettings2.Size = new Size(83, 83);
+            btnSettings2.Text = "Settings";
+            btnSettings2.ToolTipText = "Application Settings";
+            btnSettings2.Click += btnSettings_Click;
             // 
             // flwCat
             // 
@@ -373,6 +373,6 @@ namespace NT.IPTV
         private ToolStripButton btnGlobalSearch;
         private ToolStripButton btnRefresh;
         private ToolStripButton btnLogout;
-        private ToolStripButton btnSettings;
+        private ToolStripButton btnSettings2;
     }
 }

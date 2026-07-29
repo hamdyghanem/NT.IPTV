@@ -64,7 +64,7 @@ namespace NT.IPTV
                     { btnSeries, "btnSeries.png" },
                     { btnGlobalSearch, "btnGlobalSearch.png" },
                     { btnRefresh, "btnRefresh.png" },
-                    { btnSettings, "btnSettings.png" },
+                    { btnSettings2, "btnSettings.png" },
                     { btnLogout, "btnLogout.png" }
                 };
 
