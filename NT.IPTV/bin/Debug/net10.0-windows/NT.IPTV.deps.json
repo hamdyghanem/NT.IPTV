@@ -1,0 +1,116 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "NT.IPTV/1.0.0": {
+        "dependencies": {
+          "LibVLCSharp.WinForms": "3.10.0",
+          "Microsoft.Web.WebView2": "1.0.2420.47",
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "NT.IPTV.dll": {}
+        }
+      },
+      "LibVLCSharp/3.10.0": {
+        "runtime": {
+          "lib/net10.0/LibVLCSharp.dll": {
+            "assemblyVersion": "3.10.0.0",
+            "fileVersion": "3.10.0.0"
+          }
+        }
+      },
+      "LibVLCSharp.WinForms/3.10.0": {
+        "dependencies": {
+          "LibVLCSharp": "3.10.0"
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/LibVLCSharp.WinForms.dll": {
+            "assemblyVersion": "3.10.0.0",
+            "fileVersion": "3.10.0.0"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2/1.0.2420.47": {
+        "runtime": {
+          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
+            "assemblyVersion": "1.0.2420.47",
+            "fileVersion": "1.0.2420.47"
+          },
+          "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {
+            "assemblyVersion": "1.0.2420.47",
+            "fileVersion": "1.0.2420.47"
+          },
+          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {
+            "assemblyVersion": "1.0.2420.47",
+            "fileVersion": "1.0.2420.47"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/WebView2Loader.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "1.0.2420.47"
+          },
+          "runtimes/win-x64/native/WebView2Loader.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "1.0.2420.47"
+          },
+          "runtimes/win-x86/native/WebView2Loader.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "1.0.2420.47"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NT.IPTV/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LibVLCSharp/3.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VHuOfq8Xtb/lNz0asvCm5qDjgTmfB3m3lC40Dz9iH9oL3DM0fSXHjZaLxdtYVr5nsldJoh5BTeG8MtODprhC9Q==",
+      "path": "libvlcsharp/3.10.0",
+      "hashPath": "libvlcsharp.3.10.0.nupkg.sha512"
+    },
+    "LibVLCSharp.WinForms/3.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6eg3j01lwxUIFu3GNJEybNnXq9BQfQT1y28LZmcWAFuPgJTyb/eKe7CQOPuB+0zfP+rrYyYogY1oho7NeDLA+w==",
+      "path": "libvlcsharp.winforms/3.10.0",
+      "hashPath": "libvlcsharp.winforms.3.10.0.nupkg.sha512"
+    },
+    "Microsoft.Web.WebView2/1.0.2420.47": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XYZjxkepD+MwmIdeiWqjm2T8x4UmVZq4CDKUe7U6L1r+9VGo2Q88OeEgvyLYtgvebGGuSP6D74Z3wxdRwjH8IQ==",
+      "path": "microsoft.web.webview2/1.0.2420.47",
+      "hashPath": "microsoft.web.webview2.1.0.2420.47.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    }
+  }
+}

@@ -26,5 +26,17 @@ namespace NT.IPTV.Utilities
         public bool UseBuiltInPlayer { set; get; } = true;
         /// <summary>Use dark mode UI theme.</summary>
         public bool DarkMode { set; get; } = true;
+
+        /// <summary>Remember the login form window position (X coordinate).</summary>
+        public int LoginFormX { set; get; } = -1;
+
+        /// <summary>Remember the login form window position (Y coordinate).</summary>
+        public int LoginFormY { set; get; } = -1;
+
+        /// <summary>Remember the login form window width.</summary>
+        public int LoginFormWidth { set; get; } = 800;
+
+        /// <summary>Remember the login form window height.</summary>
+        public int LoginFormHeight { set; get; } = 420;
     }
 }

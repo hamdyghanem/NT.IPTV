@@ -37,6 +37,7 @@ namespace NT.IPTV
             lblServer = new Label();
             lblPassword = new Label();
             txtPassword = new TextBox();
+            btnShowPassword = new Button();
             txtServer = new TextBox();
             lblProfile = new Label();
             cboProfile = new ComboBox();
@@ -53,6 +54,7 @@ namespace NT.IPTV
             chkAutoLogin = new CheckBox();
             chkUseBuiltInPlayer = new CheckBox();
             chkDarkMode = new CheckBox();
+            lblPasswordStrength = new Label();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             statusStrip.SuspendLayout();
@@ -61,11 +63,11 @@ namespace NT.IPTV
             // 
             // btnGo
             // 
-            btnGo.Location = new Point(517, 205);
+            btnGo.Location = new Point(576, 222);
             btnGo.Name = "btnGo";
-            btnGo.Size = new Size(117, 36);
+            btnGo.Size = new Size(110, 36);
             btnGo.TabIndex = 0;
-            btnGo.Text = "Go";
+            btnGo.Text = "Connect";
             btnGo.UseVisualStyleBackColor = true;
             btnGo.Click += btnGo_Click;
             // 
@@ -74,13 +76,14 @@ namespace NT.IPTV
             tableLayoutPanel1.ColumnCount = 4;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.7513237F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.24868F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 75F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 141F));
             tableLayoutPanel1.Controls.Add(txtUsername, 1, 2);
             tableLayoutPanel1.Controls.Add(lblUserName, 0, 2);
             tableLayoutPanel1.Controls.Add(lblServer, 0, 4);
             tableLayoutPanel1.Controls.Add(lblPassword, 0, 3);
             tableLayoutPanel1.Controls.Add(txtPassword, 1, 3);
+            tableLayoutPanel1.Controls.Add(btnShowPassword, 2, 3);
             tableLayoutPanel1.Controls.Add(txtServer, 1, 4);
             tableLayoutPanel1.Controls.Add(lblProfile, 0, 0);
             tableLayoutPanel1.Controls.Add(cboProfile, 1, 0);
@@ -94,15 +97,16 @@ namespace NT.IPTV
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(659, 176);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(659, 193);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(103, 37);
+            txtUsername.Dock = DockStyle.Fill;
+            txtUsername.Location = new Point(111, 37);
             txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(314, 27);
+            txtUsername.Size = new Size(363, 27);
             txtUsername.TabIndex = 1;
             // 
             // lblUserName
@@ -134,16 +138,31 @@ namespace NT.IPTV
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(103, 70);
+            txtPassword.Dock = DockStyle.Fill;
+            txtPassword.Location = new Point(111, 70);
             txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(314, 27);
+            txtPassword.Size = new Size(363, 27);
             txtPassword.TabIndex = 2;
+            txtPassword.UseSystemPasswordChar = true;
+            txtPassword.TextChanged += txtPassword_TextChanged;
+            // 
+            // btnShowPassword
+            // 
+            btnShowPassword.Location = new Point(480, 70);
+            btnShowPassword.Name = "btnShowPassword";
+            btnShowPassword.Size = new Size(30, 27);
+            btnShowPassword.TabIndex = 5;
+            btnShowPassword.Text = "👁";
+            btnShowPassword.UseVisualStyleBackColor = true;
+            btnShowPassword.MouseDown += btnShowPassword_MouseDown;
+            btnShowPassword.MouseUp += btnShowPassword_MouseUp;
             // 
             // txtServer
             // 
-            txtServer.Location = new Point(103, 103);
+            txtServer.Dock = DockStyle.Fill;
+            txtServer.Location = new Point(111, 103);
             txtServer.Name = "txtServer";
-            txtServer.Size = new Size(314, 27);
+            txtServer.Size = new Size(363, 27);
             txtServer.TabIndex = 3;
             // 
             // lblProfile
@@ -157,10 +176,11 @@ namespace NT.IPTV
             // 
             // cboProfile
             // 
+            cboProfile.Dock = DockStyle.Fill;
             cboProfile.FormattingEnabled = true;
-            cboProfile.Location = new Point(103, 3);
+            cboProfile.Location = new Point(111, 3);
             cboProfile.Name = "cboProfile";
-            cboProfile.Size = new Size(314, 28);
+            cboProfile.Size = new Size(363, 28);
             cboProfile.TabIndex = 4;
             cboProfile.SelectedIndexChanged += cboProfile_SelectedIndexChanged;
             // 
@@ -175,9 +195,10 @@ namespace NT.IPTV
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(103, 136);
+            txtPort.Dock = DockStyle.Fill;
+            txtPort.Location = new Point(111, 136);
             txtPort.Name = "txtPort";
-            txtPort.Size = new Size(314, 27);
+            txtPort.Size = new Size(363, 27);
             txtPort.TabIndex = 3;
             // 
             // errorProvider1
@@ -186,9 +207,9 @@ namespace NT.IPTV
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(395, 205);
+            btnSave.Location = new Point(446, 222);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(117, 36);
+            btnSave.Size = new Size(110, 36);
             btnSave.TabIndex = 1;
             btnSave.Text = "Save Profile";
             btnSave.UseVisualStyleBackColor = true;
@@ -198,9 +219,9 @@ namespace NT.IPTV
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { lblVersion, lblStatus });
-            statusStrip.Location = new Point(0, 371);
+            statusStrip.Location = new Point(0, 394);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(794, 26);
+            statusStrip.Size = new Size(800, 26);
             statusStrip.TabIndex = 8;
             statusStrip.Text = "statusStrip1";
             // 
@@ -229,9 +250,9 @@ namespace NT.IPTV
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(272, 205);
+            btnCancel.Location = new Point(316, 222);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(117, 36);
+            btnCancel.Size = new Size(110, 36);
             btnCancel.TabIndex = 2;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
@@ -240,56 +261,63 @@ namespace NT.IPTV
             // chkUseProxy
             // 
             chkUseProxy.AutoSize = true;
-            chkUseProxy.Location = new Point(107, 251);
+            chkUseProxy.Location = new Point(116, 272);
             chkUseProxy.Margin = new Padding(3, 4, 3, 4);
             chkUseProxy.Name = "chkUseProxy";
-            chkUseProxy.Size = new Size(298, 24);
+            chkUseProxy.Size = new Size(323, 24);
             chkUseProxy.TabIndex = 10;
-            chkUseProxy.Text = "Route via Azure Proxy (bypass ISP block)";
+            chkUseProxy.Text = "🔒 Route via Azure Proxy (bypass ISP block)";
             chkUseProxy.UseVisualStyleBackColor = true;
             chkUseProxy.CheckedChanged += chkUseProxy_CheckedChanged;
             // 
             // chkAutoLogin
             // 
             chkAutoLogin.AutoSize = true;
-            chkAutoLogin.Location = new Point(107, 279);
+            chkAutoLogin.Location = new Point(116, 300);
             chkAutoLogin.Margin = new Padding(3, 4, 3, 4);
             chkAutoLogin.Name = "chkAutoLogin";
-            chkAutoLogin.Size = new Size(174, 24);
+            chkAutoLogin.Size = new Size(199, 24);
             chkAutoLogin.TabIndex = 11;
-            chkAutoLogin.Text = "Auto-login on startup";
+            chkAutoLogin.Text = "⚡ Auto-login on startup";
             chkAutoLogin.UseVisualStyleBackColor = true;
             chkAutoLogin.CheckedChanged += chkAutoLogin_CheckedChanged;
             // 
             // chkUseBuiltInPlayer
             // 
             chkUseBuiltInPlayer.AutoSize = true;
-            chkUseBuiltInPlayer.Location = new Point(107, 307);
+            chkUseBuiltInPlayer.Location = new Point(116, 328);
             chkUseBuiltInPlayer.Margin = new Padding(3, 4, 3, 4);
             chkUseBuiltInPlayer.Name = "chkUseBuiltInPlayer";
-            chkUseBuiltInPlayer.Size = new Size(152, 24);
+            chkUseBuiltInPlayer.Size = new Size(169, 24);
             chkUseBuiltInPlayer.TabIndex = 12;
-            chkUseBuiltInPlayer.Text = "Use built-in player";
+            chkUseBuiltInPlayer.Text = "▶️ Use built-in player";
             chkUseBuiltInPlayer.UseVisualStyleBackColor = true;
             chkUseBuiltInPlayer.CheckedChanged += chkUseBuiltInPlayer_CheckedChanged;
             // 
             // chkDarkMode
             // 
             chkDarkMode.AutoSize = true;
-            chkDarkMode.Location = new Point(107, 335);
+            chkDarkMode.Location = new Point(116, 356);
             chkDarkMode.Margin = new Padding(3, 4, 3, 4);
             chkDarkMode.Name = "chkDarkMode";
-            chkDarkMode.Size = new Size(105, 24);
+            chkDarkMode.Size = new Size(130, 24);
             chkDarkMode.TabIndex = 13;
-            chkDarkMode.Text = "Dark mode";
+            chkDarkMode.Text = "🌙 Dark mode";
             chkDarkMode.UseVisualStyleBackColor = true;
             chkDarkMode.CheckedChanged += chkDarkMode_CheckedChanged;
+            // 
+            // lblPasswordStrength
+            // 
+            lblPasswordStrength.Location = new Point(0, 0);
+            lblPasswordStrength.Name = "lblPasswordStrength";
+            lblPasswordStrength.Size = new Size(100, 23);
+            lblPasswordStrength.TabIndex = 0;
             // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(794, 397);
+            ClientSize = new Size(800, 420);
             Controls.Add(picLogo);
             Controls.Add(statusStrip);
             Controls.Add(tableLayoutPanel1);
@@ -306,7 +334,7 @@ namespace NT.IPTV
             MinimizeBox = false;
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Login";
+            Text = "NT.IPTV - Login";
             Load += frmLogin_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -343,5 +371,7 @@ namespace NT.IPTV
         private TextBox txtServer;
         private Label lblPort;
         private TextBox txtPort;
+        private Button btnShowPassword;
+        private Label lblPasswordStrength;
     }
 }

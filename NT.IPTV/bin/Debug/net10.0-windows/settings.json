@@ -1,0 +1,18 @@
+{
+  "ApplicationLanguage": null,
+  "VlcLocationPath": "",
+  "LastProfile": "",
+  "ThumbnailSize": 100,
+  "UseAzureProxy": false,
+  "ProxyBaseUrl": "https://ntiptv.azurewebsites.net",
+  "EnableCatalogCache": true,
+  "CacheExpiryHours": 4,
+  "AutoLogin": false,
+  "PlaybackPositions": {},
+  "UseBuiltInPlayer": true,
+  "DarkMode": true,
+  "LoginFormX": -1,
+  "LoginFormY": -1,
+  "LoginFormWidth": 800,
+  "LoginFormHeight": 420
+}
