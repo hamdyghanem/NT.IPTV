@@ -287,6 +287,17 @@ namespace NT.IPTV
             btnGlobalSearch.ToolTipText = "Search All Content";
             btnGlobalSearch.Click += btnGlobalSearch_Click;
             // 
+            // btnSettings2
+            // 
+            btnSettings2.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnSettings2.Image = (Image)resources.GetObject("btnSettings2.Image");
+            btnSettings2.Name = "btnSettings2";
+            btnSettings2.Padding = new Padding(10);
+            btnSettings2.Size = new Size(83, 83);
+            btnSettings2.Text = "Settings";
+            btnSettings2.ToolTipText = "Application Settings";
+            btnSettings2.Click += btnSettings_Click;
+            // 
             // btnLogout
             // 
             btnLogout.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -297,18 +308,6 @@ namespace NT.IPTV
             btnLogout.Text = "Log Out";
             btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
             btnLogout.Click += btnLogout_Click;
-            // 
-            // btnSettings2
-            // 
-            btnSettings2.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnSettings2.Image = (Image)resources.GetObject("btnSettings2.Image");
-            btnSettings2.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            btnSettings2.Name = "btnSettings2";
-            btnSettings2.Padding = new Padding(10);
-            btnSettings2.Size = new Size(83, 83);
-            btnSettings2.Text = "Settings";
-            btnSettings2.ToolTipText = "Application Settings";
-            btnSettings2.Click += btnSettings_Click;
             // 
             // flwCat
             // 

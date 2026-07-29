@@ -136,7 +136,7 @@ namespace NT.IPTV.Models.Items.StreamObject
             {
                 if (!string.IsNullOrEmpty(TitleName))
                 {
-                    var filePath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                    var filePath = Path.Combine(clsCore.GetDownloadFolder(), TitleName, $"seasons {SeasonNum}", episode.Name + "." + episode.ContainerExtension);
                     episode.IsDownloaded = File.Exists(filePath);
                 }
             }

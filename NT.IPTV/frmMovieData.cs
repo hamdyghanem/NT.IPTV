@@ -219,7 +219,7 @@ namespace NT.IPTV
             var SeassonsToDownload = new List<string>() { ((System.Windows.Forms.ToolStripItem)sender).Tag.ToString() };
             var series = (WatchSeries)Selected;
             var TitleName = clsCore.CleanName(series.Name);
-            var seriesSaveDir = Path.Combine(clsCore.DownloadeFolder, TitleName);
+            var seriesSaveDir = Path.Combine(clsCore.GetDownloadFolder(), TitleName);
             if (!Directory.Exists(seriesSaveDir))
             {
                 Directory.CreateDirectory(seriesSaveDir);
@@ -228,14 +228,14 @@ namespace NT.IPTV
             {
                 if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
                 {
-                    var seasonPath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}");
+                    var seasonPath = Path.Combine(clsCore.GetDownloadFolder(), TitleName, $"seasons {seasson.SeasonNum}");
                     if (!Directory.Exists(seasonPath))
                     {
                         Directory.CreateDirectory(seasonPath);
                     }
                     foreach (var episode in seasson.Episodes)
                     {
-                        var filePath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                        var filePath = Path.Combine(clsCore.GetDownloadFolder(), TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
                         File.WriteAllText(filePath, "This is a dummy file.");
                     }
                 }

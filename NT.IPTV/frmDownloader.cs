@@ -53,7 +53,7 @@ namespace NT.IPTV
             {
 
                 var series = (WatchSeries)downoadFile;
-                var seriesSaveDir = Path.Combine(clsCore.DownloadeFolder, TitleName);
+                var seriesSaveDir = Path.Combine(clsCore.GetDownloadFolder(), TitleName);
                 if (!Directory.Exists(seriesSaveDir))
                 {
                     Directory.CreateDirectory(seriesSaveDir);
@@ -86,7 +86,7 @@ namespace NT.IPTV
                 {
                     if (SeassonsToDownload.Contains(seasson.SeasonNum.ToString()))
                     {
-                        var seasonPath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}");
+                        var seasonPath = Path.Combine(clsCore.GetDownloadFolder(), TitleName, $"seasons {seasson.SeasonNum}");
                         if (!Directory.Exists(seasonPath))
                         {
                             Directory.CreateDirectory(seasonPath);
@@ -99,7 +99,7 @@ namespace NT.IPTV
                                 return;
                             }
                             //set name and file
-                            var filePath = Path.Combine(clsCore.DownloadeFolder, TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
+                            var filePath = Path.Combine(clsCore.GetDownloadFolder(), TitleName, $"seasons {seasson.SeasonNum}", episode.Name + "." + episode.ContainerExtension);
                             lblFileName.Text = filePath;
                             MyToolTip.Show(lblFileName.Text, lblFileName);
                             prgBarSeries.Value++;
@@ -183,10 +183,10 @@ namespace NT.IPTV
         }
         private string getFileName(string _name, string _extenstion, int i)
         {
-            var file = Path.Combine(clsCore.DownloadeFolder, _name + "." + _extenstion);
+            var file = Path.Combine(clsCore.GetDownloadFolder(), _name + "." + _extenstion);
             if (i > 0)
             {
-                file = Path.Combine(clsCore.DownloadeFolder, _name + "_" + i.ToString() + "." + _extenstion);
+                file = Path.Combine(clsCore.GetDownloadFolder(), _name + "_" + i.ToString() + "." + _extenstion);
             }
             if (File.Exists(file))
             {

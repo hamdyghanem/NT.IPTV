@@ -31,8 +31,8 @@ namespace NT.IPTV
                 downloadFolder = clsCore.Config.DownloadFolder;
                 if (string.IsNullOrEmpty(downloadFolder))
                 {
-                    // Default to a Downloades folder in the application directory
-                    downloadFolder = clsCore.DownloadeFolder;
+                    // Default to the configured download folder or use fallback
+                    downloadFolder = clsCore.GetDownloadFolder();
                 }
                 txtDownloadFolder.Text = downloadFolder;
             }

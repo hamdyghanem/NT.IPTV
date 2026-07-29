@@ -24,16 +24,25 @@ namespace NT.IPTV.Utilities
         private const string settingsFileName = "settings.json";
         public static readonly string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static CancellationTokenSource _cts = new CancellationTokenSource();
-        public static string DownloadeFolder
+
+        /// <summary>
+        /// Gets the configured download folder from settings, or falls back to the default Downloades folder.
+        /// </summary>
+        public static string GetDownloadFolder()
         {
-            get
+            // Use the configured download folder from settings if set
+            if (!string.IsNullOrEmpty(Config.DownloadFolder) && Directory.Exists(Config.DownloadFolder))
             {
-                var f = Path.Combine(assemblyFolder, "Downloades");
-                if (!Directory.Exists(f))
-                    Directory.CreateDirectory(f);
-                return f;
+                return Config.DownloadFolder;
             }
+
+            // Fall back to default Downloades folder
+            var defaultFolder = Path.Combine(assemblyFolder, "Downloades");
+            if (!Directory.Exists(defaultFolder))
+                Directory.CreateDirectory(defaultFolder);
+            return defaultFolder;
         }
+
         public static string CleanName(string name)
         {
             return name.Replace(":", " ").Replace("\\", " ").Replace("/", " ");
