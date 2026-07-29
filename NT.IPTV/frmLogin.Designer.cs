@@ -63,7 +63,7 @@ namespace NT.IPTV
             // 
             // btnGo
             // 
-            btnGo.Location = new Point(576, 222);
+            btnGo.Location = new Point(585, 222);
             btnGo.Name = "btnGo";
             btnGo.Size = new Size(110, 36);
             btnGo.TabIndex = 0;
@@ -89,7 +89,7 @@ namespace NT.IPTV
             tableLayoutPanel1.Controls.Add(cboProfile, 1, 0);
             tableLayoutPanel1.Controls.Add(lblPort, 0, 5);
             tableLayoutPanel1.Controls.Add(txtPort, 1, 5);
-            tableLayoutPanel1.Location = new Point(113, 23);
+            tableLayoutPanel1.Location = new Point(122, 23);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 6;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -207,7 +207,7 @@ namespace NT.IPTV
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(446, 222);
+            btnSave.Location = new Point(455, 222);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(110, 36);
             btnSave.TabIndex = 1;
@@ -239,10 +239,10 @@ namespace NT.IPTV
             // 
             // picLogo
             // 
-            picLogo.Image = Properties.Resources.small_logo;
-            picLogo.Location = new Point(12, 23);
+            picLogo.Image = (Image)resources.GetObject("picLogo.Image");
+            picLogo.Location = new Point(-2, 23);
             picLogo.Name = "picLogo";
-            picLogo.Size = new Size(67, 75);
+            picLogo.Size = new Size(120, 130);
             picLogo.SizeMode = PictureBoxSizeMode.Zoom;
             picLogo.TabIndex = 9;
             picLogo.TabStop = false;
@@ -250,7 +250,7 @@ namespace NT.IPTV
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(316, 222);
+            btnCancel.Location = new Point(325, 222);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(110, 36);
             btnCancel.TabIndex = 2;
@@ -261,7 +261,7 @@ namespace NT.IPTV
             // chkUseProxy
             // 
             chkUseProxy.AutoSize = true;
-            chkUseProxy.Location = new Point(116, 272);
+            chkUseProxy.Location = new Point(125, 272);
             chkUseProxy.Margin = new Padding(3, 4, 3, 4);
             chkUseProxy.Name = "chkUseProxy";
             chkUseProxy.Size = new Size(323, 24);
@@ -273,7 +273,7 @@ namespace NT.IPTV
             // chkAutoLogin
             // 
             chkAutoLogin.AutoSize = true;
-            chkAutoLogin.Location = new Point(116, 300);
+            chkAutoLogin.Location = new Point(125, 300);
             chkAutoLogin.Margin = new Padding(3, 4, 3, 4);
             chkAutoLogin.Name = "chkAutoLogin";
             chkAutoLogin.Size = new Size(199, 24);
@@ -285,7 +285,7 @@ namespace NT.IPTV
             // chkUseBuiltInPlayer
             // 
             chkUseBuiltInPlayer.AutoSize = true;
-            chkUseBuiltInPlayer.Location = new Point(116, 328);
+            chkUseBuiltInPlayer.Location = new Point(125, 328);
             chkUseBuiltInPlayer.Margin = new Padding(3, 4, 3, 4);
             chkUseBuiltInPlayer.Name = "chkUseBuiltInPlayer";
             chkUseBuiltInPlayer.Size = new Size(169, 24);
@@ -297,7 +297,7 @@ namespace NT.IPTV
             // chkDarkMode
             // 
             chkDarkMode.AutoSize = true;
-            chkDarkMode.Location = new Point(116, 356);
+            chkDarkMode.Location = new Point(125, 356);
             chkDarkMode.Margin = new Padding(3, 4, 3, 4);
             chkDarkMode.Name = "chkDarkMode";
             chkDarkMode.Size = new Size(130, 24);
@@ -308,7 +308,7 @@ namespace NT.IPTV
             // 
             // lblPasswordStrength
             // 
-            lblPasswordStrength.Location = new Point(0, 0);
+            lblPasswordStrength.Location = new Point(9, 0);
             lblPasswordStrength.Name = "lblPasswordStrength";
             lblPasswordStrength.Size = new Size(100, 23);
             lblPasswordStrength.TabIndex = 0;
