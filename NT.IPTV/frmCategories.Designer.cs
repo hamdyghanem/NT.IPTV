@@ -52,10 +52,10 @@ namespace NT.IPTV
             btnLive = new ToolStripButton();
             btnMovies = new ToolStripButton();
             btnSeries = new ToolStripButton();
-            btnGlobalSearch = new ToolStripButton();
-            flwCat = new FlowCatControl();
             btnRefresh = new ToolStripButton();
+            btnGlobalSearch = new ToolStripButton();
             btnLogout = new ToolStripButton();
+            flwCat = new FlowCatControl();
             pllHeader.SuspendLayout();
             statusStrip.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -73,7 +73,7 @@ namespace NT.IPTV
             pllHeader.Controls.Add(txtSearch);
             pllHeader.Controls.Add(lblSeach);
             pllHeader.Dock = DockStyle.Top;
-            pllHeader.Location = new Point(0, 82);
+            pllHeader.Location = new Point(0, 86);
             pllHeader.Name = "pllHeader";
             pllHeader.Size = new Size(1381, 58);
             pllHeader.TabIndex = 3;
@@ -187,9 +187,9 @@ namespace NT.IPTV
             flwChannel.AutoScroll = true;
             flwChannel.BackColor = Color.FromArgb(64, 64, 64);
             flwChannel.Dock = DockStyle.Fill;
-            flwChannel.Location = new Point(434, 140);
+            flwChannel.Location = new Point(434, 144);
             flwChannel.Name = "flwChannel";
-            flwChannel.Size = new Size(947, 499);
+            flwChannel.Size = new Size(947, 495);
             flwChannel.TabIndex = 5;
             // 
             // statusStrip
@@ -217,15 +217,14 @@ namespace NT.IPTV
             // 
             // toolStrip
             // 
-            toolStrip.AutoSize = true;
+            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip.ImageScalingSize = new Size(59, 59);
             toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnLogout });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(1381, 82);
+            toolStrip.Size = new Size(1381, 86);
             toolStrip.TabIndex = 9;
             toolStrip.Text = "toolStrip1";
-            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             // 
             // btnLive
             // 
@@ -233,11 +232,10 @@ namespace NT.IPTV
             btnLive.CheckOnClick = true;
             btnLive.CheckState = CheckState.Checked;
             btnLive.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnLive.Image = Properties.Resources._4668380_1_;
-            btnLive.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+            btnLive.Image = (Image)resources.GetObject("btnLive.Image");
             btnLive.Name = "btnLive";
             btnLive.Padding = new Padding(10);
-            btnLive.Size = new Size(79, 79);
+            btnLive.Size = new Size(83, 83);
             btnLive.Text = "Channels";
             btnLive.ToolTipText = "Channels - Live TV";
             btnLive.Click += btnLive_Click;
@@ -246,11 +244,10 @@ namespace NT.IPTV
             // 
             btnMovies.CheckOnClick = true;
             btnMovies.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnMovies.Image = Properties.Resources._2917656_1_;
-            btnMovies.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+            btnMovies.Image = (Image)resources.GetObject("btnMovies.Image");
             btnMovies.Name = "btnMovies";
             btnMovies.Padding = new Padding(10);
-            btnMovies.Size = new Size(79, 79);
+            btnMovies.Size = new Size(83, 83);
             btnMovies.Text = "Movies";
             btnMovies.ToolTipText = "Movies";
             btnMovies.Click += btnLive_Click;
@@ -259,26 +256,46 @@ namespace NT.IPTV
             // 
             btnSeries.CheckOnClick = true;
             btnSeries.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnSeries.Image = Properties.Resources._6553523_1_;
-            btnSeries.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+            btnSeries.Image = (Image)resources.GetObject("btnSeries.Image");
             btnSeries.Name = "btnSeries";
             btnSeries.Padding = new Padding(10);
-            btnSeries.Size = new Size(79, 79);
+            btnSeries.Size = new Size(83, 83);
             btnSeries.Text = "Series";
             btnSeries.ToolTipText = "Series";
             btnSeries.Click += btnLive_Click;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnRefresh.Image = (Image)resources.GetObject("btnRefresh.Image");
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Padding = new Padding(10);
+            btnRefresh.Size = new Size(83, 83);
+            btnRefresh.Text = "Refresh";
+            btnRefresh.ToolTipText = "Refresh Content";
+            btnRefresh.Click += btnRefresh_Click;
             // 
             // btnGlobalSearch
             // 
             btnGlobalSearch.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnGlobalSearch.Image = (Image)resources.GetObject("btnGlobalSearch.Image");
-            btnGlobalSearch.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnGlobalSearch.Name = "btnGlobalSearch";
             btnGlobalSearch.Padding = new Padding(10);
-            btnGlobalSearch.Size = new Size(79, 79);
+            btnGlobalSearch.Size = new Size(83, 83);
             btnGlobalSearch.Text = "Global Search";
             btnGlobalSearch.ToolTipText = "Search All Content";
             btnGlobalSearch.Click += btnGlobalSearch_Click;
+            // 
+            // btnLogout
+            // 
+            btnLogout.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnLogout.Image = (Image)resources.GetObject("btnLogout.Image");
+            btnLogout.Name = "btnLogout";
+            btnLogout.Padding = new Padding(10);
+            btnLogout.Size = new Size(83, 83);
+            btnLogout.Text = "Log Out";
+            btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
+            btnLogout.Click += btnLogout_Click;
             // 
             // flwCat
             // 
@@ -286,37 +303,13 @@ namespace NT.IPTV
             flwCat.BackColor = Color.FromArgb(64, 64, 64);
             flwCat.Categories = null;
             flwCat.Dock = DockStyle.Left;
-            flwCat.Location = new Point(0, 140);
+            flwCat.Location = new Point(0, 144);
             flwCat.Name = "flwCat";
             flwCat.SelectedItem = null;
-            flwCat.Size = new Size(434, 499);
+            flwCat.Size = new Size(434, 495);
             flwCat.TabIndex = 10;
             flwCat.SelectedIndexChaged += lstCategories_SelectedIndexChanged;
             flwCat.Load += flwCat_Load;
-            // 
-            // btnRefresh
-            // 
-            btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnRefresh.Image = (Image)resources.GetObject("btnRefresh.Image");
-            btnRefresh.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            btnRefresh.Name = "btnRefresh";
-            btnRefresh.Padding = new Padding(10);
-            btnRefresh.Size = new Size(79, 79);
-            btnRefresh.Text = "Refresh";
-            btnRefresh.ToolTipText = "Refresh Content";
-            btnRefresh.Click += btnRefresh_Click;
-            // 
-            // btnLogout
-            // 
-            btnLogout.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnLogout.Image = Properties.Resources.logout;
-            btnLogout.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            btnLogout.Name = "btnLogout";
-            btnLogout.Padding = new Padding(10);
-            btnLogout.Size = new Size(79, 79);
-            btnLogout.Text = "Log Out";
-            btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
-            btnLogout.Click += btnLogout_Click;
             // 
             // frmCategories
             // 
