@@ -14,5 +14,6 @@
   "LoginFormX": -1,
   "LoginFormY": -1,
   "LoginFormWidth": 800,
-  "LoginFormHeight": 420
+  "LoginFormHeight": 420,
+  "DownloadFolder": "D:\\Downloades"
 }

@@ -219,7 +219,7 @@ namespace NT.IPTV
             // 
             toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip.ImageScalingSize = new Size(59, 59);
-            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnLogout });
+            toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnSettings, btnLogout });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 86);
@@ -297,6 +297,18 @@ namespace NT.IPTV
             btnLogout.ToolTipText = "Log Out & Disable Auto-Login";
             btnLogout.Click += btnLogout_Click;
             // 
+            // btnSettings
+            // 
+            btnSettings.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnSettings.Image = (Image)resources.GetObject("btnSettings.Image");
+            btnSettings.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+            btnSettings.Name = "btnSettings";
+            btnSettings.Padding = new Padding(10);
+            btnSettings.Size = new Size(83, 83);
+            btnSettings.Text = "Settings";
+            btnSettings.ToolTipText = "Application Settings";
+            btnSettings.Click += btnSettings_Click;
+            // 
             // flwCat
             // 
             flwCat.AutoScroll = true;
@@ -361,5 +373,6 @@ namespace NT.IPTV
         private ToolStripButton btnGlobalSearch;
         private ToolStripButton btnRefresh;
         private ToolStripButton btnLogout;
+        private ToolStripButton btnSettings;
     }
 }

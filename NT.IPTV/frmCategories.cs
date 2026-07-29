@@ -64,6 +64,7 @@ namespace NT.IPTV
                     { btnSeries, "btnSeries.png" },
                     { btnGlobalSearch, "btnGlobalSearch.png" },
                     { btnRefresh, "btnRefresh.png" },
+                    { btnSettings, "btnSettings.png" },
                     { btnLogout, "btnLogout.png" }
                 };
 
@@ -487,6 +488,15 @@ namespace NT.IPTV
             {
                 // Fallback: exit thread if login form is not found
                 Application.ExitThread();
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            // Open the settings dialog
+            using (var settingsForm = new frmSettings())
+            {
+                settingsForm.ShowDialog(this);
             }
         }
     }

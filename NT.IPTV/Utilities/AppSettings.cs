@@ -38,5 +38,8 @@ namespace NT.IPTV.Utilities
 
         /// <summary>Remember the login form window height.</summary>
         public int LoginFormHeight { set; get; } = 420;
+
+        /// <summary>Folder path for downloading videos/content.</summary>
+        public string DownloadFolder { set; get; } = string.Empty;
     }
 }
