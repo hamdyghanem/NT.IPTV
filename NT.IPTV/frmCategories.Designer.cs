@@ -275,6 +275,7 @@ namespace NT.IPTV
             btnGlobalSearch.Padding = new Padding(10);
             btnGlobalSearch.Size = new Size(79, 79);
             btnGlobalSearch.Text = "Global Search";
+            btnGlobalSearch.ToolTipText = "Global Search";
             btnGlobalSearch.Click += btnGlobalSearch_Click;
             // 
             // flwCat
@@ -297,8 +298,10 @@ namespace NT.IPTV
             btnRefresh.Image = (Image)resources.GetObject("btnRefresh.Image");
             btnRefresh.ImageTransparentColor = Color.Magenta;
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(59, 79);
+            btnRefresh.Padding = new Padding(10);
+            btnRefresh.Size = new Size(79, 79);
             btnRefresh.Text = "Refresh";
+            btnRefresh.ToolTipText = "Refresh Content";
             btnRefresh.Click += btnRefresh_Click;
             // 
             // btnLogout
