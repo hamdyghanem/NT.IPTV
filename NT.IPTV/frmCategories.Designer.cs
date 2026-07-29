@@ -54,6 +54,7 @@ namespace NT.IPTV
             btnSeries = new ToolStripButton();
             btnRefresh = new ToolStripButton();
             btnGlobalSearch = new ToolStripButton();
+            btnSettings2 = new ToolStripButton();
             btnLogout = new ToolStripButton();
             flwCat = new FlowCatControl();
             pllHeader.SuspendLayout();
