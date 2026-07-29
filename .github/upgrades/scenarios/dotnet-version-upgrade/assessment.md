@@ -1,4 +1,4 @@
-# Projects and dependencies analysis
+be# Projects and dependencies analysis
 
 This document provides a comprehensive overview of the projects and their dependencies in the context of upgrading to .NETCoreApp,Version=v10.0.
 

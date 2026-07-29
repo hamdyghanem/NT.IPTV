@@ -30,6 +30,7 @@ namespace NT.IPTV
         public frmCategories()
         {
             InitializeComponent();
+            LoadToolbarIcons(); // Load transparent toolbar icons from PNG files
             clsCore.ApplyTheme(this);
             loadCategories();//loads the categories into the listbox view
             InitializeUpdateCheckTimer(); // Initialize the update check timer
@@ -45,6 +46,46 @@ namespace NT.IPTV
         {
 
         }
+
+        /// <summary>
+        /// Loads transparent toolbar icons from PNG files in the Resources folder
+        /// </summary>
+        private void LoadToolbarIcons()
+        {
+            try
+            {
+                string resourcePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
+
+                // Button icon mappings (button -> icon filename)
+                var iconMappings = new Dictionary<ToolStripButton, string>
+                {
+                    { btnLive, "btnLive.png" },
+                    { btnMovies, "btnMovies.png" },
+                    { btnSeries, "btnSeries.png" },
+                    { btnGlobalSearch, "btnGlobalSearch.png" },
+                    { btnRefresh, "btnRefresh.png" },
+                    { btnLogout, "btnLogout.png" }
+                };
+
+                foreach (var mapping in iconMappings)
+                {
+                    string iconPath = Path.Combine(resourcePath, mapping.Value);
+                    if (File.Exists(iconPath))
+                    {
+                        using (var stream = File.OpenRead(iconPath))
+                        {
+                            mapping.Key.Image = Image.FromStream(stream);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading toolbar icons: {ex.Message}");
+                // Fall back to embedded resources if file loading fails
+            }
+        }
+
         #region Auto updating EPG Data Functions
         private void InitializeUpdateCheckTimer()
         {

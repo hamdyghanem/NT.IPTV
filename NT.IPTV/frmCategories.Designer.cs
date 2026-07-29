@@ -217,13 +217,15 @@ namespace NT.IPTV
             // 
             // toolStrip
             // 
-            toolStrip.ImageScalingSize = new Size(55, 55);
+            toolStrip.AutoSize = true;
+            toolStrip.ImageScalingSize = new Size(59, 59);
             toolStrip.Items.AddRange(new ToolStripItem[] { btnLive, btnMovies, btnSeries, btnRefresh, btnGlobalSearch, btnLogout });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(1381, 82);
             toolStrip.TabIndex = 9;
             toolStrip.Text = "toolStrip1";
+            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             // 
             // btnLive
             // 
@@ -232,12 +234,12 @@ namespace NT.IPTV
             btnLive.CheckState = CheckState.Checked;
             btnLive.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnLive.Image = Properties.Resources._4668380_1_;
-            btnLive.ImageTransparentColor = Color.Magenta;
+            btnLive.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnLive.Name = "btnLive";
             btnLive.Padding = new Padding(10);
             btnLive.Size = new Size(79, 79);
-            btnLive.Text = "toolStripButton1";
-            btnLive.ToolTipText = "Channels";
+            btnLive.Text = "Channels";
+            btnLive.ToolTipText = "Channels - Live TV";
             btnLive.Click += btnLive_Click;
             // 
             // btnMovies
@@ -245,11 +247,11 @@ namespace NT.IPTV
             btnMovies.CheckOnClick = true;
             btnMovies.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnMovies.Image = Properties.Resources._2917656_1_;
-            btnMovies.ImageTransparentColor = Color.Magenta;
+            btnMovies.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnMovies.Name = "btnMovies";
             btnMovies.Padding = new Padding(10);
             btnMovies.Size = new Size(79, 79);
-            btnMovies.Text = "btnSeries";
+            btnMovies.Text = "Movies";
             btnMovies.ToolTipText = "Movies";
             btnMovies.Click += btnLive_Click;
             // 
@@ -258,11 +260,11 @@ namespace NT.IPTV
             btnSeries.CheckOnClick = true;
             btnSeries.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnSeries.Image = Properties.Resources._6553523_1_;
-            btnSeries.ImageTransparentColor = Color.Magenta;
+            btnSeries.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnSeries.Name = "btnSeries";
             btnSeries.Padding = new Padding(10);
             btnSeries.Size = new Size(79, 79);
-            btnSeries.Text = "btnSeries";
+            btnSeries.Text = "Series";
             btnSeries.ToolTipText = "Series";
             btnSeries.Click += btnLive_Click;
             // 
@@ -270,12 +272,12 @@ namespace NT.IPTV
             // 
             btnGlobalSearch.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnGlobalSearch.Image = (Image)resources.GetObject("btnGlobalSearch.Image");
-            btnGlobalSearch.ImageTransparentColor = Color.Magenta;
+            btnGlobalSearch.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnGlobalSearch.Name = "btnGlobalSearch";
             btnGlobalSearch.Padding = new Padding(10);
             btnGlobalSearch.Size = new Size(79, 79);
             btnGlobalSearch.Text = "Global Search";
-            btnGlobalSearch.ToolTipText = "Global Search";
+            btnGlobalSearch.ToolTipText = "Search All Content";
             btnGlobalSearch.Click += btnGlobalSearch_Click;
             // 
             // flwCat
@@ -296,7 +298,7 @@ namespace NT.IPTV
             // 
             btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnRefresh.Image = (Image)resources.GetObject("btnRefresh.Image");
-            btnRefresh.ImageTransparentColor = Color.Magenta;
+            btnRefresh.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Padding = new Padding(10);
             btnRefresh.Size = new Size(79, 79);
@@ -308,7 +310,7 @@ namespace NT.IPTV
             // 
             btnLogout.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnLogout.Image = Properties.Resources.logout;
-            btnLogout.ImageTransparentColor = Color.Magenta;
+            btnLogout.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             btnLogout.Name = "btnLogout";
             btnLogout.Padding = new Padding(10);
             btnLogout.Size = new Size(79, 79);
