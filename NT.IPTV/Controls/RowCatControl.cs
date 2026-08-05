@@ -55,6 +55,9 @@ namespace NT.IPTV
             {
                 btnFavorite.BackgroundImage = Properties.Resources.RatingDown;
             }
+
+            // Update visual state based on IsHidden property
+            UpdateHiddenStateVisuals();
         }
 
 
@@ -106,8 +109,120 @@ namespace NT.IPTV
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
+            // Toggle the hidden state of the category
+            Category.IsHidden = !Category.IsHidden;
 
+            // Update the visual appearance to reflect hidden state
+            UpdateHiddenStateVisuals();
+
+            // List to track hidden categories
+            List<string> hiddenList = new List<string>();
+
+            // Update the category in the appropriate list based on current category type
+            switch (clsCore.CurrentCategory)
+            {
+                case enumCategories.Live:
+                    {
+                        var cat = clsCore.ChannelCategories.SingleOrDefault(x => x.ID == Category.ID);
+                        if (cat != null)
+                            cat.IsHidden = Category.IsHidden;
+                        hiddenList = clsCore.currentUser.HiddenChannelsCategory;
+                        break;
+                    }
+                case enumCategories.Movies:
+                    {
+                        var cat = clsCore.MoviesCategories.SingleOrDefault(x => x.ID == Category.ID);
+                        if (cat != null)
+                            cat.IsHidden = Category.IsHidden;
+                        hiddenList = clsCore.currentUser.HiddenMoviesCategory;
+                        break;
+                    }
+                case enumCategories.Series:
+                    {
+                        var cat = clsCore.SeriesCategories.SingleOrDefault(x => x.ID == Category.ID);
+                        if (cat != null)
+                            cat.IsHidden = Category.IsHidden;
+                        hiddenList = clsCore.currentUser.HiddenSeriesCategory;
+                        break;
+                    }
+            }
+
+            // Add or remove from hidden list
+            if (Category.IsHidden)
+            {
+                if (!hiddenList.Contains(Category.ID))
+                {
+                    hiddenList.Add(Category.ID);
+                }
+            }
+            else
+            {
+                if (hiddenList.Contains(Category.ID))
+                {
+                    hiddenList.Remove(Category.ID);
+                }
+            }
+
+            // Save the updated configuration
+            clsCore.SaveConfiguration();
         }
+
+        private void UpdateHiddenStateVisuals()
+        {
+            if (Category.IsHidden)
+            {
+                // Visual indication that this category is hidden - RED background for hidden eye
+                btnSettings.BackColor = Color.Red;
+                btnSettings.BackgroundImage = null;
+                lblName.ForeColor = Color.Gray;
+            }
+            else
+            {
+                // Visual indication that this category is visible - BLACK background for visible eye
+                btnSettings.BackColor = Color.Black;
+                btnSettings.BackgroundImage = null;
+                lblName.ForeColor = Color.White;
+            }
+            btnSettings.Invalidate(); // Redraw the button
+        }
+
+        private void BtnSettings_Paint(object sender, PaintEventArgs e)
+        {
+            // Draw eye icon
+            e.Graphics.Clear(btnSettings.BackColor);
+
+            // Eye icon dimensions
+            int x = btnSettings.Width / 2 - 8;
+            int y = btnSettings.Height / 2 - 5;
+
+            if (Category.IsHidden)
+            {
+                // Draw a closed/hidden eye icon (slash through eye)
+                using (Pen pen = new Pen(Color.White, 2))
+                {
+                    // Eye outline
+                    e.Graphics.DrawEllipse(pen, x, y, 16, 10);
+                    // Slash to indicate hidden
+                    e.Graphics.DrawLine(pen, x, y + 10, x + 16, y);
+                }
+            }
+            else
+            {
+                // Draw an open eye icon
+                using (Pen pen = new Pen(Color.White, 2))
+                {
+                    // Eye outline (ellipse)
+                    e.Graphics.DrawEllipse(pen, x, y, 16, 10);
+                }
+
+                // Draw pupil (small circle)
+                using (Brush brush = new SolidBrush(Color.White))
+                {
+                    e.Graphics.FillEllipse(brush, x + 6, y + 3, 4, 4);
+                }
+            }
+        }
+
 
         private void lblName_Click(object sender, EventArgs e)
         {

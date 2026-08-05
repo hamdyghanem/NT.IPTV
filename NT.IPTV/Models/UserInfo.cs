@@ -26,5 +26,12 @@ namespace NT.IPTV.Models
 
         #endregion
 
+        #region "Hidden Categories ...
+        public List<string> HiddenChannelsCategory { set; get; } = new List<string>();
+        public List<string> HiddenMoviesCategory { set; get; } = new List<string>();
+        public List<string> HiddenSeriesCategory { set; get; } = new List<string>();
+
+        #endregion
+
     }
 }

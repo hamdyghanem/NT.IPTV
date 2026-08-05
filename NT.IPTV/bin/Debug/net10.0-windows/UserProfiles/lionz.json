@@ -11,11 +11,25 @@
   "FavoritChannels": [],
   "FavoritMovies": [],
   "FavoritSeries": [
-    "16762",
     "15160",
     "1348",
     "14267",
     "10994",
-    "16846"
+    "16846",
+    "16538"
+  ],
+  "HiddenChannelsCategory": [
+    "788"
+  ],
+  "HiddenMoviesCategory": [
+    "876"
+  ],
+  "HiddenSeriesCategory": [
+    "934",
+    "986",
+    "985",
+    "984",
+    "983",
+    "982"
   ]
 }

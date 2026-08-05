@@ -68,7 +68,6 @@
             // btnSettings
             // 
             btnSettings.BackColor = Color.Black;
-            btnSettings.BackgroundImage = (Image)resources.GetObject("btnSettings.BackgroundImage");
             btnSettings.BackgroundImageLayout = ImageLayout.Stretch;
             btnSettings.Dock = DockStyle.Left;
             btnSettings.Location = new Point(44, 0);
@@ -76,6 +75,7 @@
             btnSettings.Size = new Size(44, 43);
             btnSettings.TabIndex = 0;
             btnSettings.TabStop = false;
+            btnSettings.Paint += BtnSettings_Paint;
             btnSettings.Click += btnSettings_Click;
             // 
             // btnFavorite

@@ -380,6 +380,8 @@ namespace NT.IPTV.Utilities
                 var responseFromServer = await response.Content.ReadAsStringAsync();
                 ChannelCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
                 ChannelCategories.Where(c => currentUser.FavoritChannelsCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                // Restore hidden state
+                ChannelCategories.Where(c => currentUser.HiddenChannelsCategory.Contains(c.ID)).All(x => x.IsHidden = true);
                 //Add Favorites
                 ChannelCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
                 //
@@ -390,6 +392,8 @@ namespace NT.IPTV.Utilities
                 responseFromServer = await response.Content.ReadAsStringAsync();
                 MoviesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
                 MoviesCategories.Where(c => currentUser.FavoritMoviesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                // Restore hidden state
+                MoviesCategories.Where(c => currentUser.HiddenMoviesCategory.Contains(c.ID)).All(x => x.IsHidden = true);
                 MoviesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
                 //
                 lblStatus.Text = "Loading series categories";
@@ -399,6 +403,8 @@ namespace NT.IPTV.Utilities
                 responseFromServer = await response.Content.ReadAsStringAsync();
                 SeriesCategories = JsonConvert.DeserializeObject<StreamCategory[]>(responseFromServer).ToList();
                 SeriesCategories.Where(c => currentUser.FavoritSeriesCategory.Contains(c.ID)).All(x => x.Favorite = true);
+                // Restore hidden state
+                SeriesCategories.Where(c => currentUser.HiddenSeriesCategory.Contains(c.ID)).All(x => x.IsHidden = true);
                 SeriesCategories.Insert(0, new StreamCategory { ID = "-1", Name = "Favorites", Favorite = true });
             }
             catch (HttpRequestException ex)

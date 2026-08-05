@@ -45,8 +45,13 @@ namespace NT.IPTV
             progBar.Visible = true;
             progBar.Value = 0;
             progBar.Maximum = Categories.Count;
-            //
-            foreach (var item in Categories)
+
+            // Separate categories into visible and hidden
+            var visibleCategories = Categories.Where(c => !c.IsHidden).ToList();
+            var hiddenCategories = Categories.Where(c => c.IsHidden).ToList();
+
+            // Load visible categories first
+            foreach (var item in visibleCategories)
             {
                 progBar.Value++;
                 RowCatControl ctrl = new RowCatControl(item, defaultImage);
@@ -57,6 +62,20 @@ namespace NT.IPTV
                 ctrl.MouseLeave += row_MouseLeave;
                 flowLayoutPanel.Controls.Add(ctrl);
             }
+
+            // Load hidden categories at the end
+            foreach (var item in hiddenCategories)
+            {
+                progBar.Value++;
+                RowCatControl ctrl = new RowCatControl(item, defaultImage);
+                ctrl.BackColor = clsCore.GetThemeSurface();
+                ctrl.ForeColor = clsCore.GetThemeForeground();
+                ctrl.ButtonClick += new EventHandler(ChannelControl_ButtonClick);
+                ctrl.MouseEnter += row_MouseEnter;
+                ctrl.MouseLeave += row_MouseLeave;
+                flowLayoutPanel.Controls.Add(ctrl);
+            }
+
             progBar.Visible = false;
         }
         protected void ChannelControl_ButtonClick(object sender, EventArgs e)

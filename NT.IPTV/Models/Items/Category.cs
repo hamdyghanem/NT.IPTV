@@ -20,6 +20,7 @@ namespace NT.IPTV.Models.Items
         [JsonProperty("parent_id")]
         public string ParentId { get; set; } = string.Empty;
         public bool Favorite { get; set; }
+        public bool IsHidden { get; set; } = false;
 
         public override string ToString()
         {

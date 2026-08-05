@@ -159,8 +159,60 @@ namespace NT.IPTV
         {
             prgBar.Visible = true;
 
-
             var selectedItem = this.flwCat.SelectedItem;
+
+            // Check if the selected category is hidden
+            if (selectedItem != null && selectedItem.IsHidden)
+            {
+                // Show the category by removing hidden flag and reload categories
+                selectedItem.IsHidden = false;
+
+                // Get the appropriate hidden list
+                List<string> hiddenList = new List<string>();
+
+                // Update the category in the appropriate list
+                switch (clsCore.CurrentCategory)
+                {
+                    case enumCategories.Live:
+                        {
+                            var cat = clsCore.ChannelCategories.SingleOrDefault(x => x.ID == selectedItem.ID);
+                            if (cat != null)
+                                cat.IsHidden = false;
+                            hiddenList = clsCore.currentUser.HiddenChannelsCategory;
+                            break;
+                        }
+                    case enumCategories.Movies:
+                        {
+                            var cat = clsCore.MoviesCategories.SingleOrDefault(x => x.ID == selectedItem.ID);
+                            if (cat != null)
+                                cat.IsHidden = false;
+                            hiddenList = clsCore.currentUser.HiddenMoviesCategory;
+                            break;
+                        }
+                    case enumCategories.Series:
+                        {
+                            var cat = clsCore.SeriesCategories.SingleOrDefault(x => x.ID == selectedItem.ID);
+                            if (cat != null)
+                                cat.IsHidden = false;
+                            hiddenList = clsCore.currentUser.HiddenSeriesCategory;
+                            break;
+                        }
+                }
+
+                // Remove from hidden list
+                if (hiddenList.Contains(selectedItem.ID))
+                {
+                    hiddenList.Remove(selectedItem.ID);
+                }
+
+                clsCore.SaveConfiguration();
+
+                // Reload the category list to reflect the change
+                flwCat.LoadCategories(prgBar);
+                prgBar.Visible = false;
+                return;
+            }
+
             await clsCore.RetrieveStreams(selectedItem, _cts.Token);
 
             switch (clsCore.CurrentCategory)
