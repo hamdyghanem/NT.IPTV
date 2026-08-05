@@ -10,3 +10,6 @@
 /NileFusion.IPTV.Web/node_modules
 dist/
 /NileFusion.IPTV.Web/dist.zip
+/NT.IPTV/bin/Debug/net10.0-windows/NT.IPTV.dll
+/NT.IPTV/bin/Debug/net10.0-windows/NT.IPTV.exe
+/NT.IPTV/bin/Debug/net10.0-windows/NT.IPTV.pdb
