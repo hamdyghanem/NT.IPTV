@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2206083">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.1673888">
   <PropertyGroup>
     <StartupCommand>npm run dev -- --host 0.0.0.0</StartupCommand>
     <LaunchUrl>http://localhost:5173</LaunchUrl>

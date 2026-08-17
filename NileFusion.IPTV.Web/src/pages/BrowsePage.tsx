@@ -3,12 +3,12 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../app/AuthContext'
 import { fetchCategories, fetchStreams, getCacheItem, setCacheItem } from '../services/api'
 import { StreamCategory } from '../types'
-import { Search, Star, Tv, Film, MonitorPlay, Play, ArrowUpDown, AlertCircle, RefreshCw } from 'lucide-react'
+import { Search, Star, Tv, Film, MonitorPlay, Play, ArrowUpDown, AlertCircle, RefreshCw, Eye, EyeOff } from 'lucide-react'
 
 type TabType = 'live' | 'movies' | 'series'
 
 export default function BrowsePage() {
-  const { activeSession, toggleFavorite, isFavorite } = useAuth()
+  const { activeSession, toggleFavorite, isFavorite, toggleHiddenCategory, isHiddenCategory } = useAuth()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
@@ -107,6 +107,9 @@ export default function BrowsePage() {
         result = result.filter(item => isFavorite(activeTab, item.stream_id || item.series_id))
       } else if (selectedCategory !== 'all') {
         result = result.filter(item => String(item.category_id) === String(selectedCategory))
+      } else {
+        // When showing "all", exclude streams from hidden categories
+        result = result.filter(item => !isHiddenCategory(activeTab, item.category_id))
       }
     }
 
@@ -134,7 +137,7 @@ export default function BrowsePage() {
     })
 
     return result
-  }, [streams, selectedCategory, searchQuery, sortBy, activeTab, isFavorite])
+  }, [streams, selectedCategory, searchQuery, sortBy, activeTab, isFavorite, isHiddenCategory])
 
   // Count items inside categories for badges
   const categoryCounts = useMemo(() => {
@@ -155,7 +158,10 @@ export default function BrowsePage() {
     const id = item.stream_id || item.series_id
     if (activeTab === 'live') {
       // Live channels play directly
-      navigate(`/player/live/${id}`)
+      const params = new URLSearchParams()
+      if (item.name) params.set('name', item.name)
+      if (item.stream_icon) params.set('icon', item.stream_icon)
+      navigate(`/player/live/${id}?${params.toString()}`)
     } else {
       // VOD / Series open details
       navigate(`/details/${activeTab}/${id}`)
@@ -234,10 +240,11 @@ export default function BrowsePage() {
             {/* Dyn Categories */}
             {categories
               .filter(cat => cat.category_name.toLowerCase().includes(categorySearchQuery.toLowerCase()))
+              .filter(cat => !isHiddenCategory(activeTab, cat.category_id))
               .map((cat) => {
                 const count = categoryCounts[String(cat.category_id)] || 0
               if (count === 0) return null // Hide empty categories
-              
+
               return (
                 <button
                   key={cat.category_id}
@@ -257,8 +264,64 @@ export default function BrowsePage() {
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '0.5rem' }}>
                     {cat.category_name}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0 }}>
-                    ({count})
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({count})</span>
+                    <span
+                      onClick={(e) => { e.stopPropagation(); toggleHiddenCategory(activeTab, cat.category_id); }}
+                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}
+                      title="Hide category"
+                    >
+                      <Eye size={14} style={{ color: 'var(--text-muted)' }} />
+                    </span>
+                  </span>
+                </button>
+              )
+            })}
+
+            {/* Hidden Categories */}
+            {categories
+              .filter(cat => cat.category_name.toLowerCase().includes(categorySearchQuery.toLowerCase()))
+              .filter(cat => isHiddenCategory(activeTab, cat.category_id))
+              .length > 0 && (
+              <>
+                <div style={{ height: '1px', background: 'var(--border-light)', margin: '0.5rem 0' }} />
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '0 0.4rem' }}>Hidden</span>
+              </>
+            )}
+            {categories
+              .filter(cat => cat.category_name.toLowerCase().includes(categorySearchQuery.toLowerCase()))
+              .filter(cat => isHiddenCategory(activeTab, cat.category_id))
+              .map((cat) => {
+                const count = categoryCounts[String(cat.category_id)] || 0
+              return (
+                <button
+                  key={cat.category_id}
+                  onClick={() => setSelectedCategory(cat.category_id)}
+                  style={{
+                    justifyContent: 'space-between',
+                    padding: '0.6rem 0.8rem',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    textAlign: 'left',
+                    width: '100%',
+                    background: selectedCategory === cat.category_id ? 'var(--bg-hover)' : 'transparent',
+                    color: 'var(--text-muted)',
+                    borderLeft: selectedCategory === cat.category_id ? '3px solid var(--accent-color)' : '3px solid transparent',
+                    opacity: 0.5,
+                  }}
+                >
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '0.5rem' }}>
+                    {cat.category_name}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({count})</span>
+                    <span
+                      onClick={(e) => { e.stopPropagation(); toggleHiddenCategory(activeTab, cat.category_id); }}
+                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}
+                      title="Show category"
+                    >
+                      <EyeOff size={14} style={{ color: '#ef4444' }} />
+                    </span>
                   </span>
                 </button>
               )

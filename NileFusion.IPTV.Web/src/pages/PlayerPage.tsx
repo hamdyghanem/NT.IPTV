@@ -24,10 +24,12 @@ export default function PlayerPage() {
   const ext = searchParams.get('ext') || (type === 'live' ? 'ts' : 'mp4')
   const season = searchParams.get('season')
   const epNum = searchParams.get('ep')
+  const icon = searchParams.get('icon') || ''
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [copied, setCopied] = useState(false)
   const [hasError, setHasError] = useState(false)
+  const [isAudioOnly, setIsAudioOnly] = useState(false)
 
   // Construct stream URL for copy link / download (direct un-proxied URL)
   const streamUrl = activeSession && id && type
@@ -155,7 +157,50 @@ export default function PlayerPage() {
       })
     }
 
+    // Detect audio-only stream (radio)
+    const handleLoadedMetadata = () => {
+      if (video.videoWidth === 0 && video.videoHeight === 0) {
+        setIsAudioOnly(true)
+      } else {
+        setIsAudioOnly(false)
+      }
+    }
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+
+    // Auto-reconnect for live streams that stall or end unexpectedly
+    let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
+    const handleStalled = () => {
+      if (type === 'live' && !hasError) {
+        reconnectTimeout = setTimeout(() => {
+          if (video.paused && !video.ended) {
+            video.play().catch(() => {})
+          }
+        }, 3000)
+      }
+    }
+    const handleEnded = () => {
+      if (type === 'live') {
+        // Live streams shouldn't end - try to restart
+        reconnectTimeout = setTimeout(() => {
+          if (mpegtsRef.current) {
+            mpegtsRef.current.unload()
+            mpegtsRef.current.load()
+            mpegtsRef.current.play()
+          } else {
+            video.load()
+            video.play().catch(() => {})
+          }
+        }, 2000)
+      }
+    }
+    video.addEventListener('stalled', handleStalled)
+    video.addEventListener('ended', handleEnded)
+
     return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('stalled', handleStalled)
+      video.removeEventListener('ended', handleEnded)
+      if (reconnectTimeout) clearTimeout(reconnectTimeout)
       destroyPlayers()
     }
   }, [activeSession, id, type, ext])
@@ -255,7 +300,38 @@ export default function PlayerPage() {
         alignItems: 'center',
         justifyContent: 'center',
       }} onClick={togglePlay}>
-        
+
+        {/* Radio / Audio-only: show channel image */}
+        {isAudioOnly && icon && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1.5rem',
+            zIndex: 1,
+            background: 'radial-gradient(ellipse at center, rgba(30,30,50,0.9) 0%, #000 70%)',
+          }}>
+            <img
+              src={icon}
+              alt={name}
+              style={{
+                width: '200px',
+                height: '200px',
+                objectFit: 'contain',
+                borderRadius: '16px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+              }}
+            />
+            <div style={{ textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fff' }}>{name}</h3>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>Audio Stream (Radio)</p>
+            </div>
+          </div>
+        )}
+
         {streamUrl && (
           <video
             ref={videoRef}

@@ -8,6 +8,12 @@ interface Favorites {
   series: string[];
 }
 
+interface HiddenCategories {
+  live: string[];
+  movies: string[];
+  series: string[];
+}
+
 interface AuthContextType {
   activeSession: ApiSession | null;
   playerInfo: PlayerInfoResponse | null;
@@ -19,6 +25,8 @@ interface AuthContextType {
   deleteProfile: (profileName: string) => void;
   toggleFavorite: (type: 'live' | 'movies' | 'series', id: string | number) => void;
   isFavorite: (type: 'live' | 'movies' | 'series', id: string | number) => boolean;
+  toggleHiddenCategory: (type: 'live' | 'movies' | 'series', categoryId: string | number) => void;
+  isHiddenCategory: (type: 'live' | 'movies' | 'series', categoryId: string | number) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [playerInfo, setPlayerInfo] = useState<PlayerInfoResponse | null>(null);
   const [savedProfiles, setSavedProfiles] = useState<UserProfile[]>([]);
   const [favorites, setFavorites] = useState<Favorites>({ live: [], movies: [], series: [] });
+  const [hiddenCategories, setHiddenCategories] = useState<HiddenCategories>({ live: [], movies: [], series: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   // Load profiles and session on mount
@@ -50,6 +59,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const storedFavs = localStorage.getItem(`nilefusion_favs_${session.username}_${session.server}`);
         if (storedFavs) {
           setFavorites(JSON.parse(storedFavs));
+        }
+        // Load hidden categories for this session
+        const storedHidden = localStorage.getItem(`nilefusion_hidden_${session.username}_${session.server}`);
+        if (storedHidden) {
+          setHiddenCategories(JSON.parse(storedHidden));
         }
       }
     } catch (e) {
@@ -86,6 +100,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       setFavorites(currentFavs);
 
+      // Load or initialize hidden categories
+      const hiddenKey = `nilefusion_hidden_${session.username}_${session.server}`;
+      let currentHidden: HiddenCategories = { live: [], movies: [], series: [] };
+      const storedHidden = localStorage.getItem(hiddenKey);
+      if (storedHidden) {
+        currentHidden = JSON.parse(storedHidden);
+      }
+      setHiddenCategories(currentHidden);
+
       // Save profile if requested
       if (saveProfile && profileName) {
         setSavedProfiles((prev) => {
@@ -108,6 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveSession(null);
     setPlayerInfo(null);
     setFavorites({ live: [], movies: [], series: [] });
+    setHiddenCategories({ live: [], movies: [], series: [] });
     localStorage.removeItem('nilefusion_active_session');
     localStorage.removeItem('nilefusion_player_info');
     clearCache();
@@ -145,6 +169,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return favorites[type].includes(String(id));
   };
 
+  const toggleHiddenCategory = (type: 'live' | 'movies' | 'series', categoryId: string | number) => {
+    if (!activeSession) return;
+    const strId = String(categoryId);
+    const hiddenKey = `nilefusion_hidden_${activeSession.username}_${activeSession.server}`;
+
+    setHiddenCategories((prev) => {
+      const list = prev[type];
+      const isHidden = list.includes(strId);
+      const updatedList = isHidden ? list.filter((item) => item !== strId) : [...list, strId];
+
+      const next = {
+        ...prev,
+        [type]: updatedList,
+      };
+
+      localStorage.setItem(hiddenKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const isHiddenCategory = (type: 'live' | 'movies' | 'series', categoryId: string | number) => {
+    return hiddenCategories[type].includes(String(categoryId));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -158,6 +206,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteProfile,
         toggleFavorite,
         isFavorite,
+        toggleHiddenCategory,
+        isHiddenCategory,
       }}
     >
       {children}
