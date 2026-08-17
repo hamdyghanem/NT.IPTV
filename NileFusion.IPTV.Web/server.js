@@ -81,8 +81,12 @@ function proxyRequest(targetUrl, res, redirectCount) {
     port:     parsed.port || (isHttps ? 443 : 80),
     path:     (parsed.pathname || '') + (parsed.search || ''),
     method:   'GET',
-    timeout:  30000,
-    headers:  { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+    timeout:  60000,
+    headers:  {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      'Accept': '*/*',
+      'Connection': 'keep-alive'
+    }
   };
 
   if (isHttps) {
@@ -140,7 +144,7 @@ function proxyRequest(targetUrl, res, redirectCount) {
     proxyReq.destroy();
     if (!res.headersSent) {
       res.writeHead(504, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Gateway timeout — IPTV server did not respond in 30s' }));
+      res.end(JSON.stringify({ error: 'Gateway timeout — IPTV server did not respond in 60s' }));
     }
   });
 

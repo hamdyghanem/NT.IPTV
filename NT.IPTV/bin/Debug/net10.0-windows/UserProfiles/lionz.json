@@ -8,7 +8,11 @@
   "FavoritChannelsCategory": [],
   "FavoritMoviesCategory": [],
   "FavoritSeriesCategory": [],
-  "FavoritChannels": [],
+  "FavoritChannels": [
+    "326",
+    "184",
+    "169"
+  ],
   "FavoritMovies": [],
   "FavoritSeries": [
     "15160",

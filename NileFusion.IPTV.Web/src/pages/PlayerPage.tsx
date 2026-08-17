@@ -87,11 +87,12 @@ export default function PlayerPage() {
           url: browserPlayUrl,
         }, {
           enableStashBuffer: true,
-          stashInitialSize: 384 * 1024, // 384KB buffer to smooth out network jitter
+          stashInitialSize: 64 * 1024,  // 64KB - small enough for radio to start quickly
           enableWorker: false,         // disable worker to prevent cross-origin/Azure worker loading crash
           lazyLoad: false,             // continuously load live data
           liveBufferLatencyChasing: true,
-          liveBufferLatencyMaxLatency: 3.5,
+          liveBufferLatencyMaxLatency: 2.0,
+          liveBufferLatencyMinRemain: 0.3,
           autoCleanupSourceBuffer: true,
         })
         
@@ -112,7 +113,10 @@ export default function PlayerPage() {
 
         player.on(mpegts.Events.ERROR, (errType: any, errDetail: any, errInfo: any) => {
           console.error("mpegts.js player error:", errType, errDetail, errInfo)
-          setHasError(true)
+          // Only show error overlay for fatal network errors, not transient decode issues
+          if (errType === mpegts.ErrorTypes.NETWORK_ERROR) {
+            setHasError(true)
+          }
         })
       } else {
         console.warn("mpegts.js is not supported, attempting native fallback")
@@ -213,6 +217,8 @@ export default function PlayerPage() {
   }
 
   const handleVideoError = () => {
+    // When mpegts.js is active, ignore native video errors — mpegts.js has its own error handling
+    if (mpegtsRef.current) return
     console.warn("HTML5 Video playback failed.")
     setHasError(true)
   }
